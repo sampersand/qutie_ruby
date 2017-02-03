@@ -12,7 +12,7 @@ module Keyword
   end
 
   def handle_eval_univ(universe, parser)
-    universe << parser.parse_all(universe.pop, universe.to_globals)
+    universe << parser.parse_all(universe.pop.clone, universe.to_globals)
   end
 
   def handle_pop_lastv(universe, parser)

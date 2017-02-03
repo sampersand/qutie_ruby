@@ -9,7 +9,7 @@ module Operator
     '-'  => proc { |l, r| l -  r},
     '='  => proc { |l, r, u| u.locals[l] = r},
   }
-  OPER_ENDS = [';', "\n", ',']
+  OPER_ENDS = [';', ',']
   def priority(token, plugin)
     case
     when plugin == Operator

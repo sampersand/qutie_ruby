@@ -16,7 +16,8 @@ class Universe
 
   # repr
     def inspect
-      "<#{@stack} | #{@locals} | #{@globals}>"
+      # "<#{@stack} | #{@locals} | #{@globals}>"
+      "<#{@stack},#{@locals}>"
     end
 
     def to_s
@@ -30,6 +31,12 @@ class Universe
     def to_globals
       self.class.new(globals: @globals.clone.update(@locals))
     end
+    def clone
+      self.class.new(stack: @stack.clone,
+                     locals: @locals.clone,
+                     globals: @globals.clone)
+    end
+
   #stream methods
 
     def next(amnt=nil)
