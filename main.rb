@@ -22,6 +22,9 @@ parser.add_plugin Escape
 
 text = <<End
 2*3+4
+2+3*4
+abc = 23 * 34 + 45;
+
 End
 
 #abc = 23 * 34 + 45;

@@ -9,12 +9,12 @@ module Operator
     '-'  => proc { |l, r| l -  r},
     '='  => proc { |l, r, u| u.locals[l] = r},
   }
-  OPER_END = '|'
+  OPER_ENDS = [';', "\n", ',']
   def priority(token, plugin)
     case
     when plugin == Operator
       case token
-      when OPER_END then 0
+      when *OPER_ENDS then 100
       when '=' then 30
       when '+', '-' then 19
       when '*', '/', '%' then 18
@@ -32,29 +32,39 @@ module Operator
     OPERATORS.keys.each do |oper|
       return stream.next(oper.length) if stream.peek(oper.length) == oper
     end
+    OPER_ENDS.each do |oper_end|
+      return stream.next(oper_end.length) if stream.peek(oper_end.length) == oper_end
+    end
     nil
   end
 
+  def handle_operends(token, universe)
+    case token
+    when "\n", ',' then nil
+    when ';' then universe.stack.pop
+    end
+    
+  end
   def handle(token, stream, universe, parser)
+    return handle_operends(token, universe) if OPER_ENDS.include?(token)
+
     func = OPERATORS[token]
     lhs = universe.stack.pop
     rhs = universe.class.new
     catch(:EOF) {
-    until stream.stack.empty?
-      next_token = parser.parse(stream, rhs)
-      if priority(token, Operator) < priority(*next_token)
-        # rhs << next_token[0]
-        stream.feed(next_token[0])
-        break
-      else
-        rhs << next_token[0]
+      until stream.stack.empty?
+        next_token = parser.parse(stream, rhs)
+        if priority(token, Operator) < priority(*next_token)
+          stream.feed(next_token[0])
+          break
+        else
+          rhs << next_token[0]
+        end
       end
-    end
     }
-    u = universe.to_globals
 
-    p parser.parse_all(rhs, u)
-    exit
+    rhs = parser.parse_all(rhs, universe.to_globals)
+    
     unless rhs.stack.length == 1
       if rhs.stack.empty?
         puts("[Error] No rhs for operator `#{token}` #{rhs}")

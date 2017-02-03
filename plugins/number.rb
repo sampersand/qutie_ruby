@@ -4,9 +4,9 @@ module Number
   def parse(stream, _, _)
     return unless stream.peek =~ /\d/
     num = ''
-    catch(:EOF) do
+    catch(:EOF){
       num += stream.next while stream.peek =~ /\d/
-    end
+    }
     num
   end
 

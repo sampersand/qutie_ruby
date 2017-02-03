@@ -6,9 +6,12 @@ module Text
     return unless QUOTES.include? stream.peek
     quote = stream.next
     body = ''
-    body += stream.next(stream.peek == '\\' ? 2 : 1) until stream.peek == quote
-    raise unless stream.next == quote
-    body
+    catch(:EOF) {
+      body += stream.next(stream.peek == '\\' ? 2 : 1) until stream.peek == quote
+      raise unless stream.next == quote
+      return body
+    }
+    raise "No end quote found"
   end
   def handle(token, _, universe, _)
     universe << token
