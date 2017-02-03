@@ -1,34 +1,3 @@
-'ab' + 'cd'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //foo = {
 //   a? + b?
 //};
@@ -64,7 +33,7 @@ foo? @$ hashmap?
 
 
 
-/*
+
 
 
 
@@ -79,9 +48,9 @@ is_pythag = {
    c_squared = (c? ** 2)$;
    are_diff = a_squared? + b_squared? - c_squared?;
    if(are_diff?){
-      false
+      'false'
    } else {
-      true
+      'true'
    }$
 };
 

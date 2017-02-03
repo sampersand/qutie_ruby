@@ -3,7 +3,6 @@ module Variable
   
   def parse(stream, _, _)
     return unless stream.peek =~ /[a-zA-Z_]/
-    exit!
     result = ''
     catch(:EOF) {
       result += stream.next while stream.peek =~ /[a-zA-Z_0-9]/
@@ -12,6 +11,6 @@ module Variable
   end
 
   def handle(token, stream, universe, _)
-    universe << token.to_sym
+    universe << token#.to_sym
   end
 end
