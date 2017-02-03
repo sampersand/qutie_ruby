@@ -21,11 +21,11 @@ module Operator
     '@$' => proc { |func, args, universe, parser| parser.parse_all(func, args.to_globals).stack.last },
     '@'  => proc { |func, args, universe, parser| parser.parse_all(func, args.to_globals) },
 
-    ':V='  => proc { |arg, pos, universe, parser|
-      arg.locals[pos.stack[0]] = pos.stack[1]
-      # res.nil?  && pos.is_a?(Integer) ? arg.stack[pos] : res
-    },
-
+    ':V='  => proc { |arg, pos, universe, parser| arg.locals[pos.stack[0]] = pos.stack[1] },
+    ':S='  => proc { |arg, pos, universe, parser| arg.stack[pos.stack[0]] = pos.stack[1] },
+    ':='  => proc { |arg, pos, universe, parser| 
+      BINARY_OPERATORS[pos.stack[0].is_a?(Numeric) ? ':S=' : ':V='].(arg, pos, universe, parser)
+      },
     ':S'  => proc { |arg, pos, universe, parser| parser.parse_all(arg, universe.to_globals).stack[pos] },
     ':V'  => proc { |arg, pos, universe, parser| parser.parse_all(arg, universe.to_globals).get(pos) },
     ':'  => proc { |arg, pos, universe, parser|

@@ -1,0 +1,16 @@
+Car = {
+   wheels = 4;
+   maker = 'honda?';
+   drive = { disp(`vroom vroom!`) };
+   init = {
+      dup = (clone( Car? @ ()! ))$;
+      dup? :V= (wheels, 5)!;
+      dup?
+   };
+   1
+};
+
+
+inited = (Car? @ ()!, : init, @$ ()!)$;
+disp(inited? : wheels)
+disp(Car? @ ()!, : wheels)
