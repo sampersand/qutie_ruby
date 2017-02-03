@@ -1,16 +1,9 @@
-/*
 add = { # (a, b)
-  x = a? + b?
+  res = a? + b?;
+  if(res?){
+    res?
+  } else {
+    add? @$ (a = a? + 1, b = b? + 1)!
+  }$
 };
-add? @$ (a=3, b=4)!
-*/ #/
-
-
-# if(false){
-#   'a'
-# } else {
-#   a=3
-# }$
-# a?
-if(c=true){b=true}{a=false};
-a?
+# add? @$ (a=0, b=0)!

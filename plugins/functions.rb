@@ -15,7 +15,7 @@ module Functions
       cond[1].handle(cond[0], stream, cond_univ, parser)
       cond = cond_univ.stack.pop
       raise unless cond_univ.stack.empty?
-      cond = parser.parse_all(cond, universe.knowns_only).stack.pop
+      cond = parser.parse_all(cond.clone, universe.knowns_only).stack.pop
 
     if_true = parser.parse(stream, universe)
       raise unless if_true[1] == Parenthesis
@@ -23,11 +23,12 @@ module Functions
       if_true[1].handle(if_true[0], stream, if_true_univ, parser)
       if_true = if_true_univ.stack.pop
       raise unless if_true_univ.stack.empty?
-      if(cond)
-        universe << parser.parse_all(if_true, universe.knowns_only)
-        return
-      end
-      
+    p [cond, cond != false && cond != nil && cond != 0]
+    if(cond != false && cond != nil && cond != 0)
+      universe << parser.parse_all(if_true.clone, universe.knowns_only)
+      return
+    end
+    p [cond, cond != false && cond != nil && cond != 0]
     if_false = parser.parse(stream, universe)
       if_false = parser.parse(stream, universe) if if_false[0] == 'else'
       if if_false[1] == Parenthesis
@@ -35,13 +36,12 @@ module Functions
         if_false[1].handle(if_false[0], stream, if_true_univ, parser)
         if_false = if_true_univ.stack.pop
         raise unless if_true_univ.stack.empty?
-        if_false = parser.parse_all(if_false, universe.knowns_only)
+      if_false = parser.parse_all(if_false.clone, universe.knowns_only)
       else
         stream.feed(if_false[0])
         if_false = nil
       end
-
-    universe << (cond ? if_true : if_false)
+    universe << if_false
   end
 
   def handle_disp(universe, parser)
