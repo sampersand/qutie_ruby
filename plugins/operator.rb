@@ -11,7 +11,11 @@ module Operator
     '@$'  => proc { |func, args, universe, parser| 
       parser.parse_all(func.clone, args.to_globals).stack.last
      },
-    '@'  => proc { |func, args, universe, parser| parser.parse_all(func.clone, args.to_globals) },
+    '@'  => proc { |func, args, universe, parser|
+      func or raise "Invalid func #{func}"
+      args or raise "Invalid args #{args}"
+      parser.parse_all(func.clone, args.to_globals)
+      },
   }
   OPER_ENDS = [';', ',']
   def priority(token, plugin)
