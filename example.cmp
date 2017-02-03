@@ -12,5 +12,5 @@ add? @$ (a=3, b=4)!
 #   a=3
 # }$
 # a?
-if(a=false){0}{1};
+if(c=true){b=true}{a=false};
 a?

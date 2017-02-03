@@ -31,6 +31,10 @@ class Universe
     def to_globals
       self.class.new(globals: @globals.clone.update(@locals))
     end
+    def knowns_only
+      self.class.new(locals: @locals, globals: @globals)
+    end
+
     def clone
       self.class.new(stack: @stack.clone,
                      locals: @locals.clone,
@@ -64,9 +68,14 @@ class Universe
     end
 
     def get(val)
-      @locals[val] || @globals[val] #will fail when val is nil
+      @locals.include?(val) ? @locals[val] : @globals[val]
     end
 end
+
+
+
+
+
 
 
 
