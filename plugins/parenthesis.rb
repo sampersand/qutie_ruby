@@ -4,16 +4,25 @@ module Parenthesis
   L_PAREN = ['[', '(', '{']
   R_PAREN = [']', ')', '}']
   
-  def parse(stream, _, _)
-    stream.next if L_PAREN.include? stream.peek
+  def parse(stream, universe, parser)
+    # stream.next if L_PAREN.include? stream.peek
+    if L_PAREN.include? stream.peek
+      token = stream.next
+      result = universe.class.new
+      handle(token, stream, result, parser)
+      raise "Result should have 1 element, that is a universe" unless result.stack.length == 1 &&
+                                                                      result.stack[0].is_a?(universe.class)
+      result.pop
+
+    end
   end
 
   def handle(token, stream, universe, parser)
     container = universe.to_globals
     # container.parens[0] = stream.next
+    stream.next # pop it
     start_paren = token # is first paren
     parens = 1
-
     catch(:EOF) {
       until parens == 0 do
         if L_PAREN.include?(stream.peek)

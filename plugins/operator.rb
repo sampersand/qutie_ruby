@@ -8,6 +8,11 @@ module Operator
     '+'  => proc { |l, r| l +  r},
     '-'  => proc { |l, r| l -  r},
     '='  => proc { |l, r, u| u.locals[l] = r},
+    '@'  => proc { |l, r, u|
+      func = l
+      p l
+      exit
+    },
   }
   OPER_ENDS = [';', ',']
   def priority(token, plugin)
@@ -19,7 +24,6 @@ module Operator
       when '+', '-' then 19
       when '*', '/', '%' then 18
       when '**', '^' then 17
-      when '-' then 10
       when '@' then 5
       when ':', ':=' then 4
       when  '$', '!', '?' then 1

@@ -21,25 +21,12 @@ parser.add_plugin Keyword
 parser.add_plugin Escape
 
 text = <<End
-a=(2+3);
-a?$
 
-# 1
-# (2 + 3, 6, 7)!
-# 4
-# 5
-
-
-
+# add = {a? + b?};
+# add? @ (a=3,b=4)$;
+a=5;
+a? + (x = 3 - 4)$
 End
-# # 4 + 3 * 2, 4 + 4
-# # (a=3, b=4)
-
-
-# # add = {
-# #   a? + b?
-# # };
-# # add? @ (a=3,b=4);;;
 # # (a=3; b=4;)!
 # End
 
