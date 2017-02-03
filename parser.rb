@@ -18,7 +18,8 @@ class Parser
     parse_all(stream, universe)
   end
 
-  def parse_all(stream, universe)
+  def parse_all(stream, universe, do_clone: true)
+    stream = stream.clone if do_clone
     catch(:EOF) {
       until stream.stack.empty?
         token, plugin = parse(stream, universe)

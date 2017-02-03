@@ -18,15 +18,14 @@ module Operator
     'and' => proc { |l, r| l && r },
 
     '='  => proc { |l, r, u| u.locals[l] = r},
-    '@$'  => proc { |func, args, universe, parser| 
-      func or raise "Invalid func `#{func}`"
-      args or raise "Invalid args `#{args}`"
-      parser.parse_all(func.clone, args.to_globals).stack.last
-    },
-    '@'  => proc { |func, args, universe, parser|
-      func or raise "Invalid func `#{func}`"
-      args or raise "Invalid args `#{args}`"
-      parser.parse_all(func.clone, args.to_globals)
+    '@$' => proc { |func, args, universe, parser| parser.parse_all(func, args.to_globals).stack.last },
+    '@'  => proc { |func, args, universe, parser|  parser.parse_all(func, args.to_globals) },
+    ':S'  => proc { |arg, pos, universe, parser| parser.parse_all(arg, universe.to_globals).stack[pos] },
+    ':V'  => proc { |arg, pos, universe, parser| parser.parse_all(arg, universe.to_globals).get(pos) },
+    ':'  => proc { |arg, pos, universe, parser|
+      arg = parser.parse_all(arg, universe.to_globals);
+      res = arg.get(pos)
+      res.nil?  && pos.is_a?(Integer) ? arg.stack[pos] : res
     },
   }
   UNARY_OPERS = {
@@ -47,7 +46,8 @@ module Operator
       when '+', '-' then 12
       when '*', '/', '%' then 11
       when '**', '^' then 10
-      when '@', '@$' then 5
+      when '@', '@$' then 7
+      when ':', ':S', ':V' then 5
       when  '$', '!', '?' then 1
       else raise "Unknown operator #{token}"
       end
