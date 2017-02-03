@@ -36,11 +36,7 @@ module Functions
         stream.feed(if_false[0])
         if_false = nil
       end
-    if(cond != false && cond != nil && cond != 0)
-      universe << if_true
-      return
-    end
-    universe << if_false
+    universe << cond ? if_true : if_false
   end
 
   def handle_disp(stream, universe, parser)
@@ -60,8 +56,22 @@ module Functions
 
 
   def handle_while(universe, parser)
-    # handle_eval_univ(universe, parser)
-    # universe << universe.pop.pop
+    cond = parser.parse(stream, universe)
+      raise unless cond[1] == Parenthesis
+      cond_univ = universe.to_globals
+      cond[1].handle(cond[0], stream, cond_univ, parser)
+      cond = cond_univ.stack.pop
+      raise unless cond_univ.stack.empty?
+      cond = parser.parse_all(cond.clone, universe.knowns_only).stack.pop
+
+    if_true = parser.parse(stream, universe)
+      raise unless if_true[1] == Parenthesis
+      if_true_univ = universe.to_globals
+      if_true[1].handle(if_true[0], stream, if_true_univ, parser)
+      if_true = if_true_univ.stack.pop
+      raise unless if_true_univ.stack.empty?
+      if_true = parser.parse_all(if_true.clone, universe.knowns_only)
+
   end
 
   def parse(stream, _, _)
