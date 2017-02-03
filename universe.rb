@@ -1,53 +1,59 @@
 class Universe
 
   attr_reader :stack
-  attr_reader :knowns
+  attr_reader :locals
+  attr_reader :globals
 
   def self.from_string(input)
     new(stack: input.each_char.to_a)
   end
 
-  def initialize(stack: nil, knowns: nil)
+  def initialize(stack: nil, locals: nil, globals: nil)
     @stack = stack || []
-    @knowns = knowns || {}
+    @locals = locals || {}
+    @globals = globals || {}
   end
 
-  def inspect
-    "<#{@stack} | #{@knowns}>"
-  end
+  # repr
+    def inspect
+      "<#{@stack} | #{@locals} | #{@globals}>"
+    end
 
-  def to_s
-    "<[#{@stack.collect(&:to_s).join}] | {#{@knowns.collect{|k, v| "#{k}: #{v}"}.join(', ')}}>"
-  end
+    def to_s
+      stack_s = @stack.collect(&:to_s).join
+      locals_s = @locals.collect{|k, v| "#{k}: #{v}"}.join(', ')
+      globals_s = @globals.collect{|k, v| "#{k}: #{v}"}.join(', ')
+      "<[#{stack_s}] | {#{locals_s}} | {#{globals_s}>"
+    end
 
-  def next(amnt=nil)
-    throw :EOF if @stack.empty?
-    return @stack.shift unless amnt
-    @stack.shift(amnt).join
-  end
+  # misc
+    def to_globals
+      self.class.new(globals: @globals.clone.update(@locals))
+    end
+  #stream methods
 
-  def peek(amnt=nil)
-    throw :EOF if @stack.empty?
-    return @stack.first unless amnt
-    @stack.first(amnt).join
-  end
+    def next(amnt=nil)
+      throw :EOF if @stack.empty?
+      return @stack.shift unless amnt
+      @stack.shift(amnt).join
+    end
 
-  def feed(*vals)
-    @stack.unshift(*vals)
-  end
+    def peek(amnt=nil)
+      throw :EOF if @stack.empty?
+      return @stack.first unless amnt
+      @stack.first(amnt).join
+    end
 
-  def push(val)
-    @stack.push val
-  end
-  alias :<< :push
+    def feed(*vals)
+      @stack.unshift(*vals)
+    end
+
+    def push(val)
+      @stack.push val
+    end
+    alias :<< :push
+
 end
-
-
-
-
-
-
-
 
 
 

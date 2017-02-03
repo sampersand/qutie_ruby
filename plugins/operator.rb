@@ -1,97 +1,111 @@
 module Operator
-  
   module_function
-  OPERATOR_FUNCTIONS = {
+  OPERATORS = {
     '**' => proc { |l, r| l ** r},
     '*'  => proc { |l, r| l *  r},
     '/'  => proc { |l, r| l /  r},
     '%'  => proc { |l, r| l %  r},
     '+'  => proc { |l, r| l +  r},
     '-'  => proc { |l, r| l -  r},
-    '='  => proc { |l, r, t| t.knowns[l] = r},
-    '@'  => proc { |func, args, tokens, parser|
-      parser.parse(func.to_stream, tokens.clone_knowns.merge(args.clone_knowns))#.last
-    },
-    ':='  => proc { |func, args, tokens, parser|
-      func = parser.parse(func.to_stream, tokens.clone_knowns)
-      args = parser.parse(args.to_stream, tokens.clone_knowns)
-      pos = args[0]
-      val = args[1]
-      if pos.is_a?(Integer)
-        func[pos] = val
-      else
-        func.knowns[pos] = val
-      end
-    },
-    ':'  => proc { |func, pos, tokens, parser|
-      func = parser.parse(func.to_stream, tokens.clone_knowns)
-      func[pos]
-    },
+    '='  => proc { |l, r, u| u.locals[l] = r},
   }
-  OPERATORS = OPERATOR_FUNCTIONS.keys
   OPER_END = '|'
-  def priority(token)
-    case token
-    when OPER_END then 0
-    when '=' then 30
-    when '+', '-' then 19
-    when '*', '/', '%' then 18
-    when '**' then 17
-    when '-' then 10
-    when '@' then 5
-    when ':', ':=' then 4
-    when  '$', '!', '?' then 1
+  def priority(token, plugin)
+    case
+    when plugin == Operator
+      case token
+      when OPER_END then 0
+      when '=' then 30
+      when '+', '-' then 19
+      when '*', '/', '%' then 18
+      when '**', '^' then 17
+      when '-' then 10
+      when '@' then 5
+      when ':', ':=' then 4
+      when  '$', '!', '?' then 1
+      else raise "Unknown operator #{token}"
+      end
     else 0
     end
   end
-  def parse_oper(stream, tokens, parser)
-    oper = OPERATORS.each.find{ |oper| oper == stream.peek(oper.length) }
-    return unless oper
+  def parse(stream, _, _)
+    OPERATORS.keys.each do |oper|
+      return stream.next(oper.length) if stream.peek(oper.length) == oper
+    end
+    nil
+  end
 
-    func = OPERATOR_FUNCTIONS[stream.next oper.length]
-    lhs = tokens.pop
-    
-    rhs = tokens.clone_knowns
-    until priority(oper) <= priority(rhs.last) || stream.empty?
-      p stream, rhs
-      parser.next_token(stream, rhs)
-      if OPER_END == rhs.last
-        last = rhs.pop
-        stream.feed last
+  def handle(token, stream, universe, parser)
+    func = OPERATORS[token]
+    lhs = universe.stack.pop
+    rhs = universe.class.new
+    catch(:EOF) {
+    until stream.stack.empty?
+      next_token = parser.parse(stream, rhs)
+      if priority(token, Operator) < priority(*next_token)
+        # rhs << next_token[0]
+        stream.feed(next_token[0])
         break
+      else
+        rhs << next_token[0]
       end
     end
-    p '--'
-    warn("[Warning] ambiguous rhs for operator `#{oper}` #{rhs}. Using `#{rhs.first}` ") unless rhs.length == 1
-    tokens.push func.call(lhs, rhs.first, tokens, parser)
-    true
-  end
-  def parse_break(stream, tokens, parser)
-    case stream.peek
-    when ';'
-      stream.next
-      stream.feed *[OPER_END, '$', '$']
-      :retry
-    when ','
-      stream.next
-      stream.feed *[OPER_END, '$']
-      :retry
-    else
-      false
+    }
+    u = universe.to_globals
+
+    p parser.parse_all(rhs, u)
+    exit
+    unless rhs.stack.length == 1
+      if rhs.stack.empty?
+        puts("[Error] No rhs for operator `#{token}` #{rhs}")
+        exit(1)
+      end
+      warn("[Warning] ambiguous rhs for operator `#{token}` #{rhs}. Using `#{rhs.stack.first}` ")
     end
+    universe << func.call(lhs, rhs.stack.first, universe, parser)
   end
-  def parse(stream, tokens, parser)
-    parse_oper(stream, tokens, parser) ||
-    parse_break(stream, tokens, parser)
-  end
+  # def parse_oper(stream, tokens, parser)
+  #   oper = OPERATORS.each.find{ |oper| oper == stream.peek(oper.length) }
+  #   return unless oper
+
+  #   func = OPERATOR_FUNCTIONS[stream.next oper.length]
+  #   lhs = tokens.pop
+    
+  #   rhs = tokens.clone_knowns
+  #   until priority(oper) <= priority(rhs.last) || stream.empty?
+  #     p stream, rhs
+  #     parser.next_token(stream, rhs)
+  #     if OPER_END == rhs.last
+  #       last = rhs.pop
+  #       stream.feed last
+  #       break
+  #     end
+  #   end
+  #   p '--'
+  #   warn("[Warning] ambiguous rhs for operator `#{oper}` #{rhs}. Using `#{rhs.first}` ") unless rhs.length == 1
+  #   tokens.push func.call(lhs, rhs.first, tokens, parser)
+  #   true
+  # end
+  # def parse_break(stream, tokens, parser)
+  #   case stream.peek
+  #   when ';'
+  #     stream.next
+  #     stream.feed *[OPER_END, '$', '$']
+  #     :retry
+  #   when ','
+  #     stream.next
+  #     stream.feed *[OPER_END, '$']
+  #     :retry
+  #   else
+  #     false
+  #   end
+  # end
+  # def parse(stream, tokens, parser)
+  #   parse_oper(stream, tokens, parser) ||
+  #   parse_break(stream, tokens, parser)
+  # end
 
 end
-
-
-
-
-
-
 
 
 
