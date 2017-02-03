@@ -1,3 +1,4 @@
+
 require_relative 'stream'
 class Tokens < Array
 
