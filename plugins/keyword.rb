@@ -4,14 +4,20 @@ module Keyword
   KEYWORDS = {
     get_known: '?',
     eval_univ: '!',
+    pop_lastv: '$', #not _technically_ a keyword
   }
 
-  def handle_get_known(_, universe, _)
+  def handle_get_known(universe)
     universe << universe.get(universe.pop)
   end
 
-  def handle_eval_univ(_, universe, parser)
+  def handle_eval_univ(universe, parser)
     universe << parser.parse_all(universe.pop, universe.to_globals)
+  end
+
+  def handle_pop_lastv(universe, parser)
+    handle_eval_univ(universe, parser)
+    universe << universe.pop.pop
   end
 
   def parse(stream, _, _)
@@ -22,9 +28,11 @@ module Keyword
   def handle(token, stream, universe, parser)
     case token
     when KEYWORDS[:get_known]
-      handle_get_known(stream, universe, parser)
+      handle_get_known(universe)
     when KEYWORDS[:eval_univ]
-      handle_eval_univ(stream, universe, parser)
+      handle_eval_univ(universe, parser)
+    when KEYWORDS[:pop_lastv]
+      handle_pop_lastv(universe, parser)
     else raise "Unknown keyword #{token}"
     end
   end
