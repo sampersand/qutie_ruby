@@ -1,1 +1,5 @@
-disp('foo', end = 'a\nb\n';);
+a=0;
+while(a? < 5){
+   disp(a?);
+   a = a? + 1;
+}

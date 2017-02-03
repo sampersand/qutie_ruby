@@ -55,23 +55,24 @@ module Functions
   end
 
 
-  def handle_while(universe, parser)
+  def handle_while(stream, universe, parser)
     cond = parser.parse(stream, universe)
       raise unless cond[1] == Parenthesis
       cond_univ = universe.to_globals
       cond[1].handle(cond[0], stream, cond_univ, parser)
       cond = cond_univ.stack.pop
       raise unless cond_univ.stack.empty?
-      cond = parser.parse_all(cond.clone, universe.knowns_only).stack.pop
 
-    if_true = parser.parse(stream, universe)
-      raise unless if_true[1] == Parenthesis
+    body = parser.parse(stream, universe)
+      raise unless body[1] == Parenthesis
       if_true_univ = universe.to_globals
-      if_true[1].handle(if_true[0], stream, if_true_univ, parser)
-      if_true = if_true_univ.stack.pop
+      body[1].handle(body[0], stream, if_true_univ, parser)
+      body = if_true_univ.stack.pop
       raise unless if_true_univ.stack.empty?
-      if_true = parser.parse_all(if_true.clone, universe.knowns_only)
 
+    while(parser.parse_all(cond.clone, universe.knowns_only).stack.pop)
+      parser.parse_all(body.clone, universe.knowns_only)
+    end
   end
 
   def parse(stream, _, _)
@@ -86,7 +87,7 @@ module Functions
     when FUNCITONS[:disp]
       handle_disp(stream, universe, parser)
     when FUNCITONS[:while]
-      handle_while(universe, parser)
+      handle_while(stream, universe, parser)
     else raise "Unknown function `#{token}`"
     end
   end
