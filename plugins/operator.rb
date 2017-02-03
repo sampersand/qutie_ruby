@@ -9,10 +9,14 @@ module Operator
     '-'  => proc { |l, r| l -  r},
     '='  => proc { |l, r, u| u.locals[l] = r},
     '@$'  => proc { |func, args, universe, parser| 
+      func or raise "Invalid func `#{func}`"
+      # args = parser.parse_all(args, universe.to_globals)
+      args or raise "Invalid args `#{args}`"
       parser.parse_all(func.clone, args.to_globals).stack.last
      },
     '@'  => proc { |func, args, universe, parser|
       func or raise "Invalid func `#{func}`"
+      # args = parser.parse_all(args, universe.to_globals)
       args or raise "Invalid args `#{args}`"
       parser.parse_all(func.clone, args.to_globals)
       },
@@ -72,7 +76,7 @@ module Operator
       end
     }
 
-    rhs = parser.parse_all(rhs, universe.knowns_only)
+    rhs = parser.parse_all(rhs, universe.to_globals)
     
     unless rhs.stack.length == 1
       if rhs.stack.empty?

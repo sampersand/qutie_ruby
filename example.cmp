@@ -1,13 +1,100 @@
-# add = { # (a, b)
-#   res = a? + b?;
-#   if(res?){
-#     res?
-#   } else {
-#     res? + 3
-#   }$
-# };
-# add? @$ (a=0, b=0)!
+'ab' + 'cd'
 
-a = b = 2;
-3=6;
-# 5? + 3?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//foo = {
+//   a? + b?
+//};
+//foo? @$ (a=2, b=3)
+/*
+arr = [1, 2, 3]!;
+
+hashmap = {
+   a=3;
+   b=4;
+   c=5;
+}!;
+
+foo = {
+   a? + b? - c?
+};
+
+foo? @$ hashmap?
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+
+
+
+
+
+
+is_pythag = {
+   a_squared = (a? ** 2)$;
+   b_squared = (b? ** 2)$;
+   c_squared = (c? ** 2)$;
+   are_diff = a_squared? + b_squared? - c_squared?;
+   if(are_diff?){
+      false
+   } else {
+      true
+   }$
+};
+
+is_pythag? @$ (a=4, b=4, c=5)!
+
+
+
+
+
+
+
+
+
+
+
+

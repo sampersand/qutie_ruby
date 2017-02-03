@@ -3,6 +3,7 @@ module Variable
   
   def parse(stream, _, _)
     return unless stream.peek =~ /[a-zA-Z_]/
+    exit!
     result = ''
     catch(:EOF) {
       result += stream.next while stream.peek =~ /[a-zA-Z_0-9]/

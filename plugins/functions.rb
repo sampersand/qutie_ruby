@@ -23,10 +23,7 @@ module Functions
       if_true[1].handle(if_true[0], stream, if_true_univ, parser)
       if_true = if_true_univ.stack.pop
       raise unless if_true_univ.stack.empty?
-    if(cond != false && cond != nil && cond != 0)
-      universe << parser.parse_all(if_true.clone, universe.knowns_only)
-      return
-    end
+      if_true = parser.parse_all(if_true.clone, universe.knowns_only)
     if_false = parser.parse(stream, universe)
       if_false = parser.parse(stream, universe) if if_false[0] == 'else'
       if if_false[1] == Parenthesis
@@ -39,6 +36,10 @@ module Functions
         stream.feed(if_false[0])
         if_false = nil
       end
+    if(cond != false && cond != nil && cond != 0)
+      universe << if_true
+      return
+    end
     universe << if_false
   end
 

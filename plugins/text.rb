@@ -9,12 +9,11 @@ module Text
     catch(:EOF) {
       body += stream.next(stream.peek == '\\' ? 2 : 1) until stream.peek == quote
       raise unless stream.next == quote
-      return body
+      return quote + body + quote
     }
     raise "No end quote found"
   end
   def handle(token, _, universe, _)
     universe << token
-
   end
 end

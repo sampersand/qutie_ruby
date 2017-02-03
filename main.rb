@@ -18,18 +18,18 @@ parser.add_plugin Variable
 parser.add_plugin Parenthesis
 parser.add_plugin Operator
 parser.add_plugin Comment
-parser.add_plugin Text
 parser.add_plugin Keyword
 parser.add_plugin Escape
 parser.add_plugin Functions
-parser.add_plugin Boolean
+parser.add_plugin Text
+  parser.add_plugin Boolean
 text = open('./example.cmp', "r").read
 
 res = parser.process(text)
 require 'pp'
 
-p res
-
+# p res
+p res.stack
 
 
 
