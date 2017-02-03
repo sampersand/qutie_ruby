@@ -16,6 +16,7 @@ module Parenthesis
     start_paren = token # is first paren
     parens = 1
     catch(:EOF) {
+      # this will break if there are uneven parens inside comments
       until parens == 0 do
         if L_PAREN.include?(stream.peek)
           parens += 1
@@ -25,7 +26,7 @@ module Parenthesis
         container << stream.next
       end
       end_paren = container.pop
-      universe << container#parser.parse_all(container, universe.to_globals)
+      universe << container
       return
     }
     raise "No end parenthesis for `#{start_paren}` found"

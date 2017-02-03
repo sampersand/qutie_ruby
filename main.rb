@@ -20,18 +20,7 @@ parser.add_plugin Text
 parser.add_plugin Keyword
 parser.add_plugin Escape
 
-text = <<End
-add = {
-  a? + b?
-};
-add? @$ (a=3; b=4;)!
-End
-# End
-
-#abc = 23 * 34 + 45;
-#\\#foo?@(a=1,b=2);
-#'abc'
-#3
+text = open('./example.cmp', "r").read
 
 res = parser.process(text)
 require 'pp'
