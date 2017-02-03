@@ -24,7 +24,7 @@ module Parenthesis
         container << stream.next
       end
       end_paren = container.pop
-      universe << parser.parse_all(container, universe.to_globals)
+      universe << container#parser.parse_all(container, universe.to_globals)
       return
     }
     raise "No end parenthesis for `#{start_paren}` found"

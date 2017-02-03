@@ -56,6 +56,9 @@ class Universe
       @stack.pop
     end
 
+    def get(val)
+      @locals[val] || @globals[val] #will fail when val is nil
+    end
 end
 
 

@@ -1,46 +1,32 @@
 module Keyword
   module_function
 
-  POP_STACK = '$'
-  GET_KNOWN = '?'
-  UNPACK_TOKENS = '!'
-  # GET_LAST = '!'
+  KEYWORDS = {
+    get_known: '?',
+    eval_univ: '!',
+  }
 
-  def parse_known(stream, tokens, parser)
-    return unless stream.peek(GET_KNOWN.length) == GET_KNOWN
-    stream.next(GET_KNOWN.length) # and throw it away
-    tokens.push tokens.knowns[tokens.pop]
-    true
+  def handle_get_known(_, universe, _)
+    universe << universe.get(universe.pop)
   end
-  def parse_pop(stream, tokens, parser)
-    return unless stream.peek(POP_STACK.length) == POP_STACK
-    stream.next(POP_STACK.length) # and throw it away
-    tokens.pop # and throw it away
-    :retry
+
+  def handle_eval_univ(_, universe, parser)
+    universe << parser.parse_all(universe.pop, universe.to_globals)
   end
-  def parse_unpack(stream, tokens, parser, override=false)
-    unless override
-      return unless stream.peek(UNPACK_TOKENS.length) == UNPACK_TOKENS
-      stream.next(UNPACK_TOKENS.length) # and throw it away
+
+  def parse(stream, _, _)
+    res = KEYWORDS.find{ |_, sym| sym == stream.peek(sym.length) && stream.next(sym.length) }
+    res and res[-1]
+  end
+
+  def handle(token, stream, universe, parser)
+    case token
+    when KEYWORDS[:get_known]
+      handle_get_known(stream, universe, parser)
+    when KEYWORDS[:eval_univ]
+      handle_eval_univ(stream, universe, parser)
+    else raise "Unknown keyword #{token}"
     end
-    to_unpack = (tokens.pop + ["\n"]).to_stream
-    result = parser.parse(to_unpack, tokens.clone_knowns)
-    tokens.push result
-    true
-  end
-  # def parse_last(stream, tokens, parser)
-  #   return unless stream.peek(GET_LAST.length) == GET_LAST
-  #   stream.next(GET_LAST.length)
-  #   parse_unpack(stream, tokens, parser, true)
-  #   tokens.push tokens.pop.last
-  #   true
-  # end
-
-  def parse(stream, tokens, parser)
-    parse_known(stream, tokens, parser) || 
-    parse_pop(stream, tokens, parser)   ||
-    parse_unpack(stream, tokens, parser)
-    # parse_last(stream, tokens, parser)
   end
 
 end
