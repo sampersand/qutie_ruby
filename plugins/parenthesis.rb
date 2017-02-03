@@ -20,7 +20,6 @@ module Parenthesis
   def handle(token, stream, universe, parser)
     container = universe.to_globals
     # container.parens[0] = stream.next
-    stream.next # pop it
     start_paren = token # is first paren
     parens = 1
     catch(:EOF) {

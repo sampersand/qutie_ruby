@@ -8,11 +8,10 @@ module Operator
     '+'  => proc { |l, r| l +  r},
     '-'  => proc { |l, r| l -  r},
     '='  => proc { |l, r, u| u.locals[l] = r},
-    '@'  => proc { |l, r, u|
-      func = l
-      p l
-      exit
-    },
+    '@$'  => proc { |func, args, universe, parser| 
+      parser.parse_all(func.clone, args.to_globals).stack.last
+     },
+    '@'  => proc { |func, args, universe, parser| parser.parse_all(func.clone, args.to_globals) },
   }
   OPER_ENDS = [';', ',']
   def priority(token, plugin)
@@ -24,7 +23,7 @@ module Operator
       when '+', '-' then 19
       when '*', '/', '%' then 18
       when '**', '^' then 17
-      when '@' then 5
+      when '@', '@$' then 5
       when ':', ':=' then 4
       when  '$', '!', '?' then 1
       else raise "Unknown operator #{token}"
@@ -85,7 +84,7 @@ module Operator
   #   func = OPERATOR_FUNCTIONS[stream.next oper.length]
   #   lhs = tokens.pop
     
-  #   rhs = tokens.clone_knowns
+  #   rhs = tokens.to_globals
   #   until priority(oper) <= priority(rhs.last) || stream.empty?
   #     p stream, rhs
   #     parser.next_token(stream, rhs)
