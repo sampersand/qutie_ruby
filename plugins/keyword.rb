@@ -16,7 +16,7 @@ module Keyword
     if last == nil || last == false
       universe << last
     else
-      universe << parser.parse_all(last.clone, universe.to_globals)
+      universe << parser.parse_all(last.clone, universe.knowns_only)
     end
   end
 

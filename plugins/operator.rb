@@ -72,7 +72,7 @@ module Operator
       end
     }
 
-    rhs = parser.parse_all(rhs, universe.to_globals)
+    rhs = parser.parse_all(rhs, universe.knowns_only)
     
     unless rhs.stack.length == 1
       if rhs.stack.empty?
@@ -83,61 +83,5 @@ module Operator
     end
     universe << func.call(lhs, rhs.stack.first, universe, parser)
   end
-  # def parse_oper(stream, tokens, parser)
-  #   oper = OPERATORS.each.find{ |oper| oper == stream.peek(oper.length) }
-  #   return unless oper
-
-  #   func = OPERATOR_FUNCTIONS[stream.next oper.length]
-  #   lhs = tokens.pop
-    
-  #   rhs = tokens.to_globals
-  #   until priority(oper) <= priority(rhs.last) || stream.empty?
-  #     p stream, rhs
-  #     parser.next_token(stream, rhs)
-  #     if OPER_END == rhs.last
-  #       last = rhs.pop
-  #       stream.feed last
-  #       break
-  #     end
-  #   end
-  #   p '--'
-  #   warn("[Warning] ambiguous rhs for operator `#{oper}` #{rhs}. Using `#{rhs.first}` ") unless rhs.length == 1
-  #   tokens.push func.call(lhs, rhs.first, tokens, parser)
-  #   true
-  # end
-  # def parse_break(stream, tokens, parser)
-  #   case stream.peek
-  #   when ';'
-  #     stream.next
-  #     stream.feed *[OPER_END, '$', '$']
-  #     :retry
-  #   when ','
-  #     stream.next
-  #     stream.feed *[OPER_END, '$']
-  #     :retry
-  #   else
-  #     false
-  #   end
-  # end
-  # def parse(stream, tokens, parser)
-  #   parse_oper(stream, tokens, parser) ||
-  #   parse_break(stream, tokens, parser)
-  # end
 
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

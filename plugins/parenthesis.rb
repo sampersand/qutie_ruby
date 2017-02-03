@@ -12,7 +12,7 @@ module Parenthesis
   end
 
   def handle(token, stream, universe, parser)
-    container = universe.to_globals
+    container = universe.knowns_only
     start_paren = token # is first paren
     parens = 1
     catch(:EOF) {

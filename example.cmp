@@ -1,9 +1,13 @@
-add = { # (a, b)
-  res = a? + b?;
-  if(res?){
-    res?
-  } else {
-    add? @$ (a = a? + 1, b = b? + 1)!
-  }$
-};
+# add = { # (a, b)
+#   res = a? + b?;
+#   if(res?){
+#     res?
+#   } else {
+#     res? + 3
+#   }$
+# };
 # add? @$ (a=0, b=0)!
+
+a = b = 2;
+3=6;
+# 5? + 3?
