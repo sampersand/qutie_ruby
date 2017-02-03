@@ -25,7 +25,7 @@ text = <<End
 #\\#foo?@(a=1,b=2);
 #'abc'
 #3
-2+3*4
+2+3*4,
 End
 
 res = parser.process(text)

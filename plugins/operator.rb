@@ -1,4 +1,5 @@
 module Operator
+  
   module_function
   OPERATOR_FUNCTIONS = {
     '**' => proc { |l, r| l ** r},
