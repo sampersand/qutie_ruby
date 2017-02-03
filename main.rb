@@ -29,7 +29,7 @@ res = parser.process(text)
 require 'pp'
 
 # p res
-p res.stack
+puts res.stack
 
 
 

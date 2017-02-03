@@ -43,9 +43,21 @@ module Functions
     universe << if_false
   end
 
-  def handle_disp(universe, parser)
-    # universe << parser.parse_all(universe.pop.clone, universe.to_globals)
+  def handle_disp(stream, universe, parser)
+    to_print = parser.parse(stream, universe)
+
+    if to_print[1] == Parenthesis
+      to_print_univ = universe.to_globals
+      to_print[1].handle(to_print[0], stream, to_print_univ, parser)
+      to_print = to_print_univ.stack.pop
+      raise unless to_print_univ.stack.empty?
+      to_print = parser.parse_all(to_print.clone, universe.knowns_only)
+    end
+    endl = to_print.get('end') || "\n"
+    sep  = to_print.get('sep') || " "
+    print to_print.stack.collect(&:to_s).join(sep) + endl
   end
+
 
   def handle_while(universe, parser)
     # handle_eval_univ(universe, parser)
@@ -62,7 +74,7 @@ module Functions
     when FUNCITONS[:if]
       handle_if(stream, universe, parser)
     when FUNCITONS[:disp]
-      handle_disp(universe, parser)
+      handle_disp(stream, universe, parser)
     when FUNCITONS[:while]
       handle_while(universe, parser)
     else raise "Unknown function `#{token}`"

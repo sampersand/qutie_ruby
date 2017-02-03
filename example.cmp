@@ -1,6 +1,1 @@
-a=3;
-if(not a?){
-   'true'
-}else{
-   'false'
-}$
+disp('foo', end = 'a\nb\n';);
