@@ -29,12 +29,6 @@ module Operator
   }
   UNARY_OPERS = {
     'not' => proc { |o| !o },
-    'clone' => proc { |o|
-      case o
-      when true, false, nil, Numeric then o 
-      else o.clone
-      end
-    },
   }
 
   OPER_ENDS = [';', ',']
@@ -47,7 +41,6 @@ module Operator
       when 'or' then 25
       when 'and' then 24
       when 'not' then 23
-      when 'clone' then 22
       when '==', '<>', '<=', '>=', '<', '>' then 20
       when '+', '-' then 12
       when '*', '/', '%' then 11

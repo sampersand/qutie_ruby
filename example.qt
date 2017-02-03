@@ -1,0 +1,25 @@
+Car = {
+   wheels = 4.3;
+   maker = 'honda?';
+   drive = {
+      disp(`vroom \n vroom\!\a\\ab\\'`);
+   };
+   init = {
+      if(true and false not 1 clone){
+         this;
+      }
+      disp(Car?);
+   }
+};
+/*
+aaa
+*/
+//a
+true
+True
+false
+False
+#aaaa
+
+car = Car? @ (), : init
+a = [1,]

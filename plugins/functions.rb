@@ -5,6 +5,7 @@ module Functions
     if: 'if',
     disp: 'disp',
     while: 'while',
+    clone: 'clone',
   }
 
   def handle_if(stream, universe, parser)
@@ -75,6 +76,25 @@ module Functions
     end
   end
 
+  def handle_clone(stream, universe, parser)
+    to_clone = parser.parse(stream, universe)
+      raise unless to_clone[1] == Parenthesis
+      cond_univ = universe.to_globals
+      to_clone[1].handle(to_clone[0], stream, cond_univ, parser)
+      to_clone = cond_univ.stack.pop
+      raise unless cond_univ.stack.empty?
+    to_clone = parser.parse_all(to_clone, universe.knowns_only)
+    raise unless to_clone.stack.length == 1
+    to_clone = to_clone.stack.pop
+    universe <<(case to_clone
+                when true, false, nil, Numeric then to_clone
+                else to_clone.clone
+                end)
+    # while(parser.parse_all(cond, universe.knowns_only).stack.pop)
+    #   parser.parse_all(body, universe.knowns_only)
+    # end
+  end
+
   def parse(stream, _, _)
     res = FUNCITONS.find{ |_, sym| sym == stream.peek(sym.length) && stream.next(sym.length) }
     res and res[-1]
@@ -88,6 +108,8 @@ module Functions
       handle_disp(stream, universe, parser)
     when FUNCITONS[:while]
       handle_while(stream, universe, parser)
+    when FUNCITONS[:clone]
+      handle_clone(stream, universe, parser)
     else raise "Unknown function `#{token}`"
     end
   end

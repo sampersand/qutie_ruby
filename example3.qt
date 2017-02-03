@@ -1,0 +1,46 @@
+foo = {a? + b?};
+disp(clone(foo? @$ (a=2, b=3)!));
+
+# arr = [1, 2, 3]!;
+# //---
+# hashmap = {
+#    a=3;
+#    b=4;
+#    c=5;
+# }!;
+
+# bar = {
+#    a? + b? - c?
+# };
+
+# bar? @$ hashmap?
+# a?
+
+# //---
+# a?
+# are_diff?
+# is_pythag = {
+#    a_squared = (a? ** 2)$;
+#    b_squared = (b? ** 2)$;
+#    c_squared = (c? ** 2)$;
+#    are_diff = a_squared? + b_squared? - c_squared?;
+#    if(are_diff?){
+#       'false'
+#    } else {
+#       'true'
+#    }$
+# };
+
+# is_pythag? @$ (a=4, b=4, c=5)!
+
+
+
+
+
+
+
+
+
+
+
+
