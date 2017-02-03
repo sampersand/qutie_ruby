@@ -52,6 +52,9 @@ class Universe
       @stack.push val
     end
     alias :<< :push
+    def pop
+      @stack.pop
+    end
 
 end
 
