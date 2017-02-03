@@ -21,11 +21,7 @@ parser.add_plugin Keyword
 parser.add_plugin Escape
 
 text = <<End
-# 2*3+4
-# 2+3*4
-# abc = 23 * 34 + 45;
-# (2+{3-44})*4
-a=(3*9)$;
+(2+{3-44}$)$*4
 a=(3*9)$;
 a?
 End
