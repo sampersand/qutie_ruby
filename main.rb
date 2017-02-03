@@ -8,6 +8,8 @@ require_relative 'plugins/comment'
 require_relative 'plugins/text'
 require_relative 'plugins/keyword'
 require_relative 'plugins/escape'
+require_relative 'plugins/functions'
+require_relative 'plugins/boolean'
 
 parser = Parser.new
 parser.add_plugin Whitespace
@@ -19,7 +21,8 @@ parser.add_plugin Comment
 parser.add_plugin Text
 parser.add_plugin Keyword
 parser.add_plugin Escape
-
+parser.add_plugin Functions
+parser.add_plugin Boolean
 text = open('./example.cmp', "r").read
 
 res = parser.process(text)

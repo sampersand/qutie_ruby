@@ -27,13 +27,10 @@ module Keyword
 
   def handle(token, stream, universe, parser)
     case token
-    when KEYWORDS[:get_known]
-      handle_get_known(universe)
-    when KEYWORDS[:eval_univ]
-      handle_eval_univ(universe, parser)
-    when KEYWORDS[:pop_lastv]
-      handle_pop_lastv(universe, parser)
-    else raise "Unknown keyword #{token}"
+    when KEYWORDS[:get_known] then handle_get_known(universe)
+    when KEYWORDS[:eval_univ] then handle_eval_univ(universe, parser)
+    when KEYWORDS[:pop_lastv] then handle_pop_lastv(universe, parser)
+    else raise "Unknown keyword `#{token}`"
     end
   end
 

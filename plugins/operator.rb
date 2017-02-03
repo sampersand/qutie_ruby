@@ -12,8 +12,8 @@ module Operator
       parser.parse_all(func.clone, args.to_globals).stack.last
      },
     '@'  => proc { |func, args, universe, parser|
-      func or raise "Invalid func #{func}"
-      args or raise "Invalid args #{args}"
+      func or raise "Invalid func `#{func}`"
+      args or raise "Invalid args `#{args}`"
       parser.parse_all(func.clone, args.to_globals)
       },
   }
