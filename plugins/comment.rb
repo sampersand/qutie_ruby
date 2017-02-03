@@ -1,15 +1,18 @@
 module Comment
   module_function
 
-  def parse_one_line(stream, tokens, parser)
+  def parse_single(stream)
     return unless stream.peek == '#' || stream.peek(2) == '//'
-    until stream.next == "\n"; end
-    true
+    stream.next until stream.peek == "\n"
+    :retry
   end
-  def parse_multi_line(stream, tokens, parser)
+  def parse_multi(stream)
+    return unless stream.peek(2) == '/*'
+    stream.next until stream.peek(2) == "*/" # this will fail inside strings, but that's ok C does as well.
+    :retry
   end
 
-  def parse(stream, tokens, parser)
-    (parse_one_line(stream, tokens, parser) || parse_multi_line(stream, tokens, parser)) && :retry
+  def parse(stream, _, _)
+    parse_single(stream) || parse_multi(stream)
   end
 end

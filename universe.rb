@@ -16,14 +16,18 @@ class Universe
     "<#{@stack} | #{@knowns}>"
   end
 
+  def to_s
+    "<[#{@stack.collect(&:to_s).join}] | {#{@knowns.collect{|k, v| "#{k}: #{v}"}.join(', ')}}>"
+  end
+
   def next(amnt=nil)
-    raise EOFError if @stack.empty?
+    throw :EOF if @stack.empty?
     return @stack.shift unless amnt
     @stack.shift(amnt).join
   end
 
   def peek(amnt=nil)
-    raise EOFError if @stack.empty?
+    throw :EOF if @stack.empty?
     return @stack.first unless amnt
     @stack.first(amnt).join
   end

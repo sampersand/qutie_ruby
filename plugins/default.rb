@@ -1,6 +1,9 @@
 module Default
   module_function
-  def next_token(stream, universe, parser)
+  def parse(stream, _, _)
     stream.next
+  end
+  def handle(token, _, universe, _)
+    universe << token
   end
 end

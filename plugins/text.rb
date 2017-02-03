@@ -2,16 +2,16 @@ module Text
   QUOTES = ["'", '"', '`']
 
   module_function
-  def parse(stream, tokens, parser)
+  def parse(stream, _, _)
     return unless QUOTES.include? stream.peek
-
-    start_quote = stream.next
+    quote = stream.next
     body = ''
+    body += stream.next(stream.peek == '\\' ? 2 : 1) until stream.peek == quote
+    raise unless stream.next == quote
+    body
+  end
+  def handle(token, _, universe, _)
+    universe << token
 
-    body += stream.next(stream.peek == '\\' ? 2 : 1) until stream.peek == start_quote
-
-    tokens.push start_quote + body + stream.next
-
-    true
   end
 end
