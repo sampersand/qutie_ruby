@@ -1,25 +1,23 @@
 Car = {
-   wheels = 4.3;
+   wheels = 4;
    maker = 'honda?';
-   drive = {
-      disp(`vroom \n vroom\!\a\\ab\\'`);
-   };
+   drive = { disp(`vroom vroom!`) };
+   # init_old = {clone(c?)};
    init = {
-      if(true and false not 1 clone){
-         this;
-      }
-      disp(Car?);
-   }
+      dup = (clone( Car? @ ()! ))$;
+      dup? :V= (wheels, 5)!;
+      dup?
+   };
+   1
 };
-/*
-aaa
-*/
-//a
-true
-True
-false
-False
-#aaaa
 
-car = Car? @ (), : init
-a = [1,]
+
+# car_eval = Car? @ ()!, : init_old;
+# init_func = car_eval? : init_old;
+# inited = (init_func? @$ (c = car_eval?)!)$;
+# disp(inited? : wheels)
+
+inited = (Car? @ ()!, : init, @$ ()!)$;
+disp(inited? : wheels)
+disp(inited? )
+disp(Car? @ ()!, : wheels)

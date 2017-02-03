@@ -1,0 +1,11 @@
+a=100;
+small=a? < 10;
+if(false){
+   disp('`A` is small!');
+} else {
+   if(a? > 100){
+      disp('`a` is large!');
+   } else {
+      disp('`a` is medium!');
+   }
+}

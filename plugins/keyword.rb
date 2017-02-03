@@ -4,7 +4,7 @@ module Keyword
   KEYWORDS = {
     get_known: '?',
     eval_univ: '!',
-    pop_lastv: '$', #not _technically_ a keyword
+    pop_lastv: '$', #not _technically_ a keyword, as it can be constructed from other symbols
   }
 
   def handle_get_known(universe)

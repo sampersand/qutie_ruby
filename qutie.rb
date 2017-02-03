@@ -29,7 +29,8 @@ text = open(file, 'r').read
 res = parser.process(text)
 require 'pp'
 
-puts res.stack
+p '----[end]----'
+# res.stack.each_with_index{ |i,j| puts "\t#{j}: #{i}"}
 
 
 

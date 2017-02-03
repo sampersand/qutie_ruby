@@ -21,10 +21,11 @@ class Universe
     end
 
     def to_s
-      stack_s = @stack.collect(&:to_s).join
+      stack_s = @stack.collect(&:to_s).join(', ')
       locals_s = @locals.collect{|k, v| "#{k}: #{v}"}.join(', ')
-      globals_s = @globals.collect{|k, v| "#{k}: #{v}"}.join(', ')
-      "<[#{stack_s}] | {#{locals_s}} | {#{globals_s}}>"
+      # globals_s = @globals.collect{|k, v| "#{k}: #{v}"}.join(', ')
+      globals_s = @globals.length.to_s#collect{|k, v| "#{k}: #{v}"}.join(', ')
+      "< [#{stack_s}]|{#{locals_s}}|{#{globals_s}} >"
     end
 
   # misc

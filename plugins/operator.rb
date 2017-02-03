@@ -19,8 +19,14 @@ module Operator
 
     '='  => proc { |l, r, u| u.locals[l] = r},
     '@$' => proc { |func, args, universe, parser| parser.parse_all(func, args.to_globals).stack.last },
-    '@'  => proc { |func, args, universe, parser|  parser.parse_all(func, args.to_globals) },
-    ':$'  => proc { |arg, pos, universe, parser| parser.parse_all(arg, universe.to_globals).stack[pos] },
+    '@'  => proc { |func, args, universe, parser| parser.parse_all(func, args.to_globals) },
+
+    ':V='  => proc { |arg, pos, universe, parser|
+      arg.locals[pos.stack[0]] = pos.stack[1]
+      # res.nil?  && pos.is_a?(Integer) ? arg.stack[pos] : res
+    },
+
+    ':S'  => proc { |arg, pos, universe, parser| parser.parse_all(arg, universe.to_globals).stack[pos] },
     ':V'  => proc { |arg, pos, universe, parser| parser.parse_all(arg, universe.to_globals).get(pos) },
     ':'  => proc { |arg, pos, universe, parser|
       res = arg.get(pos)
@@ -45,8 +51,8 @@ module Operator
       when '+', '-' then 12
       when '*', '/', '%' then 11
       when '**', '^' then 10
-      when '@', '@$' then 7
-      when ':', ':S', ':V' then 5
+      when '@$', '@' then 7
+      when ':', ':S', ':V', ':=', ':S=', ':V=' then 5
       when  '$', '!', '?' then 1
       else raise "Unknown operator #{token}"
       end
@@ -75,7 +81,7 @@ module Operator
 
     func = BINARY_OPERATORS[token]
     lhs = universe.stack.pop
-    rhs = universe.class.new
+    rhs = universe.to_globals
     catch(:EOF) {
       until stream.stack.empty?
         next_token = parser.parse(stream, rhs)
@@ -97,7 +103,7 @@ module Operator
         puts("[Error] No rhs for operator `#{token}` #{rhs}")
         exit(1)
       end
-      warn("[Warning] ambiguous rhs for operator `#{token}` #{rhs}. Using `#{rhs.stack.first}` ")
+      warn("[Warning] ambiguous rhs for operator `#{token}` w/ lhs `#{lhs}`:  `#{rhs}`. Using `#{rhs.stack.first}` ")
     end
     universe << func.call(lhs, rhs.stack.first, universe, parser)
   end

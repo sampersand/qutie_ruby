@@ -1,10 +1,10 @@
 module Text
   QUOTES = ["'", '"', '`']
   REPLACEMENTS = { #
-    /(?<![\\])\\n/ => "\n",
-    /(?<![\\])\\t/ => "\t",
-    /(?<![\\])\\r/ => "\r",
-    /(?<![\\])\\f/ => "\f",
+    'n' => "\n",
+    't' => "\t",
+    'r' => "\r",
+    'f' => "\f",
   }
   module_function
   def parse(stream, _, _)
@@ -12,9 +12,15 @@ module Text
     quote = stream.next
     body = ''
     catch(:EOF) {
-      body += stream.next(stream.peek == '\\' ? 2 : 1) until stream.peek == quote
+      until stream.peek == quote
+        body +=(if stream.peek == '\\'
+                  stream.next # pop the \
+                  REPLACEMENTS.include?(stream.peek) ? REPLACEMENTS[stream.next] : stream.next
+                else
+                  stream.next
+                end)
+      end
       raise unless stream.next == quote
-      REPLACEMENTS.each{ |k, v| body.gsub!(k, v) }
       return body
     }
     raise "No end quote found"
