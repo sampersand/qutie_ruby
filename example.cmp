@@ -1,9 +1,9 @@
-/*a=0;
-while(a? < 5){
-   disp(a?);
-   a = a? + 1;
-}*/
-
-arr=[1,2,3, 0=4];
-
-disp( arr? :V 0 );
+car = {
+   1,
+   wheels = 4;
+   maker = 'honda?';
+   drive = {
+      disp('vroom vroom!');
+   };
+};
+evald=car? @ (), : drive @ ();

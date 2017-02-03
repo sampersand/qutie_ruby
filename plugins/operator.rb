@@ -23,7 +23,7 @@ module Operator
     ':S'  => proc { |arg, pos, universe, parser| parser.parse_all(arg, universe.to_globals).stack[pos] },
     ':V'  => proc { |arg, pos, universe, parser| parser.parse_all(arg, universe.to_globals).get(pos) },
     ':'  => proc { |arg, pos, universe, parser|
-      arg = parser.parse_all(arg, universe.to_globals);
+      # arg = parser.parse_all(arg, universe.to_globals);
       res = arg.get(pos)
       res.nil?  && pos.is_a?(Integer) ? arg.stack[pos] : res
     },
