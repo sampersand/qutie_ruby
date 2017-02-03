@@ -64,6 +64,8 @@ module Operator
         if priority(token, Operator) < priority(*next_token)
           stream.feed(next_token[0])
           break
+        elsif next_token[1] == Parenthesis #hacky
+          next_token[1].handle(next_token[0], stream, rhs, parser)
         else
           rhs << next_token[0]
         end
