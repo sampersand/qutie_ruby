@@ -1,5 +1,5 @@
 a=3;
-if(a? or 0){
+if(not a?){
    'true'
 }else{
    'false'

@@ -1,6 +1,6 @@
 module Operator
   module_function
-  OPERATORS = { # order matters!
+  BINARY_OPERATORS = { # order matters!
     '**' => proc { |l, r| l ** r},
     '*'  => proc { |l, r| l *  r},
     '/'  => proc { |l, r| l /  r},
@@ -28,8 +28,11 @@ module Operator
       args or raise "Invalid args `#{args}`"
       parser.parse_all(func.clone, args.to_globals)
     },
-
   }
+  UNARY_OPERS = {
+    'not' => proc { |o| !o },
+  }
+
   OPER_ENDS = [';', ',']
   def priority(token, plugin)
     case
@@ -37,7 +40,9 @@ module Operator
       case token
       when *OPER_ENDS then 40
       when '=' then 30
-      when 'or', 'and' then 25
+      when 'or' then 25
+      when 'and' then 24
+      when 'not' then 23
       when '==', '<>', '<=', '>=', '<', '>' then 20
       when '+', '-' then 12
       when '*', '/', '%' then 11
@@ -49,8 +54,12 @@ module Operator
     else 0
     end
   end
+
   def parse(stream, _, _)
-    OPERATORS.keys.each do |oper|
+    BINARY_OPERATORS.keys.each do |oper|
+      return stream.next(oper.length) if stream.peek(oper.length) == oper
+    end
+    UNARY_OPERS.keys.each do |oper|
       return stream.next(oper.length) if stream.peek(oper.length) == oper
     end
     OPER_ENDS.each do |oper_end|
@@ -59,17 +68,13 @@ module Operator
     nil
   end
 
-  def handle_operends(token, universe)
-    case token
-    when "\n", ',' then nil
-    when ';' then universe.stack.pop
-    end
-    
+  def handle_oper_end(token, universe)
+    universe.stack.pop if token == ';'
   end
-  def handle(token, stream, universe, parser)
-    return handle_operends(token, universe) if OPER_ENDS.include?(token)
 
-    func = OPERATORS[token]
+  def handle_binary_oper(token, stream, universe, parser)
+
+    func = BINARY_OPERATORS[token]
     lhs = universe.stack.pop
     rhs = universe.class.new
     catch(:EOF) {
@@ -96,6 +101,40 @@ module Operator
       warn("[Warning] ambiguous rhs for operator `#{token}` #{rhs}. Using `#{rhs.stack.first}` ")
     end
     universe << func.call(lhs, rhs.stack.first, universe, parser)
+  end
+
+  def handle_unary_oper(token, stream, universe, parser)
+    func = UNARY_OPERS[token]
+    rhs = universe.class.new
+    catch(:EOF) {
+      until stream.stack.empty?
+        next_token = parser.parse(stream, rhs)
+        if priority(token, Operator) < priority(*next_token)
+          stream.feed(next_token[0])
+          break
+        elsif next_token[1] == Parenthesis #hacky
+          next_token[1].handle(next_token[0], stream, rhs, parser)
+        else
+          rhs << next_token[0]
+        end
+      end
+    }
+    rhs = parser.parse_all(rhs, universe.to_globals)
+  
+    unless rhs.stack.length == 1
+      if rhs.stack.empty?
+        puts("[Error] No rhs for operator `#{token}` #{rhs}")
+        exit(1)
+      end
+      warn("[Warning] ambiguous rhs for operator `#{token}` #{rhs}. Using `#{rhs.stack.first}` ")
+    end
+    universe << func.call(rhs.stack.first, universe, parser)
+  end
+
+  def handle(token, stream, universe, parser)
+    return handle_oper_end(token, universe) if OPER_ENDS.include?(token)
+    return handle_unary_oper(token, stream, universe, parser) if UNARY_OPERS.include?(token)
+    handle_binary_oper(token, stream, universe, parser)
   end
 
 end
