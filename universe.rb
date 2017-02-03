@@ -15,11 +15,14 @@ class Universe
   end
 
   # repr
-    def inspect
-      # "<#{@stack} | #{@locals} | #{@globals}>"
+    def inspect        
       "<#{@stack},#{@locals}>"
     end
 
+    def __str(stream, universe, parser)
+      return to_s unless @locals.include?('__str')
+      parser.parse_all(@locals['__str'], universe.to_globals).stack.pop
+    end
     def to_s
       stack_s = @stack.collect(&:to_s).join(', ')
       locals_s = @locals.collect{|k, v| "#{k}: #{v}"}.join(', ')

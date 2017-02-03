@@ -9,13 +9,23 @@ Car = {
          disp(`vroom vroom!`);
       }
    };
-   __init__ = {
+   __init = {
       self?[wheels] = num_wheels?; // pre-process :P
+   };
+   __str = {
+      "I'm a " + self?.wheels
+      'a'
    };
 };
 
 car = new Car?(num_wheels = 2);
-disp(car? : wheels);
-car? : drive, @ ();
+disp(car?.wheels);
+disp(car?);
+dr=car?.drive;
+dr?();
 car?.drive(dist=3);
-disp(Car? @ ()!, : wheels)
+# disp(Car? @ ()!, . wheels)
+
+
+
+

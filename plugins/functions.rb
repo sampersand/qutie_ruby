@@ -39,7 +39,9 @@ module Functions
     to_print = next_argument(stream, universe, parser, do_eval: true, do_pop: false)
     endl = to_print.get('end') || "\n"
     sep  = to_print.get('sep') || " "
-    print to_print.stack.collect(&:to_s).join(sep) + endl
+    print(to_print.stack.collect do |e|
+      e.respond_to?(:__str) ? e.__str(stream, universe, parser) : e.to_s
+    end.join(sep) + endl)
   end
 
 

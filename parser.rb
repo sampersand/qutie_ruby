@@ -39,11 +39,11 @@ class Parser
 
   def pre_process!(text)
     text.gsub!(/
-          new\s+
-          ([a-zA-Z_][a-zA-Z_0-9]+\?)
-          [(]
+        new\s+
+        ([a-zA-Z_][a-zA-Z_0-9]+\?)
+        [(]
           ((?:.(?!=[({\[];\n))*)
-          [)];/x, '(self=\1@();self?:__init__,@(\2,self=self?)!,self?)$;') # replace 'new cls?()'
+        [)];/x, '(self=\1@();self?.__init,@(\2,self=self?)!,self?)$;') # replace 'new cls?()'
     text.gsub!(/\b
         ([a-zA-Z_][a-zA-Z_0-9]*\?)\s*
         ([\[])\s*
@@ -51,15 +51,25 @@ class Parser
         ([\]])\s*
         =
         (.*?)\s*
-        ;\s*(?=(?:(?:\/\/|\#|\/\*).*)?$) /x,'\1:=\2\3,\5\4!;') # replace 'x[y]=z'
+        ;\s*(?=(?:(?:\/\/|\#|\/\*).*)?$) /x,'\1.=\2\3,\5\4!;') # replace 'x[y]=z'
 
     text.gsub!(/\b
         ([a-zA-Z_][a-zA-Z_0-9]*\?)\s*
         \.
         ([a-zA-Z_][a-zA-Z_0-9]*)\s*
-        ([(])\s*
-         (.*)
-        ([)])\s*/x,'\1:\2,@\3\4\5!') # replace 'x.y()'
+        ([(])
+          (.*)
+        ([)])/x,'\1.\2,@\3\4\5!') # replace 'x.y()'
+
+    text.gsub!(/\b
+        ([a-zA-Z_][a-zA-Z_0-9]*\?)#\s* <-- dont use whitespace, thats how we id it.
+        ([(])
+          (.*)
+        ([)])
+          \s*/x,'\1@\2\3\4!,') # replace 'x.y()'
+
+    # puts text
+    # puts '---'
   end
 end
 
