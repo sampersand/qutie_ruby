@@ -1,29 +1,21 @@
-arr = [1, 2, 3]!; dup = (clone(arr?))$;
+Car = {
+   wheels = 4;
+   maker = 'honda?';
 
-disp(arr?, dup?); arr? :S= (0, 3)!;
-disp(arr?, dup?); disp('---');
-map = {a=1; b=2; c=3;}!; dup = (clone(map?))$;
-disp(map?, dup?); map? :V= (a, 3)!;
-disp(map?, dup?); disp('---');
+   drive = {
+      if(dist?){
+         disp(`Drove`, dist?, 'miles!');
+      } else {
+         disp(`vroom vroom!`);
+      }
+   };
+   __init__ = {
+      self?[wheels] = num_wheels?; // pre-process :P
+   };
+};
 
-ambig = (1, 2, a=3;)!; dup = (clone(map?))$;
-
-disp(ambig?, dup?); ambig? := (b, 4)!;
-disp(ambig?, dup?); ambig? := (0, 5)!;
-disp(ambig?, dup?); disp('---');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+car = new Car?(num_wheels = 2);
+disp(car? : wheels);
+car? : drive, @ ();
+car?.drive(dist=3);
+disp(Car? @ ()!, : wheels)

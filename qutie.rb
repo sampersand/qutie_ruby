@@ -26,6 +26,7 @@ parser.add_plugin Boolean
 
 file = ARGV[0] or fail "No file!"
 text = open(file, 'r').read
+parser.pre_process!(text)
 res = parser.process(text)
 require 'pp'
 

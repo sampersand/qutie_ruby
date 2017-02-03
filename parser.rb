@@ -37,12 +37,31 @@ class Parser
     end
   end
 
+  def pre_process!(text)
+    text.gsub!(/
+          new\s+
+          ([a-zA-Z_][a-zA-Z_0-9]+\?)
+          [(]
+          ((?:.(?!=[({\[];\n))*)
+          [)];/x, '(self=\1@();self?:__init__,@(\2,self=self?)!,self?)$;') # replace 'new cls?()'
+    text.gsub!(/\b
+        ([a-zA-Z_][a-zA-Z_0-9]*\?)\s*
+        ([\[])\s*
+          ([a-zA-Z_][a-zA-Z_0-9]*)\s*
+        ([\]])\s*
+        =
+        (.*?)\s*
+        ;\s*(?=(?:(?:\/\/|\#|\/\*).*)?$) /x,'\1:=\2\3,\5\4!;') # replace 'x[y]=z'
+
+    text.gsub!(/\b
+        ([a-zA-Z_][a-zA-Z_0-9]*\?)\s*
+        \.
+        ([a-zA-Z_][a-zA-Z_0-9]*)\s*
+        ([(])\s*
+         (.*)
+        ([)])\s*/x,'\1:\2,@\3\4\5!') # replace 'x.y()'
+  end
 end
-
-
-
-
-
 
 
 
