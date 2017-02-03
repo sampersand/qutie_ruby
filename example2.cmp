@@ -3,7 +3,6 @@ foo = {
 };
 foo? @$ (a=2, b=3)
 
-//--
 arr = [1, 2, 3]!;
 //---
 hashmap = {
@@ -17,10 +16,11 @@ bar = {
 };
 
 bar? @$ hashmap?
-
+a?
 
 //---
-
+a?
+are_diff?
 is_pythag = {
    a_squared = (a? ** 2)$;
    b_squared = (b? ** 2)$;

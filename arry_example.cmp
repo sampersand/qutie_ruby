@@ -1,8 +1,9 @@
-/*a=0;
+a=0;
 while(a? < 5){
    disp(a?);
    a = a? + 1;
-}*/
+}
+
 
 arr  = [ 1, 2, 3 ];
 hash = { a=3; b=4, c=5 };
@@ -11,5 +12,7 @@ disp( hash? : 'a' ); #=> prints out 'a'
 
 ambiguous = (5 9 0=2;);
 disp( ambiguous? :  0 ); #=> prints out 2
-disp( ambiguous? :S 0 ); #=> prints out 5
+disp( ambiguous? :$ 0 ); #=> prints out 5
 disp( ambiguous? :V 0 ); #=> prints out 2
+
+a = [1,2,3]

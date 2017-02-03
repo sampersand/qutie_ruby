@@ -12,7 +12,7 @@ module Boolean
   end
 
   def handle(token, stream, universe, parser)
-    universe << (case token
+    universe << (case token.downcase
                  when BOOELEANS[:true] then true
                  when BOOELEANS[:false] then false
                  when BOOELEANS[:nil] then nil
