@@ -1,5 +1,4 @@
-require_relative 'stream'
-require_relative 'tokens'
+require_relative 'universe'
 require_relative 'plugins/default'
 
 class Parser
@@ -14,29 +13,55 @@ class Parser
   end
 
   def process(inp)
-    inp += "\n"
-    stream = Stream::from inp
-    tokens = Tokens.new
-    parse stream, tokens
-  end
-  def parse(stream, tokens)
-    self.class.parse stream, tokens, self
-    tokens
+    stream = Universe.from_string inp
+    universe = Universe.new
+    parse stream, universe
   end
 
-  def next_token(stream, tokens)
-    return if stream.empty?
-    @plugins.each do |pl|
-      res = pl.parse(stream, tokens, self)
-      return next_token(stream, tokens) if res == :retry
-      return tokens if res
+  def parse(stream, universe)
+    until stream.stack.empty?
+      token = next_token stream, universe 
+      eval_token token, stream, universe
+    end
+    universe
+  end
+
+  def next_token(stream, universe)
+    self.class.next_token(stream, universe, self)
+  end
+
+  def self.next_token(stream, universe, parser)
+    parser.plugins.find{ |pl|
+      res = pl.next_token(stream, universe, self)
+      return (res == :retry ? next_token(stream, universe, parser) : res) if res
+    }
+  end
+
+  def eval_token(token, stream, universe)
+    parser.plugins.each do |pl|
+      res = pl.eval_token(stream, universe, self)
+      return (res == :retry ? next_token(stream, universe, parser) : res) if res
     end
   end
 
-  def self.parse(stream, tokens, parser)
-    parser.next_token(stream, tokens) until stream.empty?
-    true
-  end
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

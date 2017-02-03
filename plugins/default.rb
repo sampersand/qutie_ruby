@@ -1,7 +1,6 @@
 module Default
   module_function
-  def parse(stream, tokens, parser)
-    tokens.push stream.next
-    true
+  def next_token(stream, universe, parser)
+    stream.next
   end
 end
