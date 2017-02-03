@@ -1,38 +1,48 @@
 module Operator
   module_function
-  OPERATORS = {
+  OPERATORS = { # order matters!
     '**' => proc { |l, r| l ** r},
     '*'  => proc { |l, r| l *  r},
     '/'  => proc { |l, r| l /  r},
     '%'  => proc { |l, r| l %  r},
     '+'  => proc { |l, r| l +  r},
     '-'  => proc { |l, r| l -  r},
+    '==' => proc { |l, r| l == r },
+    '<>' => proc { |l, r| l != r },
+    '<=' => proc { |l, r| l <= r },
+    '>=' => proc { |l, r| l >= r },
+    '<'  => proc { |l, r| l <  r },
+    '>'  => proc { |l, r| l >  r },
+
+    'or'  => proc { |l, r| l || r },
+    'and' => proc { |l, r| l && r },
+
     '='  => proc { |l, r, u| u.locals[l] = r},
     '@$'  => proc { |func, args, universe, parser| 
       func or raise "Invalid func `#{func}`"
-      # args = parser.parse_all(args, universe.to_globals)
       args or raise "Invalid args `#{args}`"
       parser.parse_all(func.clone, args.to_globals).stack.last
-     },
+    },
     '@'  => proc { |func, args, universe, parser|
       func or raise "Invalid func `#{func}`"
-      # args = parser.parse_all(args, universe.to_globals)
       args or raise "Invalid args `#{args}`"
       parser.parse_all(func.clone, args.to_globals)
-      },
+    },
+
   }
   OPER_ENDS = [';', ',']
   def priority(token, plugin)
     case
     when plugin == Operator
       case token
-      when *OPER_ENDS then 100
+      when *OPER_ENDS then 40
       when '=' then 30
-      when '+', '-' then 19
-      when '*', '/', '%' then 18
-      when '**', '^' then 17
+      when 'or', 'and' then 25
+      when '==', '<>', '<=', '>=', '<', '>' then 20
+      when '+', '-' then 12
+      when '*', '/', '%' then 11
+      when '**', '^' then 10
       when '@', '@$' then 5
-      when ':', ':=' then 4
       when  '$', '!', '?' then 1
       else raise "Unknown operator #{token}"
       end
