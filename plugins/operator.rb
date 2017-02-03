@@ -20,7 +20,7 @@ module Operator
     '='  => proc { |l, r, u| u.locals[l] = r},
     '@$' => proc { |func, args, universe, parser| parser.parse_all(func, args.to_globals).stack.last },
     '@'  => proc { |func, args, universe, parser|  parser.parse_all(func, args.to_globals) },
-    ':S'  => proc { |arg, pos, universe, parser| parser.parse_all(arg, universe.to_globals).stack[pos] },
+    ':$'  => proc { |arg, pos, universe, parser| parser.parse_all(arg, universe.to_globals).stack[pos] },
     ':V'  => proc { |arg, pos, universe, parser| parser.parse_all(arg, universe.to_globals).get(pos) },
     ':'  => proc { |arg, pos, universe, parser|
       # arg = parser.parse_all(arg, universe.to_globals);

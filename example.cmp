@@ -1,9 +1,10 @@
-car = {
-   1,
+Car = {
    wheels = 4;
    maker = 'honda?';
    drive = {
       disp('vroom vroom!');
    };
+   init = {
+      
+   }
 };
-evald=car? @ (), : drive @ ();
