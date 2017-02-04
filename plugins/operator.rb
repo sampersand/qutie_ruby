@@ -26,8 +26,8 @@ module Operator
     '.='  => proc { |arg, pos, universe, parser| 
       BINARY_OPERATORS[pos.stack[0].is_a?(Numeric) ? '.S=' : '.V='].(arg, pos, universe, parser)
       },
-    '.S'  => proc { |arg, pos, universe, parser| parser.parse_all(arg, universe.to_globals).stack[pos] },
-    '.V'  => proc { |arg, pos, universe, parser| parser.parse_all(arg, universe.to_globals).get(pos) },
+    '.S'  => proc { |arg, pos, universe, parser| arg.stack[pos] },
+    '.V'  => proc { |arg, pos, universe, parser| arg.get(pos) },
     '.'  => proc { |arg, pos, universe, parser|
       res = arg.get(pos)
       res.nil?  && pos.is_a?(Integer) ? arg.stack[pos] : res

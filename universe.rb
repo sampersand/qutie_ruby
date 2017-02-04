@@ -19,9 +19,9 @@ class Universe
       "<#{@stack},#{@locals}>"
     end
 
-    def __str(stream, universe, parser)
-      return to_s unless @locals.include?('__str')
-      parser.parse_all(@locals['__str'], universe.to_globals).stack.pop
+    def __text(stream, universe, parser)
+      return to_s unless @locals.include?('__text')
+      parser.parse_all(@locals['__text'], universe.to_globals).stack.pop
     end
     def to_s
       stack_s = @stack.collect(&:to_s).join(', ')

@@ -7,6 +7,7 @@ module Functions
     while: 'while',
     clone: 'clone',
     exit: 'exit',
+    text: 'text',
   }
 
   def next_argument(stream, universe, parser, do_eval: false, do_crash: true, do_pop: true)
@@ -40,7 +41,7 @@ module Functions
     endl = to_print.get('end') || "\n"
     sep  = to_print.get('sep') || " "
     print(to_print.stack.collect do |e|
-      e.respond_to?(:__str) ? e.__str(stream, universe, parser) : e.to_s
+      e.respond_to?(:__text) ? e.__text(stream, universe, parser) : e.to_s
     end.join(sep) + endl)
   end
 
@@ -60,9 +61,17 @@ module Functions
                 when true, false, nil, Numeric then to_clone
                 else to_clone.clone
                 end)
-    # while(parser.parse_all(cond, universe.knowns_only).stack.pop)
-    #   parser.parse_all(body, universe.knowns_only)
-    # end
+  end
+
+  def handle_exit(stream, universe, parser)
+    exit_code = next_argument(stream, universe, parser, do_eval: true)
+    p stream, universe.globals.keys, parser
+    exit(exit_code || 0)
+  end
+
+  def handle_text(stream, universe, parser)
+    to_text = next_argument(stream, universe, parser, do_eval: true)
+    universe << (to_text.respond_to?(:__text) ? to_text.__text : to_text).to_s
   end
 
   def parse(stream, _, _)
@@ -80,6 +89,11 @@ module Functions
       handle_while(stream, universe, parser)
     when FUNCITONS[:clone]
       handle_clone(stream, universe, parser)
+    when FUNCITONS[:exit]
+      handle_exit(stream, universe, parser)
+    when FUNCITONS[:text]
+      handle_text(stream, universe, parser)
+
     else raise "Unknown function `#{token}`"
     end
   end
