@@ -10,21 +10,33 @@ Car = {
       }
    };
    __init = {
-      self?[wheels] = num_wheels?; // pre-process :P
+      # __self?[wheels] = num_wheels?; // pre-process :P
+      exit(2);
    };
    __text = {
+      "I'm a " + (text(__self?.wheels))$ + 'a'
       exit()
-      "I'm a " + (text(self?.wheels))$ + 'a'
    };
 };
 
-car = new Car?(num_wheels = 2);
-disp(car?.wheels)
-disp(car?);
-exit()
-dr=car?.drive;
-dr?();
-car?.drive(dist=3);
+
+i = Car? @ ();
+# i? .V= (__self,i?)!;
+i?;
+disp(i?)
+
+
+
+
+
+
+# disp(car?)
+# car = new Car?(num_wheels = 2);
+# disp(car?);
+# exit()
+# dr=car?.drive;
+# dr?();
+# car?.drive(dist=3);
 # disp(Car? @ ()!, . wheels)
 
 

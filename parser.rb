@@ -44,7 +44,8 @@ class Parser
         ([(]
           (?:.(?!=[({\[];\n))*
          [)]
-        );/x, '(self=\1@();self?.=(self,self?)!;self?.__init @ \2!;self?)$;') # replace 'new cls?()'
+        );/x, '(inst=\1@();inst?.V=(__self,inst?)!;inst?)$;') # replace 'new cls?()'
+        # );/x, '(inst=\1@();inst?.V=(__self,inst?)!;inst?.__init@\2!;inst?)$;') # replace 'new cls?()'
     text.gsub!(/\b
         ([a-zA-Z_][a-zA-Z_0-9]*\?)\s*
         ([\[])\s*

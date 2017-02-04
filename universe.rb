@@ -16,7 +16,7 @@ class Universe
 
   # repr
     def inspect        
-      "<#{@stack},#{@locals}>"
+      "<#{@stack},#{@locals},#{globals}>"
     end
 
     def __text(stream, universe, parser)
