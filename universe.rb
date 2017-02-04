@@ -19,14 +19,10 @@ class Universe
       "<#{@stack},#{@locals},#{globals}>"
     end
 
-    def __text(stream, universe, parser)
-      return to_s unless @locals.include?('__text')
-      parser.parse_all(@locals['__text'], universe.to_globals).stack.pop
-    end
     def to_s
       stack_s = @stack.collect(&:to_s).join(', ')
       locals_s = @locals.collect{|k, v| "#{k}: #{v}"}.join(', ')
-      # globals_s = @globals.collect{|k, v| "#{k}: #{v}"}.join(', ')
+      globals_s = @globals.collect{|k, v| "#{k}: #{v}"}.join(', ')
       globals_s = @globals.length.to_s#collect{|k, v| "#{k}: #{v}"}.join(', ')
       "< [#{stack_s}]|{#{locals_s}}|{#{globals_s}} >"
     end

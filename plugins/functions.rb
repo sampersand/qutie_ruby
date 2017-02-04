@@ -40,9 +40,7 @@ module Functions
     to_print = next_argument(stream, universe, parser, do_eval: true, do_pop: false)
     endl = to_print.get('end') || "\n"
     sep  = to_print.get('sep') || " "
-    print(to_print.stack.collect do |e|
-      e.respond_to?(:__text) ? e.__text(stream, universe, parser) : e.to_s
-    end.join(sep) + endl)
+    print(to_print.stack.collect(&:to_s).join(sep) + endl)
   end
 
 
@@ -65,13 +63,12 @@ module Functions
 
   def handle_exit(stream, universe, parser)
     exit_code = next_argument(stream, universe, parser, do_eval: true)
-    p stream, universe.globals.keys, parser
     exit(exit_code || 0)
   end
 
   def handle_text(stream, universe, parser)
     to_text = next_argument(stream, universe, parser, do_eval: true)
-    universe << (to_text.respond_to?(:__text) ? to_text.__text : to_text).to_s
+    universe << to_text.to_s
   end
 
   def parse(stream, _, _)
