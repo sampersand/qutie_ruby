@@ -85,7 +85,6 @@ module Operator
     catch(:EOF) {
       until stream.stack.empty?
         next_token = parser.parse(stream, rhs)
-        p next_token
         if priority(token, Operator) < priority(*next_token)
           stream.feed(next_token[0])
           break

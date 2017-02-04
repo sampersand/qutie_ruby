@@ -25,7 +25,7 @@ module Keyword
     universe << universe.pop.pop
   end
 
-  def parse(stream, _, _)
+  def parse(stream, u, _)
     res = KEYWORDS.find{ |_, sym| sym == stream.peek(sym.length) && stream.next(sym.length) }
     res and res[-1]
   end

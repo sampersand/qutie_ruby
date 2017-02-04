@@ -1,5 +1,5 @@
 Car = {
-   wheels = 4;
+   doors = 4;
    maker = 'honda?';
 
    drive = {
@@ -10,27 +10,11 @@ Car = {
       }
    };
    __init = {
-      __self?[wheels] = num_wheels?; // pre-process :P
-      exit(2);
+      __self?[maker] = new_maker?; // pre-process :P
    };
    __text = {
-      "I'm a " + __self?.maker;
-      "me"
+      "I'm a " + __self?.maker + ' with ' + (text(__self?.doors))$ + ' doors.'
    };
 };
-
-car = new Car?(num_wheels = 2);
-# disp(car?.wheels)
-'AEIOU'+'aa';
-txt = car?.__text @$ (__self = car?)!;
-disp( txt? );
-exit()
-
-dr=car?.drive;
-dr?();
-car?.drive(dist=3);
-# disp(Car? @ ()!, . wheels)
-
-
-
-
+car = new Car?(new_maker = 'toyota');
+disp( car?.__text{} );

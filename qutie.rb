@@ -30,7 +30,7 @@ parser.pre_process!(text)
 res = parser.process(text)
 require 'pp'
 
-p '----[end]----'
+pUTS '----[end]----'
 # res.stack.each_with_index{ |i,j| puts "\t#{j}: #{i}"}
 
 

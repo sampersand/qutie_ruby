@@ -1,16 +1,53 @@
+# Car = {
+#    wheels = 4;
+#    maker = 'honda?';
+#    drive = { disp(`vroom vroom!`) };
+#    init = {
+#       dup = (clone( Car? @ ()! ))$;
+#       dup? :V= (wheels, 5)!;
+#       dup?
+#    };
+#    1
+# };
+
+
+# inited = (Car? @ ()!, : init, @$ ()!)$;
+# disp(inited? : wheels)
+# disp(Car? @ ()!, : wheels)
+
 Car = {
    wheels = 4;
    maker = 'honda?';
-   drive = { disp(`vroom vroom!`) };
-   init = {
-      dup = (clone( Car? @ ()! ))$;
-      dup? :V= (wheels, 5)!;
-      dup?
+
+   drive = {
+      if(dist?){
+         disp(`Drove`, dist?, 'miles!');
+      } else {
+         disp(`vroom vroom!`);
+      }
    };
-   1
+   __init = {
+      __self?[wheels] = num_wheels?; // pre-process :P
+      exit(2);
+   };
+   __text = {
+      "I'm a " + __self?.maker;
+      "me"
+   };
 };
 
+car = new Car?(num_wheels = 2);
+# disp(car?.wheels)
+'AEIOU'+'aa';
+txt = car?.__text @$ (__self = car?)!;
+disp( txt? );
+exit()
 
-inited = (Car? @ ()!, : init, @$ ()!)$;
-disp(inited? : wheels)
-disp(Car? @ ()!, : wheels)
+dr=car?.drive;
+dr?();
+car?.drive(dist=3);
+# disp(Car? @ ()!, . wheels)
+
+
+
+

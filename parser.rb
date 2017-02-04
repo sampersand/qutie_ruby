@@ -44,7 +44,7 @@ class Parser
         [(]
           ((?:.(?!=[({\[];\n))*)
         [)]
-        ;/x, '(inst=\1@();inst?.__init=(__self=inst?;\2)!;inst?)$;') # replace 'new cls?()'
+        ;/x, '(inst=\1@();inst?.__init@(__self=inst?;\2)!;inst?)$;') # replace 'new cls?()'
         # );/x, '(inst=\1@();inst?.V=(__self,inst?)!;inst?.__init@\2!;inst?)$;') # replace 'new cls?()'
     text.gsub!(/\b
         ([a-zA-Z_][a-zA-Z_0-9]*\?)\s*
@@ -53,25 +53,18 @@ class Parser
         ([\]])\s*
         =
         (.*?)\s*
-        ;\s*(?=(?:(?:\/\/|\#|\/\*).*)?$) /x,'\1.=\2\3,\5\4!;') # replace 'x[y]=z'
+        ;\s*(?=(?:(?:\/\/|\#|\/\*).*)?$) /x,'\1.=\2\3,\5\4!;') # replace 'x[y]=z' with 'x.=(y,z)'
 
     text.gsub!(/\b
-        ([a-zA-Z_][a-zA-Z_0-9]*\?)\s*
+        ([a-zA-Z_][a-zA-Z_0-9]*\?)
         \.
-        ([a-zA-Z_][a-zA-Z_0-9]*)\s*
-        ([(])
+        ([a-zA-Z_][a-zA-Z_0-9]*)
+        ([{])
           (.*)
-        ([)])/x,'\1.\2,@\3\4\5!') # replace 'x.y()'
-
-    text.gsub!(/\b
-        ([a-zA-Z_][a-zA-Z_0-9]*\?)#\s* <-- dont use whitespace, thats how we id it.
-        ([(])
-          (.*)
-        ([)])
-          \s*/x,'\1@\2\3\4!,') # replace 'x.y()'
-
-    puts text
-    puts '---'
+        ([}])
+        \s*/x,'(\1.\2@\3__self=\1;\4\5!)$$') # replace 'x.y{z}' with '(x.y @{__self=x;z}!)$$'
+    # puts text
+    # puts '---'
   end
 end
 
