@@ -1,6 +1,28 @@
-# a=3;
-# disp? @ ('a');
-# a = clone? @ (a?);
-# disp? @ ( text? @$ (1) );
+# Car = {
+#    doors = 4;
 
-text? @ (1);
+#    __init = {};
+#    __text = { "doors: " + text? @ __self?.doors };
+# };
+# car = new Car?(new_maker = 'toyota');
+# disp? @ ( car?.__text() )!;
+# disp? @ ( text? @ car? )!;
+
+foo = {
+   a? + b?
+};
+# disp? @ ('a' + text? @ (foo?)! )!;
+disp? @ (1, 2, sep=', ';)!;
+
+
+
+
+
+
+
+
+
+
+
+
+

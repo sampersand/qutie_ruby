@@ -16,13 +16,13 @@ class Universe
 
   # repr
     def inspect        
-      "<#{@stack},#{@locals},#{globals}>"
+      "<#{@stack},{#{@locals.keys.to_s[1...-1]}},{#{globals.keys.to_s[1...-1]}}>"
     end
 
     def to_s
       stack_s = @stack.collect(&:to_s).join(', ')
       locals_s = @locals.collect{|k, v| "#{k}: #{v}"}.join(', ')
-      globals_s = @globals.collect{|k, v| "#{k}: #{v}"}.join(', ')
+      # globals_s = @globals.collect{|k, v| "#{k}: #{v}"}.join(', ')
       globals_s = @globals.length.to_s#collect{|k, v| "#{k}: #{v}"}.join(', ')
       "< [#{stack_s}]|{#{locals_s}}|{#{globals_s}} >"
     end

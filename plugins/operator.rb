@@ -134,10 +134,10 @@ module Operator
   
     unless rhs.stack.length == 1
       if rhs.stack.empty?
-        puts("[Error] No rhs for operator `#{token}` #{rhs}")
+        puts("[Error] No rhs for operator `#{token}` with lhs `#{lhs}` and rhs `#{rhs}`")
         exit(1)
       end
-      warn("[Warning] ambiguous rhs for operator `#{token}` #{rhs}. Using `#{rhs.stack.first}` ")
+      warn("[Warning] ambiguous rhs for operator `#{token}` with lhs `#{lhs}` and rhs `#{rhs}`. Using `#{rhs.stack.first}` ")
     end
     universe << func.call(rhs.stack.first, universe, parser)
   end
