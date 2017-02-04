@@ -1,13 +1,9 @@
-module Functions
+module KeywordFunctions
   module_function
 
-  FUNCITONS = {
+  FUNCTIONS = {
     if: 'if',
-    disp: 'disp',
     while: 'while',
-    clone: 'clone',
-    exit: 'exit',
-    text: 'text',
   }
 
   def next_argument(stream, universe, parser, do_eval: false, do_crash: true, do_pop: true)
@@ -36,14 +32,6 @@ module Functions
                        parser.parse_all(if_false, universe.knowns_only).stack.pop)
   end
 
-  def handle_disp(stream, universe, parser)
-    to_print = next_argument(stream, universe, parser, do_eval: true, do_pop: false)
-    endl = to_print.get('end') || "\n"
-    sep  = to_print.get('sep') || " "
-    print(to_print.stack.collect(&:to_s).join(sep) + endl)
-  end
-
-
   def handle_while(stream, universe, parser)
     cond = next_argument(stream, universe, parser)
     body = next_argument(stream, universe, parser)
@@ -53,45 +41,19 @@ module Functions
     end
   end
 
-  def handle_clone(stream, universe, parser)
-    to_clone = next_argument(stream, universe, parser, do_eval: true)
-    universe <<(case to_clone
-                when true, false, nil, Numeric then to_clone
-                else to_clone.clone
-                end)
-  end
-
-  def handle_exit(stream, universe, parser)
-    exit_code = next_argument(stream, universe, parser, do_eval: true)
-    exit(exit_code || 0)
-  end
-
-  def handle_text(stream, universe, parser)
-    to_text = next_argument(stream, universe, parser, do_eval: true)
-    universe << to_text.to_s
-  end
-
   def parse(stream, _, _)
-    res = FUNCITONS.find{ |_, sym| sym == stream.peek(sym.length) && stream.next(sym.length) }
+    res = FUNCTIONS.find{ |_, sym| sym == stream.peek(sym.length) && stream.next(sym.length) }
     res and res[-1]
   end
 
   def handle(token, stream, universe, parser)
     case token
-    when FUNCITONS[:if]
+    when FUNCTIONS[:if]
       handle_if(stream, universe, parser)
-    when FUNCITONS[:disp]
-      handle_disp(stream, universe, parser)
-    when FUNCITONS[:while]
+    when FUNCTIONS[:while]
       handle_while(stream, universe, parser)
-    when FUNCITONS[:clone]
-      handle_clone(stream, universe, parser)
-    when FUNCITONS[:exit]
-      handle_exit(stream, universe, parser)
-    when FUNCITONS[:text]
-      handle_text(stream, universe, parser)
 
-    else raise "Unknown function `#{token}`"
+    else raise "Unknown keyword_function `#{token}`"
     end
   end
 

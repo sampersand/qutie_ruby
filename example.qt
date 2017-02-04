@@ -1,20 +1,6 @@
-Car = {
-   doors = 4;
-   maker = 'honda?';
+# a=3;
+# disp? @ ('a');
+# a = clone? @ (a?);
+# disp? @ ( text? @$ (1) );
 
-   drive = {
-      if(dist?){
-         disp(`Drove`, dist?, 'miles!');
-      } else {
-         disp(`vroom vroom!`);
-      }
-   };
-   __init = {
-      __self?[maker] = new_maker?; // pre-process :P
-   };
-   __text = {
-      "I'm a " + __self?.maker + ' with ' + (text(__self?.doors))$ + ' doors.'
-   };
-};
-car = new Car?(new_maker = 'toyota');
-disp( car?.__text{} );
+text? @ (1);

@@ -19,7 +19,13 @@ module Operator
 
     '='  => proc { |l, r, u| u.locals[l] = r},
     '@$' => proc { |func, args, universe, parser| parser.parse_all(func, args.to_globals).stack.last },
-    '@'  => proc { |func, args, universe, parser| parser.parse_all(func, args.to_globals) },
+    '@'  => proc { |func, args, universe, parser|
+      if func.respond_to?(:call)
+        func.call(func, args, universe, parser)
+      else
+        parser.parse_all(func, args.to_globals)
+      end
+      },
 
     '.V='  => proc { |arg, pos, universe, parser| arg.locals[pos.stack[0]] = pos.stack[1] },
     '.S='  => proc { |arg, pos, universe, parser| arg.stack[pos.stack[0]] = pos.stack[1] },
