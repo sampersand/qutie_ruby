@@ -15,7 +15,7 @@
       end
     },
     'disp' => BuiltinFunciton.new{ |args, universe, parser|
-      p args
+      # p args
       endl = args.get('end') || "\n"
       sep  = args.get('sep') || " "
       to_print = args.stack.collect do |arg|
@@ -25,7 +25,8 @@
 
     },
     'stop' => BuiltinFunciton.new{ |args, universe, parser|
-      exit(args.respond_to?(:to_i) && args.to_i || args.respond_to?(:to_int) && args.to_int || 0)
+      exit_code = args.stack.last;
+      exit(exit_code || 0)
     },
     'text' => BuiltinFunciton.new{ |args, universe, parser|
       uni = universe.to_globals
