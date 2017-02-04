@@ -21,6 +21,7 @@ Car = {
 
 car = new Car?(num_wheels = 2);
 # disp(car?.wheels)
+'AEIOU'+'aa';
 txt = car?.__text @$ (__self = car?)!;
 disp( txt? );
 exit()
