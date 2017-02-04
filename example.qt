@@ -8,8 +8,5 @@
 # stop(0);
 # stop? @ (0);
 # stop? @ ( 1 );
-foo = {
-   a? + b?
-};
-
-foo? @ (a=3, b=4)!
+sepr = ', b';
+disp? @ (1, 2, sep = sepr?;)!
