@@ -18,13 +18,12 @@
         args.stack[switch_on]
       end
     },
-    # :if => BuiltinFunciton.new{ |args, universe, parser|
-    #   cond     = args.stack.fetch(0){ args.locals.fetch('__cond') }
-    #   if_true  = args.stack.fetch(1){ args.locals.fetch('true')   }
-    #   if_false = args.stack.fetch(2){ args.locals.fetch('false')  }
-    #   p cond
-    #   exit
-    # },
+    :if => BuiltinFunciton.new{ |args, universe, parser|
+      cond     = args.stack.fetch(0){ args.locals.fetch('__cond') }
+      if_true  = args.locals.fetch(true){ args.stack.fetch(0){ args.locals.fetch('true') }   }
+      if_false = args.locals.fetch(false){ args.stack.fetch(1){ args.locals.fetch('false') } }
+      cond ? if_true : if_false
+    },
 
     :clone => BuiltinFunciton.new{ |args, universe, parser|
       case args
@@ -35,7 +34,7 @@
     :disp => BuiltinFunciton.new{ |args, universe, parser|
       endl = args.get('end') || "\n"
       sep  = args.get('sep') || " "
-      to_print=FUNCTIONS['text'].call(nil, args, universe, parser) 
+      to_print=FUNCTIONS[:text].call(args, universe, parser) 
       print(to_print + endl)
 
     },

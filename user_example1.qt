@@ -2,15 +2,13 @@ Car = {
    doors = 4;
 
    drive = {
-      switch? @ { 4==5,
-         true=1;
-         false=2;
-      }!;
-      if(dist?){
-         disp? @ ('I drove', dist?, 'miles!')!;
-      }{
-         disp? @ (`vroom vroom!`)!;
-      };
+      # disp( switch{ 4==5, 1, 2 }! )!;
+      disp( if(4==5, false=1, true=2)! )!
+      # if(dist?){
+      #    disp? @ ('I drove', dist?, 'miles!')!;
+      # }{
+      #    disp? @ (`vroom vroom!`)!;
+      # };
    };
    __init = {
       __self? .= (maker, new_maker? or 'honda')!;
