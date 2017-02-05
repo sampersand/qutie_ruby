@@ -30,6 +30,19 @@
       parser.parse(body, universe) while parser.parse(cond, universe).pop! 
     },
 
+    :for => BuiltinFunciton.new{ |args, universe, parser|
+      start = args.stack.fetch(0){ args.locals.fetch('__start') }
+      cond = args.stack.fetch(1){ args.locals.fetch('__cond') }
+      incr = args.stack.fetch(2){ args.locals.fetch('__incr') }
+      body = args.stack.fetch(3){ args.locals.fetch('__body') }
+      parser.parse(start, universe);
+      while parser.parse(cond, universe).pop! 
+        parser.parse(body, universe)
+        parser.parse(incr, universe)
+      end
+    },
+
+
     :clone => BuiltinFunciton.new{ |args, universe, parser|
       case args
       when true, false, nil, Numeric, Fixnum then args

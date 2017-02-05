@@ -64,9 +64,11 @@ class Parser
     #     ([(])
     #     \s*/x,'\1.\2@$\3__self=\1;') # replace 'x.y(z)' with '(x.y @(__self=x;z)!)$$'
     text.gsub!(/\b
-        (clone|disp|text|num|stop|debug|len|if|switch|while)
+        (clone|disp|text|num|stop|debug|len|if|switch|while|for)
         ([\[{(])
         /x,'\1?@\2') # replace 'kwf(' with 'kwf?@('
+    text.gsub!(/\b([a-zA-Z_0-9]+)(\+|-)(\2)/x,'\1=\1?\21') # replace 'kwf(' with 'kwf?@('
+    
 
     text.gsub!(/(__self\?)\.(\w+)\s*=\s*(.*?);/,'\1.=(\2,\3);') # replace 'x[y]=z' with 'x.=(y,z)'
     # if show_text
