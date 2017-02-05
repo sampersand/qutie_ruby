@@ -3,7 +3,7 @@
     def initialize(&block)
       @func = block
     end
-    def call(func, args, universe, parser)
+    def call(args, universe, parser)
       @func.call(args, universe, parser)
     end
   end
