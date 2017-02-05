@@ -20,6 +20,7 @@ class Parser
   end
 
   def parse_all(stream, universe, do_clone: true)
+    do_clone = false;
     stream = stream.clone if do_clone
     catch(:EOF) {
       until stream.stack.empty?
@@ -48,16 +49,14 @@ class Parser
         ([a-zA-Z_][a-zA-Z_0-9]+\?)
         [(]
           (.*?)
-        [)]/x, '(i=\1@();i?.__init@(__self=i?;\2)!;i?)$') # replace 'new cls?()'
+        [)]/x, '(i=clone?@(\1)$@();i?.__init@(__self=i?;\2)!;i?)$') # replace 'new cls?()'
 
     text.gsub!(/\b
         ([a-zA-Z_][a-zA-Z_0-9]*\?)
         \.
         ([a-zA-Z_][a-zA-Z_0-9]*)
         ([(])
-          (.*?)
-        ([)])
-        \s*/x,'(\1.\2@\3__self=\1;\4\5!)$$') # replace 'x.y(z)' with '(x.y @(__self=x;z)!)$$'
+        \s*/x,'\1.\2@\3__self=\1;') # replace 'x.y(z)' with '(x.y @(__self=x;z)!)$$'
     text.gsub!(/\b
         (clone|disp|text|num|stop|debug|len)
         ([\[{(])

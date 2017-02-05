@@ -16,16 +16,9 @@ class Universe
 
   # repr
     def inspect        
-      "<#{@stack},{#{@locals.keys.to_s[1...-1]}},{#{globals.keys.to_s[1...-1]}}>"
+      "<#{@stack}|{#{@locals.keys.to_s[1...-1]}}|{#{globals.keys.to_s[1...-1]}}>"
     end
-
-    def to_s
-      stack_s = @stack.collect(&:to_s).join(', ')
-      locals_s = @locals.collect{|k, v| "#{k}: #{v}"}.join(', ')
-      # globals_s = @globals.collect{|k, v| "#{k}: #{v}"}.join(', ')
-      globals_s = @globals.length.to_s#collect{|k, v| "#{k}: #{v}"}.join(', ')
-      "< [#{stack_s}]|{#{locals_s}}|{#{globals_s}} >"
-    end
+    alias :to_s :inspect
 
   # misc
     def to_globals
@@ -71,7 +64,6 @@ class Universe
       @locals.include?(val) ? @locals[val] : @globals[val]
     end
 end
-
 
 
 

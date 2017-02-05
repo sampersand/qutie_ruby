@@ -1,0 +1,57 @@
+Users = {
+   __init = {
+      __self? .= (users, users? or {})!;
+   };
+   __text = {
+      text? @ ( __self?.get @ ( 0 )! )!
+   };
+
+   get = {
+      (__self?.users)$.1
+      # (__self?.users)$ . ( len(__self?) )!
+   };
+
+   __len = {
+      0
+   };
+
+   add = {
+      last_pos = __self?.__len @ (__self = __self?);
+      (__self?.users)$ .= (last_pos?, to_add? or __args?.0)!;
+   };
+};
+
+User = class {
+   __init = {
+      __self? .= (name, name? or __args?.0)!;
+      __self? .= (pass, pass? or __args?.1)!;
+   };
+   __text = {
+      text? @ (__self?.name, ': ', __self?.pass, sep='';)!
+   };
+};
+
+users=(i=Users?@(),.__init@(__self=i?;)!;i?)$;
+to_add=(i=User?@(),.__init@(__self=i?;'john','password')!;i?)$;
+
+users?.add@(__self=users?;to_add?)!;
+
+user=users?.get@(__self=users?;0)!;
+
+user?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

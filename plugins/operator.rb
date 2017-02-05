@@ -22,7 +22,7 @@ module Operator
     'and' => proc { |l, r| l && r },
 
     '='   => proc { |l, r, u| u.locals[l] = r},
-    '@$' => proc { |func, args, universe, parser| parser.parse_all(func, args.to_globals).stack.last },
+    '@$' => proc { |func, args, universe, parser| BINARY_OPERATORS['@'].(func, args, universe, parser).stack.last },
     '@'  => proc { |func, args, universe, parser|
       if func.respond_to?(:call)
         func.call(func, args, universe, parser)
