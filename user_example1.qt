@@ -9,7 +9,7 @@ Car = {
       };
    };
    __init = {
-      __self? .= (maker, new_maker? or 'honda');
+      __self? .= (maker, new_maker? or 'honda')!;
    };
    __text = {
       "I'm a " + __self?.maker + ' with ' +
@@ -17,7 +17,7 @@ Car = {
    };
 };
 car = (i=Car?@();i?.__init@(__self=i?;)!;i?)$;
-car?.maker
+car?.drive @ ();
 # car = new Car?(new_maker = 'toyota');
 # car?.drive(); #=> vroom vroom!
 # car?.drive(dist=3;); #=> I drove 3 miles!
