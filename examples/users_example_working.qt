@@ -6,15 +6,9 @@ Users = class {
    __text = {
       if( 0 < len(self),
          {
-            i=0;
-            res = text(i?, '. ', self.get(i?), sep='');
-            i++;
-
-            while{
-               (i? < len( self ) )
-               {
-                  res = res? + text('\n',i?, '. ', self.get(i?), sep='';);
-                  i++;
+            res = '';
+            for{(i=0;)(i? < len(self))(i++;){
+                  res = res? + text(if(i?>0,'\n'),i?, '. ', self.get(i?), sep='';);
                }
             };
             res?
@@ -24,10 +18,30 @@ Users = class {
          }
       )@$()
    };
+   # __text = {
+   #    if( 0 < len(self),
+   #       {
+   #          i=0;
+   #          res = text(i?, '. ', self.get(i?), sep='');
+   #          i++;
+
+   #          while{
+   #             (i? < len( self ) )
+   #             {
+   #                res = res? + text('\n',i?, '. ', self.get(i?), sep='';);
+   #                i++;
+   #             }
+   #          };
+   #          res?
+   #       },
+   #       {
+   #          'no users!'
+   #       }
+   #    )@$()
+   # };
 
    get = {
-      pos or= args.0;
-      self.users.pos?
+      self.users.(pos? or args.0)$
    };
 
    __len = {
@@ -41,7 +55,7 @@ Users = class {
 
 User = class {
    __init = {
-      self.name = name? or args.0;
+      self.name = name? or args.0; #aa
       self.pass = pass? or args.1;
    };
    __text = {
@@ -50,9 +64,10 @@ User = class {
 };
 
 users = new Users();
-users?.add( new User('john', 'password123') );
-users?.add( new User('fred', 'pword123'   ) );
-users?.add( new User('alex', 'lemmieinplz') );
+users?.add(new User('john', 'password123') );
+users?.add(new User('fred', 'pword123'   ) );
+users?.add(new User('alex', 'lemmieinplz') );
+disp( users?.get(0).pass, '\n');
 disp( users?, '\n');
 
 
