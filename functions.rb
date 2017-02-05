@@ -9,9 +9,8 @@
   end
 
   FUNCTIONS = {
-    # i dont know how many of these work...
     :switch => BuiltinFunciton.new{ |args, universe, parser|
-      switch_on = args.stack.fetch(0){ args.locals.fetch('__switch_on') }
+      switch_on = args.stack.fetch(0){ args.locals.fetch(:__switch_on) }
       if args.locals.include?(switch_on)
         args.locals[switch_on]
       else
@@ -19,22 +18,22 @@
       end
     },
     :if => BuiltinFunciton.new{ |args, universe, parser|
-      cond     = args.stack.fetch(0){ args.locals.fetch('__cond') }
-      if_true  = args.locals.fetch(true){ args.stack.fetch(1){ args.locals.fetch('true') }   }
-      if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch('false') } }
+      cond     = args.stack.fetch(0){ args.locals.fetch(:__cond) }
+      if_true  = args.locals.fetch(true){ args.stack.fetch(1){ args.locals.fetch(:true) }   }
+      if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false) } }
       cond ? if_true : if_false
     },
     :while => BuiltinFunciton.new{ |args, universe, parser|
-      cond = args.stack.fetch(0){ args.locals.fetch('__cond') }
-      body = args.stack.fetch(1){ args.locals.fetch('__body') }
+      cond = args.stack.fetch(0){ args.locals.fetch(:__cond) }
+      body = args.stack.fetch(1){ args.locals.fetch(:__body) }
       parser.parse(body, universe) while parser.parse(cond, universe).pop! 
     },
 
     :for => BuiltinFunciton.new{ |args, universe, parser|
-      start = args.stack.fetch(0){ args.locals.fetch('__start') }
-      cond = args.stack.fetch(1){ args.locals.fetch('__cond') }
-      incr = args.stack.fetch(2){ args.locals.fetch('__incr') }
-      body = args.stack.fetch(3){ args.locals.fetch('__body') }
+      start = args.stack.fetch(0){ args.locals.fetch(:__start) }
+      cond = args.stack.fetch(1){ args.locals.fetch(:__cond) }
+      incr = args.stack.fetch(2){ args.locals.fetch(:__incr) }
+      body = args.stack.fetch(3){ args.locals.fetch(:__body) }
       parser.parse(start, universe);
       while parser.parse(cond, universe).pop! 
         parser.parse(body, universe)
@@ -42,16 +41,17 @@
       end
     },
 
+    # i dont know how many of these work...
 
     :clone => BuiltinFunciton.new{ |args, universe, parser|
       case args
       when true, false, nil, Numeric, Fixnum then args
-      else qutie_func(args, universe, parser, '__clone'){ |a| a.clone }
+      else qutie_func(args, universe, parser, :__clone){ |a| a.clone }
       end
     },
     :disp => BuiltinFunciton.new{ |args, universe, parser|
-      endl = args.get('end') || "\n"
-      sep  = args.get('sep') || " "
+      endl = args.get(:end) || "\n"
+      sep  = args.get(:sep) || " "
       to_print=FUNCTIONS[:text].call(args, universe, parser) 
       print(to_print + endl)
 
@@ -62,10 +62,10 @@
     },
     :text => BuiltinFunciton.new{ |args, universe, parser|
       if args.respond_to?(:get)
-        sep  = args.get('sep') || " "
+        sep  = args.get(:sep) || " "
         args.stack.collect{ |arg|
             # p args.stack.length
-            qutie_func(arg, universe, parser, '__text'){ |a| a.to_s }
+            qutie_func(arg, universe, parser, :__text){ |a| a.to_s }
           }.join(sep)
       else
         args.to_s 
@@ -78,9 +78,9 @@
     :len => BuiltinFunciton.new{ |args, universe, parser|
       arg = args.stack.last;
       u = universe.to_globals
-      u.globals['type'] = args.get('type')
-      qutie_func(arg, u, parser, '__len'){ |a|
-        case args.get('type')
+      u.globals[:type] = args.get(:type)
+      qutie_func(arg, u, parser, :__len){ |a|
+        case args.get(:type)
         when /g/i then a.respond_to?(:globals) && a.globals.length
         when /v|l/i then a.respond_to?(:locals) && a.locals.length
         when /a|s/i then a.respond_to?(:stack) && a.stack.length
@@ -89,8 +89,8 @@
           stck = a.respond_to?(:stack)  ? a.stack.length : 0
           raise "unspecified type yielded both lcls and stack" unless (lcls == 0) || (stck == 0)
           lcls == 0 ? stck : lcls
-        else raise "unknown type `#{args.get('type').inspect}`"
-        end or raise "`#{a}` doesn't repsond to type param `#{args.get('type')}`"
+        else raise "unknown type `#{args.get(:type).inspect}`"
+        end or raise "`#{a}` doesn't repsond to type param `#{args.get(:type)}`"
       }
     },
 
@@ -99,7 +99,7 @@
   module_function
   def qutie_func(arg, universe, parser, name)
     uni = universe.to_globals
-    uni.locals['__self'] = arg
+    uni.locals[:__self] = arg
     if arg.respond_to?(:locals) && arg.locals.include?(name)
       func = arg.locals[name] or fail "no #{name}` function for #{arg}"
       parser.parse_all(func, uni).stack.last

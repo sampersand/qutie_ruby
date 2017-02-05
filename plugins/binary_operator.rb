@@ -28,9 +28,8 @@ module BinaryOperator
       if func.respond_to?(:call)
         func.call(args, universe, parser)
       else
-        pass_args = args.to_globals
-        pass_args.locals['__args'] = args.clone
-        parser.parse(func, pass_args)
+        args.locals[:__args] = args.clone
+        parser.parse(func, args)
       end
       },
 
