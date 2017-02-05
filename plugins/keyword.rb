@@ -10,7 +10,8 @@ module Keyword
     if last == nil || last == false
       universe << last
     else
-      universe << parser.parse(last, universe.knowns_only) # this isn't parse! cause i dont want it being destroyed each time we read it
+      # this isn't parse! cause i dont want it being destroyed each time we read it
+      universe << parser.parse(last, universe.knowns_only)
     end
   end
 
