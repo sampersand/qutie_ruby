@@ -18,8 +18,8 @@ module BinaryOperator
     '<'  => proc { |l, r| l <  r },
     '>'  => proc { |l, r| l >  r },
 
-    'or'  => proc { |l, r| l || r },
-    'and' => proc { |l, r| l && r },
+    '||'  => proc { |l, r| l || r },
+    '&&' => proc { |l, r| l && r },
 
     '='   => proc { |l, r, u| u.locals[l] = r},
     '@$' => proc { |func, args, universe, parser| OPERATORS['@'].(func, args, universe, parser).stack.last },
@@ -55,9 +55,8 @@ module BinaryOperator
       when *OPER_END then 40
       when '=' then 30
       when '->', '<-' then 29
-      when 'or' then 25
-      when 'and' then 24
-      when 'not' then 23
+      when '||' then 25
+      when '&&' then 24
       when '==', '<>', '<=', '>=', '<', '>' then 20
       when '+', '-' then 12
       when '*', '/', '%' then 11
