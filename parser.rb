@@ -45,36 +45,82 @@ class Parser
     end or fail
   end
 
-  def get_parens()
-  def pre_process!(text, show_text: false)
-    text.gsub!(/class\s+([{(\[])/i, '\1__init={};') # replace 'class {'
-    text.gsub!(/
-        new\s+
-        ([a-z_][a-z_0-9]+\?)
-        [(]
-          (.*?)
-        [)]/xi, '(i=clone?@(\1)$@();i?.__init@(__self=i?;\2)!;i?)$') # replace 'new cls?()'
+  module PreParser
+    module_function
+    def get_parens!(text, start)
+      pos = start + 1
+      parens = 1
+      until parens == 0
+        if text[pos] =~ /[({\[]/
+          parens += 1
+        elsif text[pos] =~ /[)}\]]/
+          parens -=1
+        end
+        pos += 1
+      end
+      text.slice!(start...pos)
 
-    text.gsub!(/\b
-        ([a-zA-Z_][a-zA-Z_0-9]*\?)
-        \.
-        ([a-zA-Z_][a-zA-Z_0-9]*)
-        ([(])
-        \s*/x,'\1.\2@$\3__self=\1;') # replace 'x.y(z)' with '(x.y @(__self=x;z)!)$$'
-    text.gsub!(/\b
-        (clone|disp|text|num|stop|debug|len|if|switch|while|for|del)
-        ([\[{(])
-        /x,'\1?@\2') # replace 'kwf(' with 'kwf?@('
-    text.gsub!(/\b([a-z_0-9]+)(\+|-)(\2)/i,'__temp=\1?;\1=\1?\21;__temp?') # i++
-    text.gsub!(/(\+|-)\1([a-z_0-9]+)\b/i,'\2=\2?\11') # ++i
-    text.gsub!(/([a-z_0-9]+)\s*(\+|-|\*|\/|%|\*\*|or|and)=/i,'\1=\1?\2') # ++i
-    
-
-    text.gsub!(/(__self\?)\.(\w+)\s*=\s*(.*?);/,'\1.=(\2,\3);') # replace 'x[y]=z' with 'x.=(y,z)'
-    if show_text
-      puts text
-      puts '---'
     end
+
+    NEW_CLS_REG = /new\s+([a-z_][a-z_0-9]+)/i
+    # METHOD_CALL_REG = /([a-z_][a-z_0-9]*\?(?:\.[a-z_0-9]*)*)\.([a-z_0-9]*)(?=[\[({])/i
+    METHOD_CALL_REG = /([a-z_][a-z_0-9]*\?)\.([a-z_0-9]*)(?=[\[({])/i
+    def pre_process!(text)
+
+      text.gsub!(/(?<!__)(self|args|current)(?!\?)/, '__\1?')
+
+      while pos = text.index(/(?<=clone|disp|text|num|stop|debug|len|if|switch|while|for|del)[({\[]/)
+        parens = get_parens!(text, pos)
+        text.insert(pos, "?@#{parens}!")
+      end
+      while pos = text.index(NEW_CLS_REG)
+        cls = text.match(NEW_CLS_REG)[1]
+        text.sub!(NEW_CLS_REG, '')
+        parens = get_parens!(text, pos)
+        text.insert(pos, "(i=clone?@(#{cls}?)$@();i?.__init@(__self=i?;#{parens[1...-1]})!;i?)$")
+      end
+
+      while pos = text.index(METHOD_CALL_REG)
+        match=text.match(METHOD_CALL_REG)
+        var=match[1]
+        func=match[2]
+        text.sub!(METHOD_CALL_REG, '')
+        parens = get_parens!(text, pos)
+        text.insert(pos, "(#{var}.#{func}@$#{parens[0]}__self=#{var};#{parens[1..-1]}!)$")
+      end
+
+      text.gsub!(/class\s+([{(\[])/i, '\1__init={};') # replace 'class {'
+      text.gsub!(/([a-z_0-9]+)\s*(\+|-|\*|\/|%|\*\*|or|and|xor)=/i,'\1=\1?\2') # or=
+      text.gsub!(/^([^=(]*)\.\s*([^=]+?)\s*(?<!\.)=\s*(.*);/,'\1.=(\2,\3)!;') # replace '__self?.x=y' with '__self?.=(y,z)'
+      text.gsub!(/\b([a-z_0-9]+)(\+|-)(\2)/i,'__temp=\1?;\1=\1?\21;__temp?') # i++
+      text.gsub!(/(\+|-)\1([a-z_0-9]+)\b/i,'\2=\2?\11') # ++i
+    end
+
+    # def pre_process!(text, show_text: false)
+    #   text.gsub!(/
+    #       new\s+
+    #       ([a-z_][a-z_0-9]+\?)
+    #       [(]
+    #         (.*?)
+    #       [)]/xi, '(i=clone?@(\1)$@();i?.__init@(__self=i?;\2)!;i?)$') # replace 'new cls?()'
+
+    #   text.gsub!(/\b
+    #       ([a-zA-Z_][a-zA-Z_0-9]*\?)
+    #       \.
+    #       ([a-zA-Z_][a-zA-Z_0-9]*)
+    #       ([(])
+    #       \s*/x,'\1.\2@$\3__self=\1;') # replace 'x.y(z)' with '(x.y @(__self=x;z)!)$$'
+    #   text.gsub!(/\b([a-z_0-9]+)(\+|-)(\2)/i,'__temp=\1?;\1=\1?\21;__temp?') # i++
+    #   text.gsub!(/(\+|-)\1([a-z_0-9]+)\b/i,'\2=\2?\11') # ++i
+    
+      
+
+    
+    #   if show_text
+    #     puts text
+    #     puts '---'
+    #   end
+    # end
   end
 end
 
