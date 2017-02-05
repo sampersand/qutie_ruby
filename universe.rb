@@ -1,8 +1,8 @@
 class Universe
 
-  attr_reader :stack
-  attr_reader :locals
-  attr_reader :globals
+  attr_accessor :stack
+  attr_accessor :locals
+  attr_accessor :globals
 
   def self.from_string(input)
     new(stack: input.each_char.to_a)

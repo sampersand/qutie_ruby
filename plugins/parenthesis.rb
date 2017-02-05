@@ -9,7 +9,7 @@ module Parenthesis
     if stream.peek?(*L_PAREN)
 
       start_paren = stream.next!(1)
-      new_container = universe.knowns_only
+      new_container = start_paren
       parens = 1
       catch(:EOF) {
         # this will break if there are uneven parens inside comments
@@ -21,7 +21,6 @@ module Parenthesis
           end
           new_container << stream.next!(1)
         end
-        end_paren = new_container.pop! # is unused
         return new_container
       }
       raise "No end parenthesis for `#{start_paren}` found"
@@ -30,7 +29,9 @@ module Parenthesis
   end
 
   def handle(token, stream, universe, parser)
-    universe << token
+    new_uni = universe.knowns_only
+    new_uni.stack = token.each_char.to_a
+    universe << new_uni
   end
 
 end
