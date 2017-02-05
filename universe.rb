@@ -49,9 +49,14 @@ class Universe
       @stack.first(amnt).join
     end
 
-    def peek?(val, len: nil)
-      return self.peek(len || val.source.length) =~ val if val.is_a?(Regexp)
-      self.peek(len || val.length) == val
+    def peek?(*vals, len: nil)
+      vals.any? do |val|
+        if val.is_a?(Regexp)
+          self.peek(len || val.source.length) =~ val 
+        else
+          self.peek(len || val.length) == val
+        end
+      end
     end
 
     def feed(val)

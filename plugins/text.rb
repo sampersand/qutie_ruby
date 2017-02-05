@@ -8,24 +8,26 @@ module Text
   }
   module_function
   def next_token!(stream, _, _)
-    return false;
     return unless stream.peek?(*QUOTES)
-    quote = stream.next
+    quote = stream.next!(1)
     body = ''
     catch(:EOF) {
-      until stream.peek == quote
-        body += (if stream.peek == '\\'
-                   stream.next # pop the \
-                   REPLACEMENTS.include?(stream.peek) ? REPLACEMENTS[stream.next] : stream.next
+      until stream.peek?(quote)
+        body += (if stream.peek?('\\')
+                    stream.next!(1) # pop the \
+                    to_find = stream.next!
+                    REPLACEMENTS.fetch(to_find, to_find)
                  else
-                   stream.next
+                    stream.next!
                  end)
       end
-      raise unless stream.next == quote
+      raise unless stream.peek?(quote)
+      stream.next!(quote.length)
       return body
     }
     raise "No end quote found"
   end
+
   def handle(token, _, universe, _)
     universe << token
   end
