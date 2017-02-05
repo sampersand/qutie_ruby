@@ -17,6 +17,7 @@ parser.add_plugin Number
 parser.add_plugin Variable
 parser.add_plugin Parenthesis
 parser.add_plugin Comment
+parser.add_plugin Operator
 parser.add_plugin Keyword
 parser.add_plugin Operator
 parser.add_plugin Escape
@@ -31,9 +32,9 @@ require_relative 'functions'
 res = parser.process(text, default_locals: Functions::FUNCTIONS)
 require 'pp'
 
-puts '----[end]----'
-res.stack.each_with_index{ |i,j| puts "\t#{j}: #{i.inspect}"}
-p res
+# puts '----[end]----'
+# res.stack.each_with_index{ |i,j| puts "\t#{j}: #{i.inspect}"}
+# p res
 
 
 

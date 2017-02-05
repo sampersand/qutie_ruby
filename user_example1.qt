@@ -34,7 +34,7 @@ p2= new User?(name='steeve', pass='lemmie_in');
 users?.add(to_add=p1?)!;
 users?.add(to_add=p2?)!;
 # usr=(users?.get(1)!)$$;
-usr=users?.get(1)!;
+usr=users?.get @$ (1)!;
 disp? @ ( usr? )!;
 
 

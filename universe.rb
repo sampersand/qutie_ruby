@@ -48,8 +48,10 @@ class Universe
       @stack.first(amnt).join
     end
 
-    def feed(*vals)
-      @stack.unshift(*vals)
+    def feed(val)
+      val.each_char.reverse_each(&@stack.method(:unshift))
+      # @stack.unshift(*vals)
+      p peek(2)
     end
 
     def push(val)
