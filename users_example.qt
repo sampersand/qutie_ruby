@@ -7,13 +7,13 @@ Users = class {
    };
    add = {
       last_pos = len(type=S, __self?.users)!;
-      (__self?.users)$ .S= [last_pos?, to_add?]!;
+      (__self?.users)$ .S= [last_pos?, __args?.0]!;
       # __self?[users] = users? or {};
    };
 };
 
 users = new Users?();
-users?.add( to_add=5 )!;
+users?.add( 5 )!;
 disp( users?.users )!;
 # disp( users?.users )!;
 # disp( len(users?, type=V;)! )!;

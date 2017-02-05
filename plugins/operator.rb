@@ -1,6 +1,10 @@
 module Operator
   module_function
   BINARY_OPERATORS = { # order matters!
+
+    '<-'  => proc { |l, r, u| BINARY_OPERATORS['='].(l, r, u) },
+    '->'  => proc { |l, r, u| BINARY_OPERATORS['='].(r, l, u)},
+
     '**' => proc { |l, r| l ** r},
     '*'  => proc { |l, r| l *  r},
     '/'  => proc { |l, r| l /  r},
@@ -17,13 +21,15 @@ module Operator
     'or'  => proc { |l, r| l || r },
     'and' => proc { |l, r| l && r },
 
-    '='  => proc { |l, r, u| u.locals[l] = r},
+    '='   => proc { |l, r, u| u.locals[l] = r},
     '@$' => proc { |func, args, universe, parser| parser.parse_all(func, args.to_globals).stack.last },
     '@'  => proc { |func, args, universe, parser|
       if func.respond_to?(:call)
         func.call(func, args, universe, parser)
       else
-        parser.parse_all(func, args.to_globals)
+        pass_args = args.to_globals
+        pass_args.locals['__args'] = args.clone
+        parser.parse_all(func, pass_args)
       end
       },
 
@@ -50,6 +56,7 @@ module Operator
       case token
       when *OPER_ENDS then 40
       when '=' then 30
+      when '->', '<-' then 29
       when 'or' then 25
       when 'and' then 24
       when 'not' then 23
