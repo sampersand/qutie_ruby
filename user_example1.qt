@@ -29,13 +29,22 @@ User = class {
 
 users=(k=clone?@(Users?)$@(),.__init@(__self=k?;)!;k?)$;
 
-p1=(i=clone?@(User?)$@(),.__init@(__self=i?;name='john',pass='password')!;i?)$;
-p2=(i=clone?@(User?)$@(),.__init@(__self=i?;name='a',pass='v')!;i?)$;
-users?.add@(to_add=p1?;__self=users?;)!;
-users?.add@(to_add=p2?;__self=users?;)!;
-# users?.add@(__self=users?;to_add=to_add?)!;
-usr=(users?.get@(__self=users?;1)!)$$;
+p1= new User?(name='john', pass='password');
+p2= new User?(name='steeve', pass='lemmie_in');
+users?.add(to_add=p1?)!;
+users?.add(to_add=p2?)!;
+# usr=(users?.get(1)!)$$;
+usr=users?.get(1)!;
 disp? @ ( usr? )!;
+
+
+
+
+
+
+
+
+
 
 
 
