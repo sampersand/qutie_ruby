@@ -4,33 +4,34 @@ module Parenthesis
   L_PAREN = ['[', '(', '{']
   R_PAREN = [']', ')', '}']
   
-  def parse(stream, universe, parser)
+  def next_token!(stream, universe, parser)
     # stream.next if L_PAREN.include? stream.peek
-    if L_PAREN.include? stream.peek
-      stream.next
+    if stream.peek?(*L_PAREN)
+
+      start_paren = stream.next!(1)
+      new_container = universe.knowns_only
+      parens = 1
+      catch(:EOF) {
+        # this will break if there are uneven parens inside comments
+        until parens == 0 do
+          if stream.peek?(*L_PAREN)
+            parens += 1
+          elsif stream.peek?(*R_PAREN)
+            parens -= 1
+          end
+          new_container << stream.next!(1)
+        end
+        end_paren = new_container.pop # is unused
+        universe << new_container
+        return
+      }
+      raise "No end parenthesis for `#{start_paren}` found"
+
     end
   end
 
   def handle(token, stream, universe, parser)
-    container = universe.knowns_only
-    start_paren = token # is first paren
-    parens = 1
-    catch(:EOF) {
-      # this will break if there are uneven parens inside comments
-      until parens == 0 do
-        if L_PAREN.include?(stream.peek)
-          parens += 1
-        elsif R_PAREN.include?(stream.peek)
-          parens -= 1
-        end
-        container << stream.next
-      end
-      end_paren = container.pop
-      universe << container
-      return
-    }
-    raise "No end parenthesis for `#{start_paren}` found"
-
+    universe << token
   end
 
 end

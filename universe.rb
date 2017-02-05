@@ -24,9 +24,9 @@ class Universe
     # def to_globals
     #   self.class.new(globals: @globals.clone.update(@locals))
     # end
-    # def knowns_only
-    #   self.class.new(locals: @locals, globals: @globals)
-    # end
+    def knowns_only
+      self.class.new(locals: @locals, globals: @globals)
+    end
 
     # def clone
     #   self.class.new(stack: @stack.clone,

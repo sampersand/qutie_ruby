@@ -16,7 +16,7 @@ parser.add_plugin Whitespace
 parser.add_plugin Comment
 parser.add_plugin Number
 parser.add_plugin Variable
-# parser.add_plugin Parenthesis
+parser.add_plugin Parenthesis
 # parser.add_plugin Operator
 # parser.add_plugin Keyword
 parser.add_plugin Escape
