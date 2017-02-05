@@ -39,6 +39,10 @@ class Parser
   end
 
   def pre_process!(text, show_text: false)
+    text.gsub!(/
+        class\s+
+        ([{(\[])
+        /x, '\1__init={};') # replace 'new cls?()'
     text.gsub!(/\b
         ([a-zA-Z_][a-zA-Z_0-9]*\?)
         \.

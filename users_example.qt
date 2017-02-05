@@ -1,0 +1,18 @@
+Users = class {
+   # __init = {
+   #    __self?[users] = users? or {};
+   # };
+   __text = {
+      __self?.users or 3
+   }
+};
+
+users = new Users?();
+
+disp( users? )!; #> I'm a toyota with 4 doors.
+
+Hash = {
+   __text={
+      'text'
+   }
+}
