@@ -32,11 +32,11 @@ class Universe
       self.class.new(locals: @locals, globals: @globals)
     end
 
-    # def clone
-    #   self.class.new(stack: @stack.clone,
-    #                  locals: @locals.clone,
-    #                  globals: @globals.clone)
-    # end
+    def clone
+      self.class.new(stack: @stack.clone,
+                     locals: @locals.clone,
+                     globals: @globals.clone)
+    end
 
   #stream methods
 

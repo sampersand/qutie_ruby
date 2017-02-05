@@ -97,13 +97,12 @@ module BinaryOperator
         parser.next_token!(stream, rhs)[0].each_char{ |char| rhs.push!(char) }
       end
     }
-    p rhs
     rhs = parser.parse!(rhs, universe.to_globals!)
-    
+
     unless rhs.stack.length == 1
       if rhs.stack.empty?
-        puts("[Error] No rhs for operator `#{token}` #{rhs}")
-        exit(1)
+        puts("[Error] No rhs for operator `#{token}` w/ lhs `#{lhs}`")
+        exit!
       end
       warn("[Warning] ambiguous rhs for operator `#{token}` w/ lhs `#{lhs}`:  `#{rhs}`. Using `#{rhs.stack.first}` ")
     end
