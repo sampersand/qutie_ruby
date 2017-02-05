@@ -52,10 +52,10 @@ class Parser
     #     /x, '\1__init={};') # replace 'class {'
     text.gsub!(/
         new\s+
-        ([a-zA-Z_][a-zA-Z_0-9]+\?)
+        ([a-z_][a-z_0-9]+\?)
         [(]
           (.*?)
-        [)]/x, '(i=clone?@$(\1)$@();i?.__init@(__self=i?;\2)!;i?)$') # replace 'new cls?()'
+        [)]/xi, '(i=clone?@$(\1)$@();i?.__init@(__self=i?;\2)!;i?)$') # replace 'new cls?()'
 
     # text.gsub!(/\b
     #     ([a-zA-Z_][a-zA-Z_0-9]*\?)
@@ -67,8 +67,8 @@ class Parser
         (clone|disp|text|num|stop|debug|len|if|switch|while|for)
         ([\[{(])
         /x,'\1?@\2') # replace 'kwf(' with 'kwf?@('
-    text.gsub!(/\b([a-zA-Z_0-9]+)(\+|-)(\2)/x,'__temp=\1?;\1=\1?\21;__temp?') # replace 'kwf(' with 'kwf?@('
-    # text.gsub!(/\b(\+|-)(\1)([a-zA-Z_0-9]+)/x,'(\1=\1?\21)$') # replace 'kwf(' with 'kwf?@('
+    text.gsub!(/\b([a-z_0-9]+)(\+|-)(\2)/i,'__temp=\1?;\1=\1?\21;__temp?') # replace 'kwf(' with 'kwf?@('
+    text.gsub!(/(\+|-)\1([a-z_0-9]+)\b/i,'\2=\2?\11') # replace 'kwf(' with 'kwf?@('
     
 
     text.gsub!(/(__self\?)\.(\w+)\s*=\s*(.*?);/,'\1.=(\2,\3);') # replace 'x[y]=z' with 'x.=(y,z)'
