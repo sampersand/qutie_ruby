@@ -29,30 +29,47 @@
     'text' => BuiltinFunciton.new{ |args, universe, parser|
       if args.respond_to?(:get)
         sep  = args.get('sep') || " "
-        args.stack.
-          collect{ |arg| get_text_for(arg, universe, parser) }.
-          join(sep)
+        args.stack.collect{ |arg|
+            qutie_func(arg, universe, parser, '__text'){ |a| a.to_s }
+          }.join(sep)
       else
         args.to_s 
       end
     },
-
     'debug' => BuiltinFunciton.new{ |_, args, universe, parser|
       p [args.stack, args.locals.keys]
     },
 
+    'len' => BuiltinFunciton.new{ |args, universe, parser|
+      arg = args.stack.last;
+      u = universe.to_globals
+      u.globals['type'] = args.get('type')
+      qutie_func(arg, u, parser, '__len'){ |a|
+        case args.get('type')
+        when /g/i then a.respond_to?(:globals) and a.globals.length
+        when /v|l/i then a.respond_to?(:locals) and a.locals.length
+        when /a|s/i then a.respond_to?(:stack) and a.stack.length
+        else raise "unknown type `#{args.get('type').inspect}`"
+        end or raise "`#{a}` doesn't repsond to type param `#{args.get('type')}`"
+      }
+    },
+
   }
+
   module_function
-  def get_text_for(arg, universe, parser)
+  def qutie_func(arg, universe, parser, name)
     uni = universe.to_globals
     uni.locals['__self'] = arg
-    if arg.respond_to?(:locals) && arg.locals.include?('__text')
-      __text = arg.locals['__text'] or fail "no __text function for #{arg}"
-      parser.parse_all(__text, uni).stack.last
+    if arg.respond_to?(:locals) && arg.locals.include?(name)
+      func = arg.locals[name] or fail "no #{name}` function for #{arg}"
+
+      parser.parse_all(func, uni).stack.last
     else
-      arg.to_s
+      raise unless block_given?
+      yield(arg, universe, parser)
     end
   end
+
 end
 
 

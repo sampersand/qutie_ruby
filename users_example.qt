@@ -4,15 +4,24 @@ Users = class {
    # };
    __text = {
       __self?.users or 3
-   }
+   };
+   __len = {
+      if(type? == V){
+         5
+      } else {
+         6
+      }
+   };
+   1,2,4,5,6
 };
 
 users = new Users?();
 
 disp( users? )!; #> I'm a toyota with 4 doors.
+disp( len(users?, type=V;)! )!; #> I'm a toyota with 4 doors.
 
-Hash = {
-   __text={
-      'text'
-   }
-}
+# Hash = {
+#    __text={
+#       'text'
+#    }
+# }

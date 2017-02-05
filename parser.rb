@@ -52,7 +52,7 @@ class Parser
         ([)])
         \s*/x,'(\1.\2@\3__self=\1;\4\5!)$$') # replace 'x.y(z)' with '(x.y @(__self=x;z)!)$$'
     text.gsub!(/\b
-        (clone|disp|text|num|stop|debug)
+        (clone|disp|text|num|stop|debug|len)
         ([\[{(])
         /x,'\1?@\2') # replace 'kwf(' with 'kwf?@('
 
