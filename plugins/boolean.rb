@@ -3,19 +3,21 @@ module Boolean
   BOOELEANS = {
     true: 'true',
     false: 'false',
-    nil: 'null'
+    nil: 'nil',
+    null: 'null',
+    none: 'none'
   }
 
-  def parse(stream, _, _)
-    res = BOOELEANS.find{ |_, sym| sym == stream.peek(sym.length) && stream.next(sym.length) }
-    res and res[-1]
+  def next_token!(stream, _, _)
+    res = BOOELEANS.find{ |_, sym| stream.peek?(sym) }
+    res and stream.next!(res[-1].length)
   end
 
   def handle(token, stream, universe, parser)
     universe << (case token.downcase
                  when BOOELEANS[:true] then true
                  when BOOELEANS[:false] then false
-                 when BOOELEANS[:nil] then nil
+                 when BOOELEANS[:nil], BOOELEANS[:null], BOOELEANS[:none] then nil
                  else raise "Unknown boolean `#{token}`"
                  end)
   end

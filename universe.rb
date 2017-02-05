@@ -21,18 +21,18 @@ class Universe
     alias :to_s :inspect
 
   # misc
-    def to_globals
-      self.class.new(globals: @globals.clone.update(@locals))
-    end
-    def knowns_only
-      self.class.new(locals: @locals, globals: @globals)
-    end
+    # def to_globals
+    #   self.class.new(globals: @globals.clone.update(@locals))
+    # end
+    # def knowns_only
+    #   self.class.new(locals: @locals, globals: @globals)
+    # end
 
-    def clone
-      self.class.new(stack: @stack.clone,
-                     locals: @locals.clone,
-                     globals: @globals.clone)
-    end
+    # def clone
+    #   self.class.new(stack: @stack.clone,
+    #                  locals: @locals.clone,
+    #                  globals: @globals.clone)
+    # end
 
   #stream methods
 
@@ -49,7 +49,7 @@ class Universe
       @stack.first(amnt).join
     end
 
-    def peek?(val, len=nil)
+    def peek?(val, len: nil)
       return self.peek(len || val.source.length) =~ val if val.is_a?(Regexp)
       self.peek(len || val.length) == val
     end

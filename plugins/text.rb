@@ -1,14 +1,15 @@
 module Text
   QUOTES = ["'", '"', '`']
-  REPLACEMENTS = { #
+  REPLACEMENTS = {
     'n' => "\n",
     't' => "\t",
     'r' => "\r",
     'f' => "\f",
   }
   module_function
-  def parse(stream, _, _)
-    return unless QUOTES.include? stream.peek
+  def next_token!(stream, _, _)
+    return false;
+    return unless stream.peek?(*QUOTES)
     quote = stream.next
     body = ''
     catch(:EOF) {
