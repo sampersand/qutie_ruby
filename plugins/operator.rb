@@ -58,7 +58,8 @@ module Operator
       when '*', '/', '%' then 11
       when '**', '^' then 10
       when '@$', '@' then 7
-      when '.', '.S', '.V', '.=', '.S=', '.V=' then 5
+      when '.=', '.S=', '.V=' then 6
+      when '.', '.S', '.V' then 5
       when  '$', '!', '?' then 1
       else raise "Unknown operator #{token}"
       end
