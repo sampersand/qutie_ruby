@@ -24,12 +24,13 @@ module BinaryOperator
     '='   => proc { |l, r, u| u.locals[l] = r},
     '@$' => proc { |func, args, universe, parser| OPERATORS['@'].(func, args, universe, parser).stack.last },
     '@'  => proc { |func, args, universe, parser|
+      p args
       if func.respond_to?(:call)
-        func.call(func, args, universe, parser)
+        func.call(args, universe, parser)
       else
         pass_args = args.to_globals
         pass_args.locals['__args'] = args.clone
-        parser.parse_all(func, pass_args)
+        parser.parse(func, pass_args)
       end
       },
 
