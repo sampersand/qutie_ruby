@@ -14,12 +14,12 @@ Users = class {
 
 User = class {
    __init = {
-      __self?[username] = __args?.0;
+      __self?[username] = (__args?.0)$;
    };
 };
 
 users = new Users?();
-users?.add( new User?('fred', 'password123') )!;
-disp( users?.users )!;
+# users?.add( new User?('fred', 'password123') )!;
+# disp( users?.users )!;
 # disp( users?.users )!;
 # disp( len(users?, type=V;)! )!;

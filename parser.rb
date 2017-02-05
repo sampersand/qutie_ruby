@@ -47,8 +47,8 @@ class Parser
         new\s+
         ([a-zA-Z_][a-zA-Z_0-9]+\?)
         [(]
-          ((?:.(?!=[({\[];\n))*)
-        [)]/x, '(inst=\1@();inst?.__init@(__self=inst?;\2)!;inst?)$') # replace 'new cls?()'
+          (.*?)
+        [)]/x, '(i=\1@();i?.__init@(__self=i?;\2)!;i?)$') # replace 'new cls?()'
 
     text.gsub!(/\b
         ([a-zA-Z_][a-zA-Z_0-9]*\?)
@@ -63,15 +63,8 @@ class Parser
         ([\[{(])
         /x,'\1?@\2') # replace 'kwf(' with 'kwf?@('
 
-    text.gsub!(/\b
-        ([a-zA-Z_][a-zA-Z_0-9]*\?)\s*
-        ([\[])\s*
-          ([a-zA-Z_][a-zA-Z_0-9]*)\s*
-        ([\]])\s*
-        =
-        (.*?)\s*
-        ;\s*(?=(?:(?:\/\/|\#|\/\*).*)?$) /x,'\1.=\2\3,\5\4!;') # replace 'x[y]=z' with 'x.=(y,z)'
-    if show_text 
+    text.gsub!(/(__self\?)\.(\w+)\s*=\s*(.*?);/,'\1.=(\2,\3);') # replace 'x[y]=z' with 'x.=(y,z)'
+    if show_text
       puts text
       puts '---'
     end
