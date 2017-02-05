@@ -1,45 +1,43 @@
 Users = {
    __init = {
-      __self? .= (users, users? or {})!;
+      __self? .= (users, {})!;
    };
-   __text = {
-      text? @ ( __self?.get @ ( 0 )! )!
-   };
+   # __text = {
+   #    'selfme'
+   # };
 
-   get = {
-      (__self?.users)$.1
-      # (__self?.users)$ . ( len(__self?) )!
-   };
+   get = { __self?.users.(__args?.0)$ };
 
-   __len = {
-      0
-   };
+   __len = { len? @ (__self?.users)! };
 
    add = {
-      last_pos = __self?.__len @ (__self = __self?);
-      (__self?.users)$ .= (last_pos?, to_add? or __args?.0)!;
+      length=(__self?.__len@(__self=__self?)!)$$;
+      disp?@(length?)!;
+      (__self?.users)$ .= (length?, to_add?)!;
    };
 };
 
 User = class {
    __init = {
-      __self? .= (name, name? or __args?.0)!;
-      __self? .= (pass, pass? or __args?.1)!;
+      __self? .= (name, name?)!;
+      __self? .= (pass, pass?)!;
    };
    __text = {
       text? @ (__self?.name, ': ', __self?.pass, sep='';)!
    };
 };
 
-users=(i=Users?@(),.__init@(__self=i?;)!;i?)$;
-to_add=(i=User?@(),.__init@(__self=i?;'john','password')!;i?)$;
+# users=(k=clone?@(Users?)$@(),.__init@(__self=k?;)!;k?)$;
+users = new Users?();
 
-users?.add@(__self=users?;to_add?)!;
+p1= new User?(name='john', pass='password');
+p2= new User?(name='steeve', pass='lemmie_in');
+# users?.add(to_add=p1?)!;
+# users?.add(to_add=p2?)!;
+# usr=(users?.get(1)!)$$;
 
-user=users?.get@(__self=users?;0)!;
-
-user?
-
+usr=users?.get @$ (1)!;
+disp? @ ( usr? )!;
 
 
 

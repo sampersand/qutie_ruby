@@ -1,20 +1,20 @@
 module Comment
   module_function
 
-  def parse_single(stream)
-    return unless stream.peek == '#' || stream.peek(2) == '//'
+  def next_single!(stream)
+    return unless stream.peek?('#') || stream.peek?('//')
     stream.next until stream.peek == "\n"
     stream.next
     :retry
   end
-  def parse_multi(stream)
-    return unless stream.peek(2) == '/*'
-    stream.next until stream.peek(2) == "*/" # this will fail inside strings, but that's ok C does as well.
+  def next_multi!(stream)
+    return unless stream.peek?('/*')
+    stream.next until stream.peek?('*/') # this will fail inside strings, but that's ok C does as well.
     stream.next(2)
     :retry
   end
 
-  def parse(stream, _, _)
-    parse_single(stream) || parse_multi(stream)
+  def next_token!(stream, _, _)
+    next_single!(stream) || next_multi!(stream)
   end
 end

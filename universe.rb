@@ -48,16 +48,20 @@ class Universe
       @stack.first(amnt).join
     end
 
+    def peek?(val)
+      peek(val.length) == val
+    end
+
     def feed(val)
-      val.each_char.reverse_each(&@stack.method(:unshift))
-      # @stack.unshift(*vals)
-      p peek(20)
+      val.each_char(&@stack.method(:unshift))
     end
 
     def push(val)
       @stack.push val
     end
+
     alias :<< :push
+
     def pop
       @stack.pop
     end
