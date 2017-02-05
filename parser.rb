@@ -46,36 +46,34 @@ class Parser
   end
 
   def pre_process!(text, show_text: false)
-    # text.gsub!(/
-    #     class\s+
-    #     ([{(\[])
-    #     /x, '\1__init={};') # replace 'class {'
+    text.gsub!(/class\s+([{(\[])/i, '\1__init={};') # replace 'class {'
     text.gsub!(/
         new\s+
         ([a-z_][a-z_0-9]+\?)
         [(]
           (.*?)
-        [)]/xi, '(i=clone?@$(\1)$@();i?.__init@(__self=i?;\2)!;i?)$') # replace 'new cls?()'
+        [)]/xi, '(i=clone?@(\1)$@();i?.__init@(__self=i?;\2)!;i?)$') # replace 'new cls?()'
 
-    # text.gsub!(/\b
-    #     ([a-zA-Z_][a-zA-Z_0-9]*\?)
-    #     \.
-    #     ([a-zA-Z_][a-zA-Z_0-9]*)
-    #     ([(])
-    #     \s*/x,'\1.\2@$\3__self=\1;') # replace 'x.y(z)' with '(x.y @(__self=x;z)!)$$'
     text.gsub!(/\b
-        (clone|disp|text|num|stop|debug|len|if|switch|while|for)
+        ([a-zA-Z_][a-zA-Z_0-9]*\?)
+        \.
+        ([a-zA-Z_][a-zA-Z_0-9]*)
+        ([(])
+        \s*/x,'\1.\2@$\3__self=\1;') # replace 'x.y(z)' with '(x.y @(__self=x;z)!)$$'
+    text.gsub!(/\b
+        (clone|disp|text|num|stop|debug|len|if|switch|while|for|del)
         ([\[{(])
         /x,'\1?@\2') # replace 'kwf(' with 'kwf?@('
-    text.gsub!(/\b([a-z_0-9]+)(\+|-)(\2)/i,'__temp=\1?;\1=\1?\21;__temp?') # replace 'kwf(' with 'kwf?@('
-    text.gsub!(/(\+|-)\1([a-z_0-9]+)\b/i,'\2=\2?\11') # replace 'kwf(' with 'kwf?@('
+    text.gsub!(/\b([a-z_0-9]+)(\+|-)(\2)/i,'__temp=\1?;\1=\1?\21;__temp?') # i++
+    text.gsub!(/(\+|-)\1([a-z_0-9]+)\b/i,'\2=\2?\11') # ++i
+    text.gsub!(/([a-z_0-9]+)\s*(\+|-|\*|\/|%|\*\*|or|and)=/i,'\1=\1?\2') # ++i
     
 
     text.gsub!(/(__self\?)\.(\w+)\s*=\s*(.*?);/,'\1.=(\2,\3);') # replace 'x[y]=z' with 'x.=(y,z)'
-    # if show_text
-    #   puts text
-    #   puts '---'
-    # end
+    if show_text
+      puts text
+      puts '---'
+    end
   end
 end
 
