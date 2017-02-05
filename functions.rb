@@ -29,14 +29,18 @@
       exit(exit_code || 0)
     },
     'text' => BuiltinFunciton.new{ |args, universe, parser|
-      uni = universe.to_globals
-      uni.locals['__self'] = args
-      if args.respond_to?(:locals) && args.locals.include?('__text')
-        __text = args.locals['__text'] or fail "no __text function for #{args}"
-        res = parser.parse_all(__text, uni).stack.last
-      else
-        args.to_s
-      end
+      endl = args.get('end') || "\n"
+      sep  = args.get('sep') || " "
+      to_texts = args.stack.collect do |arg|
+        uni = universe.to_globals
+        uni.locals['__self'] = arg
+        if arg.respond_to?(:locals) && arg.locals.include?('__text')
+          __text = arg.locals['__text'] or fail "no __text function for #{arg}"
+          parser.parse_all(__text, uni).stack.last
+        else
+          arg.to_s
+        end
+      end.join(sep)
     },
 
     'debug' => BuiltinFunciton.new{ |_, args, universe, parser|
