@@ -1,19 +1,25 @@
 Users = class {
    __init = {
-      __self?[users] = users? or {};
+      __self?[users] = __args?.0 or __args?.users or {};
    };
    __text = {
-      __self?.users or 3;
+      __self?.users or 3
    };
    add = {
-      last_pos = len(type=S, __self?.users)!;
-      (__self?.users)$ .S= [last_pos?, __args?.0]!;
-      # __self?[users] = users? or {};
+      disp(__self?.username)!
+      # last_pos = len(type=S, __self?.users)!;
+      # (__self?.users)$ .S= [last_pos?, __args?.0 ]!;
+   };
+};
+
+User = class {
+   __init = {
+      __self?[username] = __args?.0;
    };
 };
 
 users = new Users?();
-users?.add( 5 )!;
+users?.add( new User?('fred', 'password123') )!;
 disp( users?.users )!;
 # disp( users?.users )!;
 # disp( len(users?, type=V;)! )!;
