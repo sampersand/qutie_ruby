@@ -20,7 +20,6 @@ class Parser
   end
 
   def parse_all(stream, universe, do_clone: true)
-    do_clone = false;
     stream = stream.clone if do_clone
     catch(:EOF) {
       until stream.stack.empty?
