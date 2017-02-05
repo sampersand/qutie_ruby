@@ -14,7 +14,7 @@ require_relative 'plugins/boolean'
 parser = Parser.new
 parser.add_plugin Whitespace
 parser.add_plugin Comment
-# parser.add_plugin Number
+parser.add_plugin Number
 # parser.add_plugin Variable
 # parser.add_plugin Parenthesis
 # parser.add_plugin Operator

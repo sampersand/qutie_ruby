@@ -36,7 +36,8 @@ class Universe
 
   #stream methods
 
-    def next(amnt=nil)
+    def next!(amnt=nil)
+      return next!(amnt.length) if amnt.is_a?(String)
       throw :EOF if @stack.empty?
       return @stack.shift unless amnt
       @stack.shift(amnt).join
@@ -48,8 +49,9 @@ class Universe
       @stack.first(amnt).join
     end
 
-    def peek?(val)
-      peek(val.length) == val
+    def peek?(val, len=nil)
+      return self.peek(len || val.source.length) =~ val if val.is_a?(Regexp)
+      self.peek(len || val.length) == val
     end
 
     def feed(val)

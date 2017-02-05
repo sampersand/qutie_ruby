@@ -1,7 +1,11 @@
-Users = {
-   __init = {
-      __self? .= (users, {})!;
-   };
-};
-1+2*3;1*2+3;
-# users = new Users?();
+# Users = {
+#    __init = {
+#       __self? .= (users, {})!;
+#    };
+# };
+# 1+2*3;1*2+3;
+# # users = new Users?();
+# a = 3;
+1;
+2;
+3;
