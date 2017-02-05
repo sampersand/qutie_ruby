@@ -21,7 +21,7 @@ module Parenthesis
           end
           new_container << stream.next!(1)
         end
-        end_paren = new_container.pop # is unused
+        end_paren = new_container.pop! # is unused
         universe << new_container
         return
       }

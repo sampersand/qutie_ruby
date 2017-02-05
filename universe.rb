@@ -63,13 +63,13 @@ class Universe
       val.each_char(&@stack.method(:unshift))
     end
 
-    def push(val)
+    def push!(val)
       @stack.push val
     end
 
-    alias :<< :push
+    alias :<< :push!
 
-    def pop
+    def pop!
       @stack.pop
     end
 

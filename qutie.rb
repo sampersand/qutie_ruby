@@ -16,13 +16,13 @@ parser.add_plugin Whitespace
 parser.add_plugin Comment
 parser.add_plugin Number
 parser.add_plugin Variable
+parser.add_plugin Boolean
 parser.add_plugin Parenthesis
 # parser.add_plugin Operator
-# parser.add_plugin Keyword
-parser.add_plugin Escape
+parser.add_plugin Keyword
 # parser.add_plugin KeywordFunctions
 parser.add_plugin Text
-parser.add_plugin Boolean
+parser.add_plugin Escape
 
 file = ARGV[0] or fail "No file!"
 text = open(file, 'r').read
