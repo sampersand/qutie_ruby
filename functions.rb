@@ -26,7 +26,7 @@
     },
     :while => BuiltinFunciton.new{ |args, universe, parser|
       cond = args.stack.fetch(0){ args.locals.fetch('__cond') }
-      body = args.stack.fetch(0){ args.locals.fetch('__body') }
+      body = args.stack.fetch(1){ args.locals.fetch('__body') }
       parser.parse(body, universe) while parser.parse(cond, universe).pop! 
     },
 
