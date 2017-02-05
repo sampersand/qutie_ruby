@@ -2,7 +2,7 @@ require_relative 'parser'
 require_relative 'plugins/whitespace'
 require_relative 'plugins/parenthesis'
 require_relative 'plugins/number'
-require_relative 'plugins/operator'
+require_relative 'plugins/binary_operator'
 require_relative 'plugins/variable'
 require_relative 'plugins/comment'
 require_relative 'plugins/text'
@@ -18,7 +18,7 @@ parser.add_plugin Number
 parser.add_plugin Variable
 parser.add_plugin Boolean
 parser.add_plugin Parenthesis
-# parser.add_plugin Operator
+parser.add_plugin BinaryOperator
 parser.add_plugin Keyword
 # parser.add_plugin KeywordFunctions
 parser.add_plugin Text

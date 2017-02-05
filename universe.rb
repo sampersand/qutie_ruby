@@ -21,9 +21,13 @@ class Universe
     alias :to_s :inspect
 
   # misc
-    # def to_globals
-    #   self.class.new(globals: @globals.clone.update(@locals))
-    # end
+    def to_globals!
+      self.class.new(globals: @globals.update(@locals))
+    end
+    def to_globals
+      self.class.new(globals: @globals.clone.update(@locals))
+    end
+
     def knowns_only
       self.class.new(locals: @locals, globals: @globals)
     end
@@ -59,10 +63,6 @@ class Universe
       end
     end
 
-    def feed(val)
-      val.each_char(&@stack.method(:unshift))
-    end
-
     def push!(val)
       @stack.push val
     end
@@ -71,6 +71,10 @@ class Universe
 
     def pop!
       @stack.pop
+    end
+
+    def stream_empty?
+      @stack.empty?
     end
 
     def get(val)

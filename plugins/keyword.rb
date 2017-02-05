@@ -22,7 +22,7 @@ module Keyword
 
   def next_token!(stream, _, _)
     res = KEYWORDS.find{ |val, _| stream.peek?(val) }
-    res and stream.next!(res[0].length)
+    res and stream.next!(res[0])
   end
 
   def handle(token, stream, universe, parser)

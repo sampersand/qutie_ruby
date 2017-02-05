@@ -22,7 +22,7 @@ module Text
                  end)
       end
       raise unless stream.peek?(quote)
-      stream.next!(quote.length)
+      stream.next!(quote)
       return body
     }
     raise "No end quote found"
