@@ -24,7 +24,7 @@ class Parser
     catch(:EOF) {
       until stream.stack.empty?
         token, plugin = parse(stream, universe)
-      plugin.handle(token, stream, universe, self)
+        plugin.handle(token, stream, universe, self)
       end
     }
     universe

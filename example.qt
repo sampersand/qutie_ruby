@@ -8,5 +8,4 @@
 # stop(0);
 # stop? @ (0);
 # stop? @ ( 1 );
-sepr = ', b';
-disp? @ (1, 2, sep = sepr?;)!
+disp? @ (1, 2, sep = ', '; end="\n")!;

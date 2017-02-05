@@ -96,13 +96,15 @@ module Operator
           break
         elsif next_token[1] == Parenthesis #hacky
           next_token[1].handle(next_token[0], stream, rhs, parser)
+        elsif next_token[1] == Text #hacky
+          "'#{next_token[0]}'".each_char(&rhs.method(:push)) # also quite hacky
         else
           rhs << next_token[0]
         end
       end
     }
 
-    rhs = parser.parse_all(rhs, universe.to_globals)
+    rhs = parser.parse_all(rhs, universe.to_globals, do_clone: false)
     
     unless rhs.stack.length == 1
       if rhs.stack.empty?
