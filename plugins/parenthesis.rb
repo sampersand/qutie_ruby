@@ -5,7 +5,6 @@ module Parenthesis
   R_PAREN = [']', ')', '}']
   
   def next_token!(stream, universe, parser)
-    # stream.next if L_PAREN.include? stream.peek
     if stream.peek?(*L_PAREN)
 
       start_paren = stream.next!(1)

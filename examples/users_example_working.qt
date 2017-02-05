@@ -69,6 +69,10 @@ users?.add(new User('fred', 'pword123'   ) );
 users?.add(new User('alex', 'lemmieinplz') );
 disp( users?.get(0).pass, '\n');
 disp( users?, '\n');
+disp( 1.5, '\n');
+disp( 0xa + 5, '\n');
+
+
 
 
 
