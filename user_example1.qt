@@ -27,12 +27,13 @@ User = class {
    };
 };
 
-users=(k=clone?@(Users?)$@(),.__init@(__self=k?;)!;k?)$;
+# users=(k=clone?@(Users?)$@(),.__init@(__self=k?;)!;k?)$;
+users = new Users?();
 
 p1= new User?(name='john', pass='password');
 p2= new User?(name='steeve', pass='lemmie_in');
-users?.add(to_add=p1?)!;
-users?.add(to_add=p2?)!;
+# users?.add(to_add=p1?)!;
+# users?.add(to_add=p2?)!;
 # usr=(users?.get(1)!)$$;
 usr=users?.get @$ (1)!;
 disp? @ ( usr? )!;

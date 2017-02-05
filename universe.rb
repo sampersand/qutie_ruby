@@ -51,7 +51,7 @@ class Universe
     def feed(val)
       val.each_char.reverse_each(&@stack.method(:unshift))
       # @stack.unshift(*vals)
-      p peek(2)
+      p peek(20)
     end
 
     def push(val)

@@ -107,7 +107,8 @@ module Operator
         elsif next_token[1] == Text #hacky
           "'#{next_token[0]}'".each_char(&rhs.method(:push)) # also quite hacky
         else
-          rhs << next_token[0]
+          next_token[0].each_char(&rhs.method(:<<))
+          # rhs << next_token[0]
         end
       end
     }

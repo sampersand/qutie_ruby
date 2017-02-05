@@ -48,7 +48,7 @@ class Parser
         ([a-zA-Z_][a-zA-Z_0-9]+\?)
         [(]
           (.*?)
-        [)]/x, '(i=clone?@(\1)$@();i?.__init@(__self=i?;\2)!;i?)$') # replace 'new cls?()'
+        [)]/x, '(i=clone?@$(\1)$@();i?.__init@(__self=i?;\2)!;i?)$') # replace 'new cls?()'
 
     text.gsub!(/\b
         ([a-zA-Z_][a-zA-Z_0-9]*\?)
