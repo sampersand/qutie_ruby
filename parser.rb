@@ -38,11 +38,11 @@ class Parser
   end
 
   def next_token!(stream, universe)
-    @plugins.find do |pl|
+    @plugins.each do |pl|
       token = pl.next_token!(stream, universe, self)
       next unless token
       return token == :retry ? next_token!(stream, universe) : [token, pl]
-    end
+    end or fail
   end
 
   def pre_process!(text, show_text: false)

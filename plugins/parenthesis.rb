@@ -22,8 +22,7 @@ module Parenthesis
           new_container << stream.next!(1)
         end
         end_paren = new_container.pop! # is unused
-        universe << new_container
-        return
+        return new_container
       }
       raise "No end parenthesis for `#{start_paren}` found"
 
