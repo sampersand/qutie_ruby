@@ -1,3 +1,15 @@
+a=0;
+while{
+   (a? < 10)
+   {
+      a=a?+1;
+      stop(2)!;
+      disp(a?)!;
+   }
+}!;
+
+stop(0)!;
+
 Car = {
    doors = 4;
 
@@ -25,6 +37,8 @@ car?.drive @ ();
 # car?.drive(dist=3;); #=> I drove 3 miles!
 # disp? @ ( car?.__text() )!; #> I'm a toyota with 4 doors.
 # disp? @ ( car? )!; #> I'm a toyota with 4 doors.
+
+
 
 
 

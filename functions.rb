@@ -24,6 +24,11 @@
       if_false = args.locals.fetch(false){ args.stack.fetch(1){ args.locals.fetch('false') } }
       cond ? if_true : if_false
     },
+    :while => BuiltinFunciton.new{ |args, universe, parser|
+      cond = args.stack.fetch(0){ args.locals.fetch('__cond') }
+      body = args.stack.fetch(0){ args.locals.fetch('__body') }
+      parser.parse(body, universe) while parser.parse(cond, universe).pop! 
+    },
 
     :clone => BuiltinFunciton.new{ |args, universe, parser|
       case args
