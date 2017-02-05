@@ -26,7 +26,7 @@ parser.add_plugin Boolean
 
 file = ARGV[0] or fail "No file!"
 text = open(file, 'r').read
-parser.pre_process!(text)
+parser.pre_process!(text, show_text: false)
 require_relative 'functions'
 res = parser.process(text, default_locals: Functions::FUNCTIONS)
 require 'pp'

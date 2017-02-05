@@ -1,4 +1,4 @@
-Car = {
+Stack = {
    DOORS = 4;
    drive = {
       if(dist?){

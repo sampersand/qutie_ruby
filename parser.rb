@@ -38,7 +38,7 @@ class Parser
     end
   end
 
-  def pre_process!(text)
+  def pre_process!(text, show_text: false)
     text.gsub!(/\b
         ([a-zA-Z_][a-zA-Z_0-9]*\?)
         \.
@@ -47,6 +47,11 @@ class Parser
           (.*?)
         ([)])
         \s*/x,'(\1.\2@\3__self=\1;\4\5!)$$') # replace 'x.y(z)' with '(x.y @(__self=x;z)!)$$'
+    text.gsub!(/\b
+        (clone|disp|text|num|stop|debug)
+        ([\[{(])
+        /x,'\1?@\2') # replace 'kwf(' with 'kwf?@('
+
 
     text.gsub!(/
         new\s+
@@ -63,10 +68,13 @@ class Parser
         =
         (.*?)\s*
         ;\s*(?=(?:(?:\/\/|\#|\/\*).*)?$) /x,'\1.=\2\3,\5\4!;') # replace 'x[y]=z' with 'x.=(y,z)'
-    # puts text
-    # puts '---'
+    if show_text  
+      puts text
+      puts '---'
+    end
   end
 end
+
 
 
 
