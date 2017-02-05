@@ -1,0 +1,23 @@
+Car = {
+   doors = 4;
+
+   drive = {
+      if(dist?){
+         disp('I drove', dist?, 'miles!');
+      }{
+         disp(`vroom vroom!`);
+      };
+   };
+   __init = {
+      __self?[maker] = new_maker? or 'honda';
+   };
+   __text = {
+      # "I'm a " + __self?.maker + ' with ' + (text(__self?.doors))$ + ' doors.'
+      "I'm a " + __self?.maker + ' with ' +
+         text @ ( __self?.doors ) + ' doors.'
+   };
+};
+car = new Car?(new_maker = 'toyota');
+car?.drive(); #=> vroom vroom!
+car?.drive(dist=3;); #=> I drove 3 miles!
+disp( car?.__text() ); #> I'm a toyota with 4 doors.

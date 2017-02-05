@@ -45,6 +45,7 @@ class Parser
     end or fail
   end
 
+  def get_parens()
   def pre_process!(text, show_text: false)
     text.gsub!(/class\s+([{(\[])/i, '\1__init={};') # replace 'class {'
     text.gsub!(/
