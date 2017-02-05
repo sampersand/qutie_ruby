@@ -2,6 +2,10 @@ Car = {
    doors = 4;
 
    drive = {
+      switch? @ { 4==5,
+         true=1;
+         false=2;
+      }!;
       if(dist?){
          disp? @ ('I drove', dist?, 'miles!')!;
       }{

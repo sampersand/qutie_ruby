@@ -9,24 +9,41 @@
   end
 
   FUNCTIONS = {
-    :'clone' => BuiltinFunciton.new{ |args, universe, parser|
+    # i dont know how many of these work...
+    :switch => BuiltinFunciton.new{ |args, universe, parser|
+      switch_on = args.stack.fetch(0){ args.locals.fetch('__switch_on') }
+      if args.locals.include?(switch_on)
+        args.locals[switch_on]
+      else
+        args.stack[switch_on]
+      end
+    },
+    # :if => BuiltinFunciton.new{ |args, universe, parser|
+    #   cond     = args.stack.fetch(0){ args.locals.fetch('__cond') }
+    #   if_true  = args.stack.fetch(1){ args.locals.fetch('true')   }
+    #   if_false = args.stack.fetch(2){ args.locals.fetch('false')  }
+    #   p cond
+    #   exit
+    # },
+
+    :clone => BuiltinFunciton.new{ |args, universe, parser|
       case args
       when true, false, nil, Numeric, Fixnum then args
       else qutie_func(args, universe, parser, '__clone'){ |a| a.clone }
       end
     },
-    :'disp' => BuiltinFunciton.new{ |args, universe, parser|
+    :disp => BuiltinFunciton.new{ |args, universe, parser|
       endl = args.get('end') || "\n"
       sep  = args.get('sep') || " "
       to_print=FUNCTIONS['text'].call(nil, args, universe, parser) 
       print(to_print + endl)
 
     },
-    :'stop' => BuiltinFunciton.new{ |args, universe, parser|
+    :stop => BuiltinFunciton.new{ |args, universe, parser|
       exit_code = args.stack.last;
       exit(exit_code || 0)
     },
-    :'text' => BuiltinFunciton.new{ |args, universe, parser|
+    :text => BuiltinFunciton.new{ |args, universe, parser|
       if args.respond_to?(:get)
         sep  = args.get('sep') || " "
         args.stack.collect{ |arg|
@@ -37,11 +54,11 @@
         args.to_s 
       end
     },
-    :'debug' => BuiltinFunciton.new{ |_, args, universe, parser|
+    :debug => BuiltinFunciton.new{ |args, universe, parser|
       p [args.stack, args.locals.keys]
     },
 
-    :'len' => BuiltinFunciton.new{ |args, universe, parser|
+    :len => BuiltinFunciton.new{ |args, universe, parser|
       arg = args.stack.last;
       u = universe.to_globals
       u.globals['type'] = args.get('type')
