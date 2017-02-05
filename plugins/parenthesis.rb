@@ -21,7 +21,7 @@ module Parenthesis
           end
           new_container << stream.next!(1)
         end
-        return new_container
+        return new_container[1...-1]
       }
       raise "No end parenthesis for `#{start_paren}` found"
 

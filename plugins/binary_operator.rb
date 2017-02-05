@@ -24,7 +24,6 @@ module BinaryOperator
     '='   => proc { |l, r, u| u.locals[l] = r},
     '@$' => proc { |func, args, universe, parser| OPERATORS['@'].(func, args, universe, parser).stack.last },
     '@'  => proc { |func, args, universe, parser|
-      p args
       if func.respond_to?(:call)
         func.call(args, universe, parser)
       else
@@ -92,12 +91,16 @@ module BinaryOperator
     rhs = universe.to_globals
     catch(:EOF) {
       until stream.stream_empty?
-        next_token = parser.next_token(stream, rhs) #this might get weird if rhs doesnt copy
-        break if priority(token, BinaryOperator) <= priority(*next_token)
-        parser.next_token!(stream, rhs)[0].each_char{ |char| rhs.push!(char) }
+        # vvvv this might get weird if rhs doesnt copy
+        break if priority(token, BinaryOperator) <= priority(*parser.next_token(stream, rhs)) 
+        # ^^^^
+
+        next_token = parser.next_token!(stream, rhs)
+        next_token[1].handle(next_token[0], stream, rhs, parser) # pretty sure this will bite me...
       end
     }
-    rhs = parser.parse!(rhs, universe.to_globals!)
+
+    # rhs = parser.parse!(rhs, universe.to_globals!)
 
     unless rhs.stack.length == 1
       if rhs.stack.empty?
