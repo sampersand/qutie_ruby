@@ -1,26 +1,21 @@
-# a=0;
-# while{
-#    (a? < 10)
-#    {
-#       disp(a?)!;
-#       a=a?+1;
-#    }
-# }!;
+# for{(a=0)(a?<5)(a++){disp(a?)!;}}!;
+# disp('--')!;
+# for{(a=0)(a?<5)(a++){
+#    disp(a++)!;
+# }}!;
+# # }!;
 
-for{(a=0)(a?<5)(a++){disp(a?)!;}}!;
-disp('--')!;
-for{(a=0)(a?<5)(a++){
-   disp(a++)!;
-}}!;
-# }!;
-
-stop(0)!;
+# stop(0)!;
 Car = {
    doors = 4;
 
    drive = {
       # disp( switch{ 4==5, 1, 2 }! )!;
-      disp( if(4==5, false=1, true=2)! )!
+      dist = dist? or __args?.0;
+      disp( if(dist?,
+               text('I drove', dist?, 'miles!')!,
+               text('vroom vroom')!
+            )! )!
       # if(dist?){
       #    disp? @ ('I drove', dist?, 'miles!')!;
       # }{
@@ -36,7 +31,7 @@ Car = {
    };
 };
 car = (i=Car?@();i?.__init@(__self=i?;)!;i?)$;
-car?.drive @ ();
+car?.drive @ (1);
 # car = new Car?(new_maker = 'toyota');
 # car?.drive(); #=> vroom vroom!
 # car?.drive(dist=3;); #=> I drove 3 miles!

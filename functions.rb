@@ -20,8 +20,8 @@
     },
     :if => BuiltinFunciton.new{ |args, universe, parser|
       cond     = args.stack.fetch(0){ args.locals.fetch('__cond') }
-      if_true  = args.locals.fetch(true){ args.stack.fetch(0){ args.locals.fetch('true') }   }
-      if_false = args.locals.fetch(false){ args.stack.fetch(1){ args.locals.fetch('false') } }
+      if_true  = args.locals.fetch(true){ args.stack.fetch(1){ args.locals.fetch('true') }   }
+      if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch('false') } }
       cond ? if_true : if_false
     },
     :while => BuiltinFunciton.new{ |args, universe, parser|
