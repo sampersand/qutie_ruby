@@ -3,12 +3,15 @@ module Number
 
   def next_base!(stream)
     return unless stream.peek?(/0[oxdb]/i, len: 2)
-    scopy = stream.clone
-    scopy.next!(2)
-    return unless next_int!(scopy)
-    r = stream.next!(2) + next_int!(stream)
-    p r 
-    r
+    res = stream.next!(2)
+    case res[1]
+    when 'b' then res += stream.next! while stream.peek?(/[01]/, len: 1)
+    when 'o' then res += stream.next! while stream.peek?(/[0-7]/, len: 1)
+    when 'd' then res += stream.next! while stream.peek?(/[0-9]/, len: 1)
+    when 'x' then res += stream.next! while stream.peek?(/[0-9A-F]/i, len: 1)
+    else raise "Unknown base `#{res}`"
+    end
+    res
   end
   def next_int!(stream)
     return unless stream.peek?(/\d/, len: 1)
