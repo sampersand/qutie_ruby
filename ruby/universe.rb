@@ -17,7 +17,6 @@ class Universe
 
   # repr
     def inspect        
-      # "<#{@stack}|{#{@locals.keys.to_s[1...-1]}}|{#{globals.keys.to_s[1...-1]}}>"
       "<#{@stack}|{#{@locals.keys.to_s[1...-1]}}|{#{globals_s}}>"
     end
     alias :to_s :inspect
