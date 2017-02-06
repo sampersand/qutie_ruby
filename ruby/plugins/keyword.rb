@@ -40,8 +40,4 @@ module Keyword
     '$' => method(:handle_pop_lastv),
   }
 
-
 end
-
-
-
