@@ -28,8 +28,8 @@ module BinaryOperator
       if func.respond_to?(:call)
         func.call(args, universe, parser)
       else
-        args.locals[:__args] = args.clone
-        parser.parse(func, args)
+        args.locals[:__args] = args.clone #somethign here with spawn off
+        parser.parse(stream: func, universe: args)
       end
       },
 
@@ -99,7 +99,7 @@ module BinaryOperator
       end
     }
 
-    # rhs = parser.parse!(rhs, universe.to_globals!)
+    # rhs = parser.parse!(rhs, universe.spawn_frame!)
 
     # unless rhs.stack.length == 1
     #   if rhs.stack.empty?
@@ -114,7 +114,7 @@ module BinaryOperator
 
   # def handle_oper(token, stream, universe, parser)
   #   lhs = universe.pop!
-  #   rhs = universe.to_globals
+  #   rhs = universe.spawn_frame
   #   catch(:EOF) {
   #     until stream.stream_empty?
   #       # vvvv this might get weird if rhs doesnt copy
@@ -127,7 +127,7 @@ module BinaryOperator
   #     end
   #   }
 
-  #   # rhs = parser.parse!(rhs, universe.to_globals!)
+  #   # rhs = parser.parse!(rhs, universe.spawn_frame!)
 
   #   unless rhs.stack.length == 1
   #     if rhs.stack.empty?

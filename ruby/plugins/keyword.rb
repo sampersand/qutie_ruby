@@ -2,7 +2,12 @@ module Keyword
   module_function
 
   def handle_get_known(_, universe, _)
-    universe << universe.get(universe.pop!)
+    to_get = universe.pop!
+    if to_get == :__func_stack
+      universe << universe.new_stack(universe.program_stack)
+    else
+      universe << universe.get(to_get)
+    end
   end
 
   def handle_eval_univ(_, universe, parser)
@@ -11,7 +16,7 @@ module Keyword
       universe << last
     else
       # this isn't parse! cause i dont want it being destroyed each time we read it
-      universe << parser.parse(last, universe.knowns_only.clone)
+      universe << parser.parse(stream: last, universe: universe.new_stack(nil).clone)
     end
   end
 

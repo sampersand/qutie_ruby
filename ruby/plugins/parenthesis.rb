@@ -28,9 +28,7 @@ module Parenthesis
   end
 
   def handle(token, stream, universe, parser)
-    new_uni = universe.knowns_only
-    new_uni.stack = token.each_char.to_a
-    universe << new_uni
+    universe << universe.new_stack(token.each_char.to_a)
   end
 
 end

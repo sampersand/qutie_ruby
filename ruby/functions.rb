@@ -30,7 +30,7 @@
     :while => BuiltinFunciton.new{ |args, universe, parser|
       cond = args.stack.fetch(0){ args.locals.fetch(:__cond) }
       body = args.stack.fetch(1){ args.locals.fetch(:__body) }
-      parser.parse(body, universe) while parser.parse(cond, universe).pop! 
+      parser.parse(stream: body, universe: universe) while parser.parse(stream: cond, universe: universe).pop! 
     },
     :del => BuiltinFunciton.new{ |args, universe, parser|
       pos = args.stack.fetch(0){ args.locals.fetch(:__pos) }
@@ -52,10 +52,10 @@
       cond = args.stack.fetch(1){ args.locals.fetch(:__cond) }
       incr = args.stack.fetch(2){ args.locals.fetch(:__incr) }
       body = args.stack.fetch(3){ args.locals.fetch(:__body) }
-      parser.parse(start, universe);
-      while parser.parse(cond, universe).pop! 
-        parser.parse(body, universe)
-        parser.parse(incr, universe)
+      parser.parse(stream: start, universe: universe);
+      while parser.parse(cond, stream: universe).pop! 
+        parser.parse(body, stream: universe)
+        parser.parse(incr, stream: universe)
       end
     },
 
@@ -96,7 +96,7 @@
 
     :len => BuiltinFunciton.new{ |args, universe, parser|
       arg = args.stack.last;
-      u = universe.to_globals
+      u = universe.spawn_frame
       u.globals[:__type] = args.get(:__type)
       qutie_func(arg, u, parser, :__len){ |a|
         case args.get(:__type)
@@ -117,11 +117,11 @@
 
   module_function
   def qutie_func(arg, universe, parser, name)
-    uni = universe.to_globals
+    uni = universe.spawn_frame
       uni.locals[:__self] = arg
     if arg.respond_to?(:locals) && arg.locals.include?(name)
       func = arg.locals[name] or fail "no #{name}` function for #{arg}"
-      parser.parse(func, uni).stack.last
+      parser.parse(stream: func, universe: uni).stack.last
     else
       raise unless block_given?
       yield(arg, universe, parser)
