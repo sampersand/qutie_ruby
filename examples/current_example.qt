@@ -3,13 +3,9 @@ foo = {
    c = __current?;
    __current? .= (food, eggs)!;
    c? .= (food, spam)!;
-   disp? @ {
-      __current? .= (food, chicken)!;
-      '\t__current?.food: ', __current?.food
-   }!; #=> should give me `chicken`
+   disp? @ {__current? .= (food, chicken)!; '\t__current?.food: ', __current?.food }!;
    disp? @ ( '\t c?.food:        ', c?.food )!; # => should give me `spam`
    __current?
 };
 
-foo? @ ();
-# disp? @ ('\tfoo result.food: ', (foo? @$ (arg=3;)!)$.food )!; # sohuld give me `spam`, gives me `eggs`
+disp? @ ('\tfoo result.food: ', (foo? @$ (arg=3;)!)$.food )!; # sohuld give me `spam`, gives me `eggs`

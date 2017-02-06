@@ -2,9 +2,7 @@ module Keyword
   module_function
 
   def handle_get_known(_, universe, _)
-    # universe << universe.get(universe.pop!)
-    to_get = universe.pop!;
-    universe << (to_get == :__current ? universe : universe.get(to_get))
+    universe << universe.get(universe.pop!)
   end
 
   def handle_eval_univ(_, universe, parser)
@@ -13,7 +11,7 @@ module Keyword
       universe << last
     else
       # this isn't parse! cause i dont want it being destroyed each time we read it
-      universe << parser.parse(last, universe.knowns_only)
+      universe << parser.parse(last, universe.knowns_only.clone)
     end
   end
 

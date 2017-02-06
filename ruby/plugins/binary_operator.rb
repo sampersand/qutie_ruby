@@ -88,30 +88,56 @@ module BinaryOperator
 
   def handle_oper(token, stream, universe, parser)
     lhs = universe.pop!
-    rhs = universe.to_globals
     catch(:EOF) {
       until stream.stream_empty?
         # vvvv this might get weird if rhs doesnt copy
-        break if priority(token, BinaryOperator) <= priority(*parser.next_token(stream, rhs)) 
+        break if priority(token, BinaryOperator) <= priority(*parser.next_token(stream, universe)) 
         # ^^^^
 
-        next_token = parser.next_token!(stream, rhs)
-        p next_token # right here it breaks
-        next_token[1].handle(next_token[0], stream, rhs, parser) # pretty sure this will bite me...
+        next_token = parser.next_token!(stream, universe)
+        next_token[1].handle(next_token[0], stream, universe, parser) # pretty sure this will bite me...
       end
     }
 
     # rhs = parser.parse!(rhs, universe.to_globals!)
 
-    unless rhs.stack.length == 1
-      if rhs.stack.empty?
-        puts("[Error] No rhs for operator `#{token}` w/ lhs `#{lhs}`")
-        exit!
-      end
-      warn("[Warning] ambiguous rhs for operator `#{token}` w/ lhs `#{lhs}`:  `#{rhs}`. Using `#{rhs.stack.first}` ")
-    end
-    universe << OPERATORS[token].(lhs, rhs.stack.first, universe, parser)
+    # unless rhs.stack.length == 1
+    #   if rhs.stack.empty?
+    #     puts("[Error] No rhs for operator `#{token}` w/ lhs `#{lhs}`")
+    #     exit!
+    #   end
+    #   warn("[Warning] ambiguous rhs for operator `#{token}` w/ lhs `#{lhs}`:  `#{rhs}`. Using `#{rhs.stack.first}` ")
+    # end
+    # universe << OPERATORS[token].(lhs, rhs.stack.first, universe, parser)
+    universe << OPERATORS[token].(lhs, universe.pop!, universe, parser)
   end
+
+  # def handle_oper(token, stream, universe, parser)
+  #   lhs = universe.pop!
+  #   rhs = universe.to_globals
+  #   catch(:EOF) {
+  #     until stream.stream_empty?
+  #       # vvvv this might get weird if rhs doesnt copy
+  #       break if priority(token, BinaryOperator) <= priority(*parser.next_token(stream, rhs)) 
+  #       # ^^^^
+
+  #       next_token = parser.next_token!(stream, rhs)
+  #       p next_token # right here it breaks}}
+  #       next_token[1].handle(next_token[0], stream, rhs, parser) # pretty sure this will bite me...
+  #     end
+  #   }
+
+  #   # rhs = parser.parse!(rhs, universe.to_globals!)
+
+  #   unless rhs.stack.length == 1
+  #     if rhs.stack.empty?
+  #       puts("[Error] No rhs for operator `#{token}` w/ lhs `#{lhs}`")
+  #       exit!
+  #     end
+  #     warn("[Warning] ambiguous rhs for operator `#{token}` w/ lhs `#{lhs}`:  `#{rhs}`. Using `#{rhs.stack.first}` ")
+  #   end
+  #   universe << OPERATORS[token].(lhs, rhs.stack.first, universe, parser)
+  # end
 
 end
 

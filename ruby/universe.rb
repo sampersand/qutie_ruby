@@ -83,6 +83,7 @@ class Universe
     end
 
     def get(val)
+      return self if val == :__current
       @locals.include?(val) ? @locals[val] : @globals[val]
     end
 end
