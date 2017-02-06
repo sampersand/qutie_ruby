@@ -13,7 +13,7 @@ class Universe
   end
 
   def initialize(stack: nil, locals: nil, globals: nil)
-
+    self.class::PROGRAM_STACK[0] = self if self.class::PROGRAM_STACK.empty?
     @stack = stack || []
     @locals = locals || {}
     @globals = globals || {}
@@ -25,12 +25,15 @@ class Universe
 
   # repr
     def inspect        
-      "<#{@stack}|{#{@locals.keys.to_s[1...-1]}}|{#{globals_s}}>"
+      "<#{@stack}|{#{locals_s}}|{#{globals_s}}>"
     end
     alias :to_s :inspect
 
     def globals_s
-      @globals.reject{ |k, v| v.respond_to?(:to_s?) && !v.to_s? }.keys.to_s[1...-1]
+      @globals.reject{ |k, v| v.respond_to?(:to_s?) && !v.to_s? || k[0..1]=='__'}.keys.to_s[1...-1]
+    end
+    def locals_s
+      @locals.reject{ |k, v| v.respond_to?(:to_s?) && !v.to_s? || k[0..1]=='__'}.keys.to_s[1...-1]
     end
 
   # misc

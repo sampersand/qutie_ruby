@@ -29,7 +29,9 @@ module BinaryOperator
         func.call(args, universe, parser)
       else
         args.locals[:__args] = args.clone #somethign here with spawn off
+        func.class::PROGRAM_STACK.unshift args
         parser.parse(stream: func, universe: args)
+        func.class::PROGRAM_STACK.shift
       end
       },
 
