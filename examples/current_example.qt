@@ -7,8 +7,9 @@ foo = {
       __current? .= (food, chicken)!;
       '\t__current?.food: ', __current?.food
    }!; #=> should give me `chicken`
-   disp? @ ( '\t        c?.food: ', c?.food )!; # => should give me `spam`
+   disp? @ ( '\t c?.food:        ', c?.food )!; # => should give me `spam`
    __current?
 };
 
-disp? @ ('\tfoo result.food: ', (foo? @$ (arg=3;)!)$.food )!; # sohuld give me `spam`, gives me `eggs`
+foo? @ ();
+# disp? @ ('\tfoo result.food: ', (foo? @$ (arg=3;)!)$.food )!; # sohuld give me `spam`, gives me `eggs`

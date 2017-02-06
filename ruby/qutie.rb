@@ -27,7 +27,7 @@ text = open(file, 'r').read
 # Parser::PreParser::pre_process!(text)
 
 require_relative 'functions'
-res = parser.process(text, default_locals: Functions::FUNCTIONS)
+res = parser.process(text, builtins: Functions::FUNCTIONS)
 
 require 'pp'
 puts '----[end]----'

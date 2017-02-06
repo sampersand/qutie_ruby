@@ -12,10 +12,10 @@ class Parser
     @plugins.unshift plugin
   end
 
-  def process(inp, default_locals: nil)
+  def process(inp, builtins: nil)
     stream = Universe.from_string inp
     universe = Universe.new
-    universe.locals.update(default_locals) if default_locals
+    universe.globals.update(builtins) if builtins
     parse(stream, universe)
   end
 

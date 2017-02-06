@@ -6,6 +6,10 @@
     def call(args, universe, parser)
       @func.call(args, universe, parser)
     end
+    def to_s?
+      false
+    end
+
   end
 
   FUNCTIONS = {

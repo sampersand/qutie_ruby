@@ -42,24 +42,3 @@ end
 
 
 
-
-a = {
-  b: {
-    c: :d
-  }
-}
-e = {
-  b: {
-    g: :h
-  }
-}
-a.clone[:b].update(e[:b])
-p a
-
-
-
-
-
-
-
-

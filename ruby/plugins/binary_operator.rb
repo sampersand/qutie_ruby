@@ -96,6 +96,7 @@ module BinaryOperator
         # ^^^^
 
         next_token = parser.next_token!(stream, rhs)
+        p next_token # right here it breaks
         next_token[1].handle(next_token[0], stream, rhs, parser) # pretty sure this will bite me...
       end
     }
@@ -113,3 +114,9 @@ module BinaryOperator
   end
 
 end
+
+
+
+
+
+

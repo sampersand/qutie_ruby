@@ -1,3 +1,4 @@
+require_relative 'functions' # for global print
 class Universe
 
   attr_accessor :stack
@@ -16,9 +17,13 @@ class Universe
 
   # repr
     def inspect        
-      "<#{@stack}|{#{@locals.keys.to_s[1...-1]}}|{#{globals.keys.to_s[1...-1]}}>"
+      # "<#{@stack}|{#{@locals.keys.to_s[1...-1]}}|{#{globals.keys.to_s[1...-1]}}>"
+      "<#{@stack}|{#{@locals.keys.to_s[1...-1]}}|{#{globals_s}}>"
     end
     alias :to_s :inspect
+    def globals_s
+      @globals.reject{ |k, v| v.respond_to?(:to_s?) && !v.to_s? }.keys.to_s[1...-1]
+    end
 
   # misc
     def to_globals!
