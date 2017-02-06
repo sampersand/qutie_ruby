@@ -4,18 +4,23 @@ class Universe
   attr_accessor :stack
   attr_accessor :locals
   attr_accessor :globals
-  attr_accessor :program_stack
+
+  
+  Universe::PROGRAM_STACK = []
 
   def self.from_string(input)
     new(stack: input.each_char.to_a)
   end
 
-  def initialize(stack: nil, locals: nil, globals: nil, program_stack: nil, add_to_stack: true)
+  def initialize(stack: nil, locals: nil, globals: nil)
+
     @stack = stack || []
     @locals = locals || {}
     @globals = globals || {}
-    @program_stack = program_stack || []
-    @program_stack += [self] if add_to_stack
+  end
+
+  def program_stack
+    self.class::PROGRAM_STACK
   end
 
   # repr
@@ -30,19 +35,17 @@ class Universe
 
   # misc
     def spawn_frame
-      self.class.new(program_stack: @program_stack, globals: @globals.clone.update(@locals))
+      self.class.new(globals: @globals.clone.update(@locals))
     end
 
-    def new_stack(stack)
-      self.class.new(program_stack: @program_stack, stack: stack, locals: @locals, globals: @globals, add_to_stack: false)
+    def spawn_new_stack(new_stack:)
+      self.class.new(stack: new_stack, locals: @locals, globals: @globals)
     end
 
     def clone
-      self.class.new(program_stack: @program_stack, #we dont need to copy this
-                     stack: @stack.clone,
+      self.class.new(stack: @stack.clone,
                      locals: @locals.clone,
-                     globals: @globals.clone,
-                     add_to_stack: false)
+                     globals: @globals.clone)
     end
 
   #stream methods
@@ -88,12 +91,3 @@ class Universe
       @locals.include?(val) ? @locals[val] : @globals[val]
     end
 end
-
-
-
-
-
-
-
-
-

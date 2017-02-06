@@ -4,7 +4,7 @@ module Keyword
   def handle_get_known(_, universe, _)
     to_get = universe.pop!
     if to_get == :__func_stack
-      universe << universe.new_stack(universe.program_stack)
+      universe << universe.spawn_new_stack(new_stack: universe.program_stack)
     else
       universe << universe.get(to_get)
     end
@@ -16,7 +16,7 @@ module Keyword
       universe << last
     else
       # this isn't parse! cause i dont want it being destroyed each time we read it
-      universe << parser.parse(stream: last, universe: universe.new_stack(nil).clone)
+      universe << parser.parse(stream: last, universe: universe.spawn_new_stack(new_stack: nil).clone)
     end
   end
 

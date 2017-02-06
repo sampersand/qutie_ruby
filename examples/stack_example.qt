@@ -14,8 +14,12 @@
 #    disp? @ ('B: ', B?)!;
 # } @ ();
 # disp? @ ('A: ', A?)!;
-A=3;
-{
-   B=2;
+foo = {
+   A = 0;
+   {
+      B = 1;
+      disp? @ ( __func_stack? )!;
+   }!
    __func_stack?
-}!
+};
+foo? @ ()!;
