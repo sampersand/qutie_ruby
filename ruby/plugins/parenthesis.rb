@@ -5,26 +5,23 @@ module Parenthesis
   R_PAREN = [']', ')', '}']
   
   def next_token!(stream, universe, parser)
-    if stream.peek?(*L_PAREN)
-
-      start_paren = stream.next!(1)
-      new_container = start_paren
-      parens = 1
-      catch(:EOF) {
-        # this will break if there are uneven parens inside comments
-        until parens == 0 do
-          if stream.peek?(*L_PAREN)
-            parens += 1
-          elsif stream.peek?(*R_PAREN)
-            parens -= 1
-          end
-          new_container << stream.next!(1)
+    return unless stream.peek?(*L_PAREN)
+    start_paren = stream.next!(1)
+    new_container = start_paren
+    parens = 1
+    parser.catch_EOF {
+      # this will break if there are uneven parens inside comments
+      until parens == 0 do
+        if stream.peek?(*L_PAREN)
+          parens += 1
+        elsif stream.peek?(*R_PAREN)
+          parens -= 1
         end
-        return new_container[1...-1]
-      }
-      raise "No end parenthesis for `#{start_paren}` found"
-
-    end
+        new_container << stream.next!(1)
+      end
+      nil
+    }
+    new_container[1...-1]
   end
 
   def handle(token, stream, universe, parser)

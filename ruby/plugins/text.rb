@@ -7,11 +7,12 @@ module Text
     'f' => "\f",
   }
   module_function
-  def next_token!(stream, _, _)
+  def next_token!(stream, _, parser)
     return unless stream.peek?(*QUOTES)
     quote = stream.next!(1)
     body = ''
-    catch(:EOF) {
+
+    parser.catch_EOF {
       until stream.peek?(quote)
         body += (if stream.peek?('\\')
                     stream.next!(1) # pop the \
@@ -23,9 +24,10 @@ module Text
       end
       raise unless stream.peek?(quote)
       stream.next!(quote)
-      return body
+      nil
     }
-    raise "No end quote found"
+    body
+
   end
 
   def handle(token, _, universe, _)

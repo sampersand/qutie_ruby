@@ -16,19 +16,29 @@ class Parser
     stream = Universe.from_string inp
     universe = Universe.new
     universe.globals.update(builtins) if builtins
-    parse(stream: stream, universe: universe)
+    catch(:EOF){
+      parse(stream: stream, universe: universe)
+    }
   end
 
   def parse(stream:, universe:)
     parse!(stream: stream.clone, universe: universe)
   end
 
+  def catch_EOF(&block)
+    levels = catch(:EOF, &block) or return false
+    # p levels
+    throw :EOF, levels-1 if levels >= 1
+    return true
+  end
+
   def parse!(stream:, universe:)
-    catch(:EOF) {
+    catch_EOF { 
       until stream.stack.empty?
         token, plugin = next_token!(stream, universe)
         plugin.handle(token, stream, universe, self)
       end
+      nil
     }
     universe
   end

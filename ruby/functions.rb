@@ -27,10 +27,9 @@
 
       value = args.stack[0]
       value = args.locals.fetch(:__value){ args.stack.fetch(0, NoRet) }
-      levels = args.locals.fetch(:__levels){ args.stack.fetch(1, 1) }
+      levels = args.locals.fetch(:__levels){ args.stack.fetch(1, 1) } - 1
       universe << value unless value == NoRet
-      stream.stack.clear
-      stream.next!
+      throw :EOF, levels
     },
 
     :if => BuiltinFunciton.new{ |args, universe, stream, parser|

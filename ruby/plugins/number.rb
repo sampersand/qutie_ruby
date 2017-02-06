@@ -1,7 +1,7 @@
 module Number
   module_function
 
-  def next_base!(stream)
+  def next_base!(stream, _)
     return unless stream.peek?(/0[oxdb]/i, len: 2)
     res = stream.next!(2)
     case res[1]
@@ -13,27 +13,29 @@ module Number
     end
     res
   end
-  def next_int!(stream)
+  def next_int!(stream, parser)
     return unless stream.peek?(/\d/, len: 1)
     num = ''
-    catch(:EOF){
+    parser.catch_EOF {
       num += stream.next! while stream.peek?(/\d/, len: 1)
+      nil
     }
     num
   end
 
-  def next_float!(stream)
-    start = next_int!(stream) or return
-    catch(:EOF){
+  def next_float!(stream, parser)
+    start = next_int!(stream, parser) or return
+    parser.catch_EOF {
       return start unless stream.peek?('.')
-      return start + stream.next! + next_int!(stream) || '0'
+      return start + stream.next! + next_int!(stream, parser) || '0'
+      nil
     }
-    return start
+    start
 
   end
 
-  def next_token!(stream, _, _)
-     next_base!(stream) || next_float!(stream)
+  def next_token!(stream, _, parser)
+     next_base!(stream, parser) || next_float!(stream, parser)
   end
   def handle(token, _, universe, _)
     universe << (token.include?('.') ? token.to_f : token.to_i)

@@ -55,13 +55,13 @@ class Universe
 
     def next!(amnt=nil)
       return next!(amnt.length) if amnt.is_a?(String)
-      throw :EOF if @stack.empty?
+      throw :EOF, 0 if @stack.empty?
       return @stack.shift unless amnt
       @stack.shift(amnt).join
     end
 
     def peek(amnt=nil)
-      throw :EOF if @stack.empty?
+      throw :EOF, 0 if @stack.empty?
       return @stack.first unless amnt
       @stack.first(amnt).join
     end

@@ -1,9 +1,14 @@
 foo = {
-   disp?@(before);
-   1,
-   {
-      return? @ (2)!;
-   }
-   disp?@(after (dont come here) );
+   disp? @ ('b4: 1')!;
+   ret_value = {
+      disp? @ ('b4: 2')!;
+      return? @ (5)!;
+      disp? @ ('l8: 2')!;
+   } @$ ()!;
+   disp? @ ('\tinner value: ', ret_value?)!;
+   disp? @ ('l8: 1')!;
+   3
 };
 disp? @ ( foo? @$ ()! )!;
+
+
