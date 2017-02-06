@@ -32,6 +32,7 @@ res = parser.process(text, default_locals: Functions::FUNCTIONS)
 require 'pp'
 puts '----[end]----'
 res.stack.each_with_index{ |i,j| puts "\t#{j}: #{i.inspect}"}
+p '--'
 p res
 
 

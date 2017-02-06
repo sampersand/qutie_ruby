@@ -2,7 +2,9 @@ module Keyword
   module_function
 
   def handle_get_known(_, universe, _)
-    universe << universe.get(universe.pop!)
+    # universe << universe.get(universe.pop!)
+    to_get = universe.pop!;
+    universe << (to_get == :__current ? universe : universe.get(to_get))
   end
 
   def handle_eval_univ(_, universe, parser)
@@ -39,6 +41,20 @@ module Keyword
 end
 
 
+
+
+a = {
+  b: {
+    c: :d
+  }
+}
+e = {
+  b: {
+    g: :h
+  }
+}
+a.clone[:b].update(e[:b])
+p a
 
 
 
