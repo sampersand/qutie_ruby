@@ -66,7 +66,6 @@ class Parser
     # METHOD_CALL_REG = /([a-z_][a-z_0-9]*\?(?:\.[a-z_0-9]*)*)\.([a-z_0-9]*)(?=[\[({])/i
     METHOD_CALL_REG = /([a-z_][a-z_0-9]*\?)\.([a-z_0-9]*)(?=[\[({])/i
     def pre_process!(text)
-
       text.gsub!(/(?<!__)(self|args|current)(?!\?)/, '__\1?')
 
       while pos = text.index(/(?<=clone|disp|text|num|stop|debug|len|if|switch|while|for|del)[({\[]/)

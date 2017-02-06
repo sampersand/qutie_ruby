@@ -1,4 +1,4 @@
-Users = class {
+Users = {
    __init = {
       __self? .= [users, users? or {}]!;
    };
@@ -38,21 +38,25 @@ Users = class {
    };
 };
 
-User = class {
+User = {
    __init = {
       __self? .= (name, name?)!;
       __self? .= (pass, pass?)!;
    };
+   __init? @ (__self=__current?, name=name?,pass=pass?)!;
+   __init? @ (name=name?,pass=pass?)!;
    __text = {
       text('`'+__self?.name+'`', '=', __self?.pass)!
    };
 };
 
-users = new Users?();
-users?.add( new User?(name='john', pass='password123';) )!;
-users?.add( new User?(name='fred', pass='pword123';) )!;
-users?.add( new User?(name='alex', pass='lemmieinplz';) )!;
-disp( users?, end='\n')!;
+user = User? @ (name='foo', pass = 'bar');
+
+# users = new Users();
+# users?.add( new User?(name='john', pass='password123';) )!;
+# users?.add( new User?(name='fred', pass='pword123';) )!;
+# users?.add( new User?(name='alex', pass='lemmieinplz';) )!;
+# disp( users?, end='\n')!;
 
 
 

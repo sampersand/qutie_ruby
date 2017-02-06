@@ -24,7 +24,7 @@ parser.add_plugin Escape
 
 file = ARGV[0] or fail "No file!"
 text = open(file, 'r').read
-Parser::PreParser::pre_process!(text)
+# Parser::PreParser::pre_process!(text)
 
 require_relative 'functions'
 res = parser.process(text, default_locals: Functions::FUNCTIONS)

@@ -1,2 +1,0 @@
-#!/bin/bash
-ruby '/users/westerhack/code/ruby/qutie/qutie.rb' $1
