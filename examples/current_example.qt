@@ -1,7 +1,7 @@
 foo = {
    food = ham;
    c = __current?;
-   __current? .= (food, eggs)!;
+   __current?.1 .= (food, eggs)!;
    c? .= (food, spam)!;
    disp? @ {__current? .= (food, chicken)!; '\t__current?.food: ', __current?.food }!;
    disp? @ ( '\t c?.food:        ', c?.food )!; # => should give me `spam`
