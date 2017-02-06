@@ -23,10 +23,10 @@ module BinaryOperator
     'xor' => proc { |l, r| l ^ r }, # doesnt work
 
     '='   => proc { |l, r, u| u.locals[l] = r},
-    '@$' => proc { |func, args, universe, parser| OPERATORS['@'].(func, args, universe, parser).stack.last },
-    '@'  => proc { |func, args, universe, parser|
+    '@$' => proc { |func, args, universe, stream, parser| OPERATORS['@'].(func, args, universe, stream, parser).stack.last },
+    '@'  => proc { |func, args, universe, stream, parser|
       if func.respond_to?(:call)
-        func.call(args, universe, parser)
+        func.call(args, universe, stream, parser)
       else
         args.locals[:__args] = args.clone #somethign here with spawn off
         func.class::PROGRAM_STACK.unshift args
@@ -35,14 +35,14 @@ module BinaryOperator
       end
       },
 
-    '.V='  => proc { |arg, pos, universe, parser| arg.locals[pos.stack[0]] = pos.stack[1] },
-    '.S='  => proc { |arg, pos, universe, parser| arg.stack[pos.stack[0]] = pos.stack[1] },
-    '.='  => proc { |arg, pos, universe, parser| 
-      OPERATORS[pos.stack[0].is_a?(Numeric) ? '.S=' : '.V='].(arg, pos, universe, parser)
+    '.V='  => proc { |arg, pos| arg.locals[pos.stack[0]] = pos.stack[1] },
+    '.S='  => proc { |arg, pos| arg.stack[pos.stack[0]] = pos.stack[1] },
+    '.='  => proc { |arg, pos| 
+      OPERATORS[pos.stack[0].is_a?(Numeric) ? '.S=' : '.V='].(arg, pos)
       },
-    '.S'  => proc { |arg, pos, universe, parser| arg.stack[pos] },
-    '.V'  => proc { |arg, pos, universe, parser| arg.get(pos) },
-    '.'  => proc { |arg, pos, universe, parser|
+    '.S'  => proc { |arg, pos| arg.stack[pos] },
+    '.V'  => proc { |arg, pos| arg.get(pos) },
+    '.'  => proc { |arg, pos|
       res = arg.get(pos)
       res.nil?  && pos.is_a?(Integer) ? arg.stack[pos] : res
     },
@@ -111,7 +111,7 @@ module BinaryOperator
     #   warn("[Warning] ambiguous rhs for operator `#{token}` w/ lhs `#{lhs}`:  `#{rhs}`. Using `#{rhs.stack.first}` ")
     # end
     # universe << OPERATORS[token].(lhs, rhs.stack.first, universe, parser)
-    universe << OPERATORS[token].(lhs, universe.pop!, universe, parser)
+    universe << OPERATORS[token].(lhs, universe.pop!, universe, stream, parser)
   end
 
   # def handle_oper(token, stream, universe, parser)

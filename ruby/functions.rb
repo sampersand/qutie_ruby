@@ -3,8 +3,8 @@
     def initialize(&block)
       @func = block
     end
-    def call(args, universe, parser)
-      @func.call(args, universe, parser)
+    def call(args, universe, stream, parser)
+      @func.call(args, universe, stream, parser)
     end
     def to_s?
       false
@@ -12,8 +12,9 @@
 
   end
 
+  NoRet = Class.new();
   FUNCTIONS = {
-    :switch => BuiltinFunciton.new{ |args, universe, parser|
+    :switch => BuiltinFunciton.new{ |args, universe, stream, parser|
       switch_on = args.stack.fetch(0){ args.locals.fetch(:__switch_on) }
       if args.locals.include?(switch_on)
         args.locals[switch_on]
@@ -21,18 +22,29 @@
         args.stack[switch_on]
       end
     },
-    :if => BuiltinFunciton.new{ |args, universe, parser|
+
+    :return => BuiltinFunciton.new{ |args, universe, stream|
+
+      value = args.stack[0]
+      value = args.locals.fetch(:__value){ args.stack.fetch(0, NoRet) }
+      levels = args.locals.fetch(:__levels){ args.stack.fetch(1, 1) }
+      universe << value unless value == NoRet
+      stream.stack.clear
+      stream.next!
+    },
+
+    :if => BuiltinFunciton.new{ |args, universe, stream, parser|
       cond     = args.stack.fetch(0){ args.locals.fetch(:__cond) }
       if_true  = args.locals.fetch(true){ args.stack.fetch(1){ args.locals.fetch(:true) }   }
       if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false, nil) } }
       cond ? if_true : if_false
     },
-    :while => BuiltinFunciton.new{ |args, universe, parser|
+    :while => BuiltinFunciton.new{ |args, universe, stream, parser|
       cond = args.stack.fetch(0){ args.locals.fetch(:__cond) }
       body = args.stack.fetch(1){ args.locals.fetch(:__body) }
       parser.parse(stream: body, universe: universe) while parser.parse(stream: cond, universe: universe).pop! 
     },
-    :del => BuiltinFunciton.new{ |args, universe, parser|
+    :del => BuiltinFunciton.new{ |args, universe, stream, parser|
       pos = args.stack.fetch(0){ args.locals.fetch(:__pos) }
       type = args.stack.fetch(1){ args.locals.fetch(:__type, nil) }
 
@@ -47,7 +59,7 @@
       end
     },
 
-    :for => BuiltinFunciton.new{ |args, universe, parser|
+    :for => BuiltinFunciton.new{ |args, universe, stream, parser|
       start = args.stack.fetch(0){ args.locals.fetch(:__start) }
       cond = args.stack.fetch(1){ args.locals.fetch(:__cond) }
       incr = args.stack.fetch(2){ args.locals.fetch(:__incr) }
@@ -61,25 +73,25 @@
 
     # i dont know how many of these work...
 
-    :clone => BuiltinFunciton.new{ |args, universe, parser|
+    :clone => BuiltinFunciton.new{ |args, universe, stream, parser|
       case args
       when true, false, nil, Numeric, Fixnum then args
       else qutie_func(args, universe, parser, :__clone){ |a| a.clone }
       end
     },
-    :disp => BuiltinFunciton.new{ |args, universe, parser|
+    :disp => BuiltinFunciton.new{ |args, universe, stream, parser|
       endl = args.get(:end) || "\n"
       sep  = args.get(:sep) || ""
       args.locals[:sep] = sep # forces it to be '' if not specified, but doesnt override text's default
-      to_print=FUNCTIONS[:text].call(args, universe, parser) 
+      to_print=FUNCTIONS[:text].call(args, universe, stream, parser) 
       print(to_print + endl)
 
     },
-    :stop => BuiltinFunciton.new{ |args, universe, parser|
+    :stop => BuiltinFunciton.new{ |args, universe, stream, parser|
       exit_code = args.stack.last;
       exit(exit_code || 0)
     },
-    :text => BuiltinFunciton.new{ |args, universe, parser|
+    :text => BuiltinFunciton.new{ |args, universe, stream, parser|
       if args.respond_to?(:get)
         sep  = args.get(:sep) || " "
         args.stack.collect{ |arg|
@@ -90,11 +102,11 @@
         args.to_s 
       end
     },
-    :debug => BuiltinFunciton.new{ |args, universe, parser|
+    :debug => BuiltinFunciton.new{ |args, universe, stream, parser|
       p [args.stack, args.locals.keys]
     },
 
-    :len => BuiltinFunciton.new{ |args, universe, parser|
+    :len => BuiltinFunciton.new{ |args, universe, stream, parser|
       arg = args.stack.last;
       u = universe.spawn_frame
       u.globals[:__type] = args.get(:__type)

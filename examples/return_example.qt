@@ -1,0 +1,9 @@
+foo = {
+   disp?@(before);
+   1,
+   {
+      return? @ (2)!;
+   }
+   disp?@(after (dont come here) );
+};
+disp? @ ( foo? @$ ()! )!;
