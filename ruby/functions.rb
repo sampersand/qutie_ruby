@@ -88,7 +88,7 @@
       print(to_print + endl)
     },
     :syscall => BuiltinFunciton.new{ |args, universe, stream, parser|
-      sep  = args.get(:sep) || ""
+      sep  = args.get(:sep) || " "
       args.locals[:sep] = sep # forces it to be '' if not specified, but doesnt override text's default
       to_call=FUNCTIONS[:text].call(args, universe, stream, parser) 
       `#{to_call}`

@@ -19,3 +19,5 @@ car?.drive()!; #=> vroom vroom!
 car?.drive( dist = 3; )!; #=> I drove 3 miles!
 disp( text(car?) )!; #> I'm a toyota with 4 doors.
 disp( text(car2?) )!; #> I'm a toyota with 4 doors.
+foo='hello, friend';
+syscall('echo', foo?, '>', 'myfiles.txt');
