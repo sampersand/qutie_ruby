@@ -12,6 +12,32 @@ module Parenthesis
     parser.catch_EOF(universe) {
       # this will break if there are uneven parens inside comments
       until parens == 0 do
+        # this is very hacky right here
+
+        if stream.peek?("'", '"', '`')
+          quote = stream.next!
+          new_container << quote
+          until stream.peek?(quote)
+            new_container << stream.next! if stream.peek?('\\')
+            new_container << stream.next!
+          end
+          new_container << stream.next!
+          next
+        end
+
+        if stream.peek?('#', '//')
+          new_container << stream.next! until stream.peek?("\n")
+          stream.next!
+          next
+        end
+
+        if stream.peek?('/*')
+          new_container << stream.next! until stream.peek?('*/')
+          stream.next!(2)
+          next
+        end
+
+
         if stream.peek?(*L_PAREN)
           parens += 1
         elsif stream.peek?(*R_PAREN)
@@ -23,6 +49,7 @@ module Parenthesis
       end
       nil
     }
+
     new_container[1...-1]
   end
 
