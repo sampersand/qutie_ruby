@@ -50,9 +50,9 @@
       pos = args.stack.fetch(1){ args.locals.fetch(:__pos) }
       type = args.stack.fetch(2){ args.locals.fetch(:__type, nil) }
 
-      if type == :V || (type.nil? && universe.locals.include?(pos))
+      if type == :V || (type.nil? && uni.locals.include?(pos))
         uni.locals.delete(pos)
-      elsif type == :S || (type.nil? && universe.stack.include?(pos))
+      elsif type == :S || (type.nil? && uni.stack.include?(pos))
         uni.stack.delete(pos)
       elsif type == :G
         uni.globals.delete(pos)
@@ -117,21 +117,22 @@
     },
 
     :len => BuiltinFunciton.new{ |args, universe, stream, parser|
-      arg = args.stack.last
+      arg = args.stack.fetch(0){ args.locals.fetch(:__arg) }
+      type = args.stack.fetch(1){ args.locals.fetch(:__type, nil) }
       u = universe.clone
-      u.globals[:__type] = args.get(:__type)
+      u.globals[:__type] = type
       qutie_func(arg, u, parser, :__len){ |a|
-        case args.get(:__type)
-        when /g/i then a.respond_to?(:globals) && a.globals.length
-        when /v|l/i then a.respond_to?(:locals) && a.locals.length
-        when /a|s/i then a.respond_to?(:stack) && a.stack.length
+        case type
+        when :g, :G then a.respond_to?(:globals) && a.globals.length
+        when :v, :V, :l, :L then a.respond_to?(:locals) && a.locals.length
+        when :a, :A, :s, :S then a.respond_to?(:stack) && a.stack.length
         when nil
           lcls = a.respond_to?(:locals) ? a.locals.length : 0
           stck = a.respond_to?(:stack)  ? a.stack.length : 0
           raise "unspecified type yielded both lcls and stack" unless (lcls == 0) || (stck == 0)
           lcls == 0 ? stck : lcls
-        else raise "unknown type `#{args.get(:__type).inspect}`"
-        end or raise "`#{a}` doesn't repsond to type param `#{args.get(:__type)}`"
+        else raise "unknown type `#{type.inspect}`"
+        end or raise "`#{a}` doesn't repsond to type param `#{type.inspect}`"
       }
     },
 
