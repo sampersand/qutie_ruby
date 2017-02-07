@@ -8,4 +8,4 @@
 
 # disp?@( num? @ (`syscall? @ [echo 9]`$.0)$ + 1)!;
 
-'disp? @ (foo?)!' @ (foo=3)!;
+'disp? @ (foo?)!' @ (foo=3)!
