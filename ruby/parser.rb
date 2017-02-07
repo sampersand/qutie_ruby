@@ -18,10 +18,11 @@ class Parser
     @builtins.update builtins
   end
 
-  def process(inp)
+  def process(inp, additional_builtins: nil)
     stream = Universe.from_string inp
     universe = Universe.new
     universe.globals.update(@builtins)
+    universe.globals.update(additional_builtins) if additional_builtins
     catch(:EOF){
       parse(stream: stream, universe: universe)
     }

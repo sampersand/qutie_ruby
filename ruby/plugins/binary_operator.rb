@@ -27,6 +27,8 @@ module BinaryOperator
     '@'  => proc { |func, args, universe, stream, parser|
       if func.respond_to?(:call)
         func.call(args, universe, stream, parser)
+      elsif func.is_a?(String)
+        parser.process(func, additional_builtins: args.locals)
       else
         args.locals[:__args] = args.clone #somethign here with spawn off
         func.program_stack.push args

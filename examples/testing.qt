@@ -6,7 +6,6 @@
 # syscall?@[cd ~; cat ./arry_example.qt];
 # syscall? @ [echo `pwd`];
 
-# disp?@( num? @ (`syscall? @ [echo 0]`!.0)$ + 1)!;
-# disp?@( `syscall? @ [echo 0]`! )!;
-disp?@( `disp? @ (3)!;`! )!;
-# disp?@( num? @ (`echo 0`!.0)$ + 1)!;
+# disp?@( num? @ (`syscall? @ [echo 9]`$.0)$ + 1)!;
+
+'disp? @ (foo?)!' @ (foo=3)!;
