@@ -46,11 +46,9 @@
       parser.parse(stream: body, universe: universe) while parser.parse(stream: cond, universe: universe).pop! 
     },
     :del => BuiltinFunciton.new{ |args, universe, stream, parser|
-      pos = args.stack.fetch(0){ args.locals.fetch(:__pos) }
-      uni = args.stack.fetch(1){ args.locals.fetch(:__uni, args) }
+      uni = args.stack.fetch(0){ args.locals.fetch(:__uni) }
+      pos = args.stack.fetch(1){ args.locals.fetch(:__pos) }
       type = args.stack.fetch(2){ args.locals.fetch(:__type, nil) }
-      # p [pos, (0..uni.stack.length), uni, args.stack, uni.stack]
-      p [args.stack]
       if type == :V || (type.nil? && uni.locals.include?(pos))
         uni.locals.delete(pos)
       elsif type == :S || (type.nil? && (0..uni.stack.length).include?(pos))
@@ -129,7 +127,7 @@
     },
 
     :len => BuiltinFunciton.new{ |args, universe, stream, parser|
-      arg = args.stack.fetch(0){ args.locals.fetch(:__arg, universe) }
+      arg = args.stack.fetch(0){ args.locals.fetch(:__arg) }
       type = args.stack.fetch(1){ args.locals.fetch(:__type, nil) }
       u = universe.clone
       u.globals[:__type] = type
