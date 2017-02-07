@@ -89,25 +89,26 @@ class Parser
     def pre_process!(text)
       text.gsub!(/(?<!__)(self|args|current)(?!\?)/, '__\1?')
 
-      while pos = text.index(/(?<=clone|disp|text|num|stop|debug|len|if|switch|while|for|del)[({\[]/)
+      keys = Functions::FUNCTIONS.keys.collect(&:to_s).join('|')
+      while pos = text.index(/(?<=#{keys})[({\[]/)
         parens = get_parens!(text, pos)
         text.insert(pos, "?@#{parens}!")
       end
-      while pos = text.index(NEW_CLS_REG)
-        cls = text.match(NEW_CLS_REG)[1]
-        text.sub!(NEW_CLS_REG, '')
-        parens = get_parens!(text, pos)
-        text.insert(pos, "(i=clone?@(#{cls}?)$@();i?.__init@(__self=i?;#{parens[1...-1]})!;i?)$")
-      end
+      # while pos = text.index(NEW_CLS_REG)
+      #   cls = text.match(NEW_CLS_REG)[1]
+      #   text.sub!(NEW_CLS_REG, '')
+      #   parens = get_parens!(text, pos)
+      #   text.insert(pos, "(i=clone?@(#{cls}?)$@();i?.__init@(__self=i?;#{parens[1...-1]})!;i?)$")
+      # end
 
-      while pos = text.index(METHOD_CALL_REG)
-        match=text.match(METHOD_CALL_REG)
-        var=match[1]
-        func=match[2]
-        text.sub!(METHOD_CALL_REG, '')
-        parens = get_parens!(text, pos)
-        text.insert(pos, "(#{var}.#{func}@$#{parens[0]}__self=#{var};#{parens[1..-1]}!)$")
-      end
+      # while pos = text.index(METHOD_CALL_REG)
+      #   match=text.match(METHOD_CALL_REG)
+      #   var=match[1]
+      #   func=match[2]
+      #   text.sub!(METHOD_CALL_REG, '')
+      #   parens = get_parens!(text, pos)
+      #   text.insert(pos, "(#{var}.#{func}@$#{parens[0]}__self=#{var};#{parens[1..-1]}!)$")
+      # end
 
       text.gsub!(/class\s+([{(\[])/i, '\1__init={};') # replace 'class {'
       text.gsub!(/([a-z_0-9]+)\s*(\+|-|\*|\/|%|\*\*|or|and|xor)=/i,'\1=\1?\2') # or=

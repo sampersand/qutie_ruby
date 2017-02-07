@@ -97,7 +97,7 @@ module BinaryOperator
     case token
     when '**' then Math::E
     when '*', '/' then 1.0
-    when '+', '-' then 0.0
+    when '+', '-' then 0
     end
   end
 

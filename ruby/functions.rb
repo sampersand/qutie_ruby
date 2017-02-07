@@ -115,10 +115,6 @@
 
     },
 
-    :debug => BuiltinFunciton.new{ |args, universe, stream, parser|
-      p [args.stack, args.locals.keys]
-    },
-
     :len => BuiltinFunciton.new{ |args, universe, stream, parser|
       arg = args.stack.last
       u = universe.clone
