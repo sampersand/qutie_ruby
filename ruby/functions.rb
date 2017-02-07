@@ -46,18 +46,19 @@
       parser.parse(stream: body, universe: universe) while parser.parse(stream: cond, universe: universe).pop! 
     },
     :del => BuiltinFunciton.new{ |args, universe, stream, parser|
-      uni = args.stack.fetch(0){ args.locals.fetch(:__uni) }
-      pos = args.stack.fetch(1){ args.locals.fetch(:__pos) }
+      pos = args.stack.fetch(0){ args.locals.fetch(:__pos) }
+      uni = args.stack.fetch(1){ args.locals.fetch(:__uni, args) }
       type = args.stack.fetch(2){ args.locals.fetch(:__type, nil) }
-
+      # p [pos, (0..uni.stack.length), uni, args.stack, uni.stack]
+      p [args.stack]
       if type == :V || (type.nil? && uni.locals.include?(pos))
         uni.locals.delete(pos)
-      elsif type == :S || (type.nil? && uni.stack.include?(pos))
-        uni.stack.delete(pos)
+      elsif type == :S || (type.nil? && (0..uni.stack.length).include?(pos))
+        uni.stack.delete_at(pos)
       elsif type == :G
         uni.globals.delete(pos)
       else
-        raise "Unknown type `#{type.inspect}`! (__type)"
+        raise "Unknown type `#{type.inspect}` with pos `#{pos}`"
       end
     },
 
@@ -128,7 +129,7 @@
     },
 
     :len => BuiltinFunciton.new{ |args, universe, stream, parser|
-      arg = args.stack.fetch(0){ args.locals.fetch(:__arg) }
+      arg = args.stack.fetch(0){ args.locals.fetch(:__arg, universe) }
       type = args.stack.fetch(1){ args.locals.fetch(:__type, nil) }
       u = universe.clone
       u.globals[:__type] = type

@@ -15,11 +15,13 @@
 
 Car = class {
    wheels = {
-      1, 2, 3, 4
+      1, 2, 3, 4, 5, 6
    }!;
 };
 c = Car? @ ();
-disp(c?.wheels.len());
+# c?.wheels.del@(1, $?)!;
+disp(c?.wheels.len@()!);
+# disp(c?.wheels)
 
 
 
