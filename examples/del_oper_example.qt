@@ -1,11 +1,14 @@
-map={a=3;b=4;c=4;}!;
+# map={a=3;b=4;c=4;}!;
 
-disp('len map: ' len(map?) ); #=> 3
-disp('map?.a: ' map?.a  ); # => does not have '3'
-del( map?, a); disp?@[deleted map?.a];
-disp('map?.a: ' map?.a  ); #=> nil
-disp('len map: ' len(map?) ); #=> 2
-prompt[hi]
+# disp('len map: ' len(map?) ); #=> 3
+# disp('map?.a: ' map?.a  ); # => does not have '3'
+# del( map?, a); disp?@[deleted map?.a];
+# disp('map?.a: ' map?.a  ); #=> nil
+# disp('len map: ' len(map?) ); #=> 2
+# prompt[hi]
 # disp( a?  )
 # del( $?.-1, map );
 # disp( a?  ); #=> does not have '3'
+
+
+prompt('hi')
