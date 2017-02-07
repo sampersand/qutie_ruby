@@ -15,7 +15,7 @@
 #   song = __args?.1;
 #   #...
 # }
-greet = function(name, age?, fav_color='green\\, or maybe red') {
-  disp('Hello', name?, '(', age?, ') whose favourite colour is', fav_color?, sep=' ';);
+greet = function(name, age?, fav_color=green) {
+  disp('Hello,', name?, '(', age?, ') whose favourite colour is: ', fav_color?, sep=' ';);
 };
-greet?@('Sam', 18, name='Saam';)!;
+greet?@('Sam', 18)!;
