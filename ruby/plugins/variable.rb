@@ -1,8 +1,8 @@
 module Variable
   module_function
   
-  VARIABLE_START = /[a-zA-Z_]/
-  VARIABLE_CONT  = /[a-zA-Z_]/
+  VARIABLE_START = /[a-z_]/i
+  VARIABLE_CONT  = /[a-z_0-9]/i
   def next_token!(stream, universe, parser)
     return stream.next! if stream.peek?('$')
     return unless stream.peek?(VARIABLE_START, len: 1)
