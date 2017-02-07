@@ -46,17 +46,18 @@
       parser.parse(stream: body, universe: universe) while parser.parse(stream: cond, universe: universe).pop! 
     },
     :del => BuiltinFunciton.new{ |args, universe, stream, parser|
-      pos = args.stack.fetch(0){ args.locals.fetch(:__pos) }
-      type = args.stack.fetch(1){ args.locals.fetch(:__type, nil) }
+      uni = args.stack.fetch(0){ args.locals.fetch(:__uni) }
+      pos = args.stack.fetch(1){ args.locals.fetch(:__pos) }
+      type = args.stack.fetch(2){ args.locals.fetch(:__type, nil) }
 
       if type == :V || (type.nil? && universe.locals.include?(pos))
-        universe.locals.delete(pos)
-      elsif type == :s || (type.nil? && universe.stack.include?(pos))
-        universe.stack.delete(pos)
+        uni.locals.delete(pos)
+      elsif type == :S || (type.nil? && universe.stack.include?(pos))
+        uni.stack.delete(pos)
       elsif type == :G
-        universe.globals.delete(pos)
+        uni.globals.delete(pos)
       else
-        raise "Unknown type `#{type}`!"
+        raise "Unknown type `#{type.inspect}`! (__type)"
       end
     },
 

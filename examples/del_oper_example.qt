@@ -1,0 +1,8 @@
+a = class {
+
+};
+map={a=3;b=4;}!;
+
+del(map?, a, V);
+disp($?);
+disp(map?);
