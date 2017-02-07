@@ -27,8 +27,8 @@ parser.add_builtins(Functions::FUNCTIONS)
 file = ARGV[0] or fail "No file!"
 text = open(file, 'r').read
 Parser::PreParser::pre_process!(text)
-fail text
-# puts text
+
+puts text
 require_relative 'functions'
 res = parser.process(text)
 
