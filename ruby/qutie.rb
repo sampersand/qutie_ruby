@@ -29,10 +29,10 @@ text = open(file, 'r').read
 require_relative 'functions'
 res = parser.process(text, builtins: Functions::FUNCTIONS)
 
-# require 'pp'
-# puts '----[end]----'
-# res.stack.each_with_index{ |i,j| puts "\t#{j}: #{i.inspect}"}
-# puts '-------------'
+require 'pp'
+puts '----[end]----'
+res.stack.each_with_index{ |i,j| puts "\t#{j}: #{i.inspect}"}
+puts '-------------'
 
 
 

@@ -12,7 +12,7 @@
 
   end
 
-  NoRet = Class.new();
+  NoRet = Class.new()
   FUNCTIONS = {
     :switch => BuiltinFunciton.new{ |args, universe, stream, parser|
       switch_on = args.stack.fetch(0){ args.locals.fetch(:__switch_on) }
@@ -27,9 +27,11 @@
 
       value = args.stack[0]
       value = args.locals.fetch(:__value){ args.stack.fetch(0, NoRet) }
-      levels = args.locals.fetch(:__levels){ args.stack.fetch(1, 1) } - 1
-      universe << value unless value == NoRet
-      throw :EOF, levels
+      levels = args.locals.fetch(:__levels){ args.stack.fetch(1, 1) }
+      if levels > 0
+        universe.program_stack.pop # to remove us
+        throw :EOF, [levels, value]
+      end
     },
 
     :if => BuiltinFunciton.new{ |args, universe, stream, parser|
@@ -54,7 +56,7 @@
       elsif type == :G
         universe.globals.delete(pos)
       else
-        raise "Unknown type `#{type}`!";
+        raise "Unknown type `#{type}`!"
       end
     },
 
@@ -63,7 +65,7 @@
       cond = args.stack.fetch(1){ args.locals.fetch(:__cond) }
       incr = args.stack.fetch(2){ args.locals.fetch(:__incr) }
       body = args.stack.fetch(3){ args.locals.fetch(:__body) }
-      parser.parse(stream: start, universe: universe);
+      parser.parse(stream: start, universe: universe)
       while parser.parse(cond, stream: universe).pop! 
         parser.parse(body, stream: universe)
         parser.parse(incr, stream: universe)
@@ -84,10 +86,16 @@
       args.locals[:sep] = sep # forces it to be '' if not specified, but doesnt override text's default
       to_print=FUNCTIONS[:text].call(args, universe, stream, parser) 
       print(to_print + endl)
+    },
+    :syscall => BuiltinFunciton.new{ |args, universe, stream, parser|
+      sep  = args.get(:sep) || ""
+      args.locals[:sep] = sep # forces it to be '' if not specified, but doesnt override text's default
+      to_call=FUNCTIONS[:text].call(args, universe, stream, parser) 
+      `#{to_call}`
 
     },
     :stop => BuiltinFunciton.new{ |args, universe, stream, parser|
-      exit_code = args.stack.last;
+      exit_code = args.stack.last
       exit(exit_code || 0)
     },
     :text => BuiltinFunciton.new{ |args, universe, stream, parser|
@@ -101,12 +109,18 @@
         args.to_s 
       end
     },
+
+    :num => BuiltinFunciton.new{ |args, universe, stream, parser|
+      qutie_func(args, universe, parser, :__num){ |a| a.to_i }
+
+    },
+
     :debug => BuiltinFunciton.new{ |args, universe, stream, parser|
       p [args.stack, args.locals.keys]
     },
 
     :len => BuiltinFunciton.new{ |args, universe, stream, parser|
-      arg = args.stack.last;
+      arg = args.stack.last
       u = universe.spawn_frame
       u.globals[:__type] = args.get(:__type)
       qutie_func(arg, u, parser, :__len){ |a|
@@ -140,14 +154,5 @@
   end
 
 end
-
-
-
-
-
-
-
-
-
 
 

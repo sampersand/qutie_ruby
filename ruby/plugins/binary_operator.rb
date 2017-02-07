@@ -29,11 +29,11 @@ module BinaryOperator
         func.call(args, universe, stream, parser)
       else
         args.locals[:__args] = args.clone #somethign here with spawn off
-        func.class::PROGRAM_STACK.unshift args
+        func.program_stack.push args
         parser.parse(stream: func, universe: args)
-        func.class::PROGRAM_STACK.shift
+        func.program_stack.pop
       end
-      },
+    },
 
     '.V='  => proc { |arg, pos| arg.locals[pos.stack[0]] = pos.stack[1] },
     '.S='  => proc { |arg, pos| arg.stack[pos.stack[0]] = pos.stack[1] },
@@ -43,8 +43,12 @@ module BinaryOperator
     '.S'  => proc { |arg, pos| arg.stack[pos] },
     '.V'  => proc { |arg, pos| arg.get(pos) },
     '.'  => proc { |arg, pos|
-      res = arg.get(pos)
-      res.nil?  && pos.is_a?(Integer) ? arg.stack[pos] : res
+      if arg.is_a?(String)
+        arg[pos]
+      else
+        res = arg.get(pos)
+        res.nil?  && pos.is_a?(Integer) ? arg.stack[pos] : res
+      end
     },
   }
 
@@ -87,45 +91,51 @@ module BinaryOperator
     end
   end
 
+  def fix_lhs(token)
+    case token
+    when '**' then Math::E
+    when '*', '/' then 1.0
+    when '+', '-' then 0.0
+    end
+  end
 
   def handle_oper(token, stream, universe, parser)
     lhs = universe.pop!
-    parser.catch_EOF {
+    rhs = universe.spawn_new_stack(new_stack: nil)
+    token_priority = priority(token, BinaryOperator)
+    parser.catch_EOF(universe) {
       until stream.stream_empty?
-        break if priority(token, BinaryOperator) <= priority(*parser.next_token(stream, universe)) 
-        next_token = parser.next_token!(stream, universe)
-        next_token[1].handle(next_token[0], stream, universe, parser) # pretty sure this will bite me...
+        next_token = parser.next_token(stream, rhs)
+        if next_token[0] =~ /[-+*\/]/ and next_token[1] == BinaryOperator and rhs.stack.empty?
+          next_token = parser.next_token!(stream, rhs)
+          rhs.push!(fix_lhs(next_token[0]))
+          # puts rhs, next_token, stream
+          next_token[1].handle(next_token[0], stream, rhs, parser)
+        else
+          break if token_priority <= priority(*next_token) 
+          next_token = parser.next_token!(stream, rhs)
+          next_token[1].handle(next_token[0], stream, rhs, parser) # pretty sure this will bite me...
+        end
       end
       nil
     }
+    universe.stack.concat(rhs.stack)
+    lhs ||= fix_lhs(token)
     universe << OPERATORS[token].(lhs, universe.pop!, universe, stream, parser)
   end
 
+
   # def handle_oper(token, stream, universe, parser)
   #   lhs = universe.pop!
-  #   rhs = universe.spawn_frame
-  #   catch(:EOF) {
+  #   parser.catch_EOF(universe) {
   #     until stream.stream_empty?
-  #       # vvvv this might get weird if rhs doesnt copy
-  #       break if priority(token, BinaryOperator) <= priority(*parser.next_token(stream, rhs)) 
-  #       # ^^^^
-
-  #       next_token = parser.next_token!(stream, rhs)
-  #       p next_token # right here it breaks}}
-  #       next_token[1].handle(next_token[0], stream, rhs, parser) # pretty sure this will bite me...
+  #       break if priority(token, BinaryOperator) <= priority(*parser.next_token(stream, universe)) 
+  #       next_token = parser.next_token!(stream, universe)
+  #       next_token[1].handle(next_token[0], stream, universe, parser) # pretty sure this will bite me...
   #     end
+  #     nil
   #   }
-
-  #   # rhs = parser.parse!(rhs, universe.spawn_frame!)
-
-  #   unless rhs.stack.length == 1
-  #     if rhs.stack.empty?
-  #       puts("[Error] No rhs for operator `#{token}` w/ lhs `#{lhs}`")
-  #       exit!
-  #     end
-  #     warn("[Warning] ambiguous rhs for operator `#{token}` w/ lhs `#{lhs}`:  `#{rhs}`. Using `#{rhs.stack.first}` ")
-  #   end
-  #   universe << OPERATORS[token].(lhs, rhs.stack.first, universe, parser)
+  #   universe << OPERATORS[token].(lhs, universe.pop!, universe, stream, parser)
   # end
 
 end

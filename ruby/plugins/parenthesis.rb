@@ -9,13 +9,15 @@ module Parenthesis
     start_paren = stream.next!(1)
     new_container = start_paren
     parens = 1
-    parser.catch_EOF {
+    parser.catch_EOF(universe) {
       # this will break if there are uneven parens inside comments
       until parens == 0 do
         if stream.peek?(*L_PAREN)
           parens += 1
         elsif stream.peek?(*R_PAREN)
           parens -= 1
+        elsif stream.peek?('\\')
+          new_container << stream.next!
         end
         new_container << stream.next!(1)
       end

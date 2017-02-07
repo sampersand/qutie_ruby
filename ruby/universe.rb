@@ -13,7 +13,7 @@ class Universe
   end
 
   def initialize(stack: nil, locals: nil, globals: nil)
-    self.class::PROGRAM_STACK[0] = self if self.class::PROGRAM_STACK.empty?
+    program_stack[0] = self if program_stack.empty?
     @stack = stack || []
     @locals = locals || {}
     @globals = globals || {}
@@ -55,13 +55,13 @@ class Universe
 
     def next!(amnt=nil)
       return next!(amnt.length) if amnt.is_a?(String)
-      throw :EOF, 0 if @stack.empty?
+      throw :EOF, [-1] if @stack.empty?
       return @stack.shift unless amnt
       @stack.shift(amnt).join
     end
 
     def peek(amnt=nil)
-      throw :EOF, 0 if @stack.empty?
+      throw :EOF, [-1] if @stack.empty?
       return @stack.first unless amnt
       @stack.first(amnt).join
     end
@@ -94,3 +94,10 @@ class Universe
       @locals.include?(val) ? @locals[val] : @globals[val]
     end
 end
+
+
+
+
+
+
+

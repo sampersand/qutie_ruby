@@ -25,15 +25,19 @@ class Parser
     parse!(stream: stream.clone, universe: universe)
   end
 
-  def catch_EOF(&block)
+  def catch_EOF(universe, &block)
     levels = catch(:EOF, &block) or return false
-    # p levels
-    throw :EOF, levels-1 if levels >= 1
-    return true
+
+    if levels[0] > 0
+      throw :EOF, [levels[0]-1, levels[1]]
+    elsif levels[0] == 0
+      universe << levels[1];
+    end
   end
 
   def parse!(stream:, universe:)
-    catch_EOF { 
+    return `#{stream}` if stream.is_a?(String)
+    catch_EOF(universe){ 
       until stream.stack.empty?
         token, plugin = next_token!(stream, universe)
         plugin.handle(token, stream, universe, self)

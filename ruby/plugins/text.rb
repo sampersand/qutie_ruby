@@ -7,12 +7,12 @@ module Text
     'f' => "\f",
   }
   module_function
-  def next_token!(stream, _, parser)
+  def next_token!(stream, universe, parser)
     return unless stream.peek?(*QUOTES)
     quote = stream.next!(1)
     body = ''
 
-    parser.catch_EOF {
+    parser.catch_EOF(universe) {
       until stream.peek?(quote)
         body += (if stream.peek?('\\')
                     stream.next!(1) # pop the \
