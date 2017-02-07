@@ -27,13 +27,14 @@ module Parenthesis
 
         if stream.peek?('#', '//')
           new_container << stream.next! until stream.peek?("\n")
-          stream.next!
+          new_container << stream.next!
+          
           next
         end
 
         if stream.peek?('/*')
           new_container << stream.next! until stream.peek?('*/')
-          stream.next!(2)
+          new_container << stream.next!(2)
           next
         end
 
