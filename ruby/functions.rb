@@ -121,7 +121,7 @@
 
     :len => BuiltinFunciton.new{ |args, universe, stream, parser|
       arg = args.stack.last
-      u = universe.spawn_frame
+      u = universe.clone
       u.globals[:__type] = args.get(:__type)
       qutie_func(arg, u, parser, :__len){ |a|
         case args.get(:__type)

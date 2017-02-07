@@ -1,16 +1,2 @@
-# disp? @ {/3,', '
-#    1 + 2 * -3,
-
-# }!;
-
-# syscall?@[cd ~; cat ./arry_example.qt];
-# syscall? @ [echo `pwd`];
-
-# disp?@( num? @ (`syscall? @ [echo 9]`$.0)$ + 1)!;
-
-# 'disp? @ (foo?)!' @ (foo=3)!
-
-
-A=3,
-$?->a;
-a?.0
+# a=2+3,+1->b,$?.0
+5,$?.0 .0
