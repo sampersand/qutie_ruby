@@ -1,0 +1,16 @@
+Car = class {
+  maker |= 'honda';
+  wheels |= 4;
+  __text = function {
+    text(`I'm a`, __self?.maker, 'with', __self?.wheels, 'wheels!')
+  };
+  drive = function( dist=nil ) {
+    dist |= __args?.0;
+    disp( if(dist?, text('I drove', dist?, 'miles'), 'vroom vroom!') );
+  };
+};
+
+car = Car? @ (maker='toyoya')!;
+disp(car?);
+car?.drive( 5 )!;
+car?.drive(  )!;

@@ -66,9 +66,9 @@
       incr = args.stack.fetch(2){ args.locals.fetch(:__incr) }
       body = args.stack.fetch(3){ args.locals.fetch(:__body) }
       parser.parse(stream: start, universe: universe)
-      while parser.parse(cond, stream: universe).pop! 
-        parser.parse(body, stream: universe)
-        parser.parse(incr, stream: universe)
+      while parser.parse(stream: cond, universe: universe).pop! 
+        parser.parse(stream: body, universe: universe)
+        parser.parse(stream: incr, universe: universe)
       end
     },
 
@@ -151,7 +151,7 @@
   module_function
   def qutie_func(arg, universe, parser, name)
     uni = universe.spawn_frame
-      uni.locals[:__self] = arg
+    uni.locals[:__self] ||= arg
     if arg.respond_to?(:locals) && arg.locals.include?(name)
       func = arg.locals[name] or fail "no #{name}` function for #{arg}"
       parser.parse(stream: func, universe: uni).stack.last

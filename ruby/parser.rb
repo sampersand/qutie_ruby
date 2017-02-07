@@ -101,22 +101,22 @@ class Parser
       #   text.insert(pos, "(i=clone?@(#{cls}?)$@();i?.__init@(__self=i?;#{parens[1...-1]})!;i?)$")
       # end
 
-      # while pos = text.index(METHOD_CALL_REG)
-      #   match=text.match(METHOD_CALL_REG)
-      #   var=match[1]
-      #   func=match[2]
-      #   text.sub!(METHOD_CALL_REG, '')
-      #   parens = get_parens!(text, pos)
-      #   text.insert(pos, "(#{var}.#{func}@$#{parens[0]}__self=#{var};#{parens[1..-1]}!)$")
-      # end
-
+      while pos = text.index(METHOD_CALL_REG)
+        match=text.match(METHOD_CALL_REG)
+        var=match[1]
+        func=match[2]
+        text.sub!(METHOD_CALL_REG, '')
+        parens = get_parens!(text, pos)
+        text.insert(pos, "#{var}.#{func}@#{parens[0]}__self=#{var};#{parens[1..-1]}!")
+      end
       text.gsub!(/(function|class)(\(.*?\))?\s*/i, '') # replace 'function(args)' with''
       text.gsub!(/(?<=[a-z_0-9\$])([({\[])/i, '@\1') # replace 'function(args)' with''
       text.gsub!(/([a-z_0-9]+)\s*(\*\*|\+|-|\*|\/|%|\||&|\^)=/i,'\1=\1?\2') # x=
-      # text.gsub!(/([a-z_0-9]+)\s*<(\*\*|\+|-|\*|\/|%|\||&|\^)-/i,'\1<-\1?\2') # -x>
+      text.gsub!(/([a-z_0-9]+)\s*<(\*\*|\+|-|\*|\/|%|\||&|\^)-/i,'\1<-\1?\2') # -x>
+      text.gsub!(/-(\*\*|\+|-|\*|\/|%|\||&|\^)>\s*([a-z_0-9]+)/i,'\2\1?->\1') # -x>
       text.gsub!(/(^\s*__self\?(?:\s*\.\s*.+?)*)\s*\.\s*(.+?)\s*=\s(.+);/,'\1.=(\2,\3)!;') # replace '__self?.x=y' with '__self?.=(y,z)'
       text.gsub!(/(\+|-)\1([a-z_0-9]+)\b/i,'\2=\2?\11') # ++i
-      text.gsub!(/\b([a-z_0-9]+)(\+|-)(\2)/i,'($?.-1, .=(a,a?+1)!;a?)!.0') # i++
+      text.gsub!(/\b([a-z_0-9]+)(\+|-)(\2)/i,'($?.-1, .=(\1,\1?\21)!;\1?)!.0') # i++
     end
 
     # def pre_process!(text, show_text: false)

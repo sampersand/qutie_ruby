@@ -25,15 +25,20 @@ module BinaryOperator
     '='   => proc { |l, r, u| u.locals[l] = r},
     '@$' => proc { |func, args, universe, stream, parser| OPERATORS['@'].(func, args, universe, stream, parser).stack.last },
     '@'  => proc { |func, args, universe, stream, parser|
-      if func.respond_to?(:call)
-        func.call(args, universe, stream, parser)
-      elsif func.is_a?(String)
-        parser.process(func, additional_builtins: args.locals)
-      else
-        args.locals[:__args] = args #somethign here with spawn off
-        func.program_stack.push args
-        parser.parse(stream: func, universe: args)
-        func.program_stack.pop
+      begin
+        if func.respond_to?(:call)
+          func.call(args, universe, stream, parser)
+        elsif func.is_a?(String)
+          parser.process(func, additional_builtins: args.locals)
+        else
+          args.locals[:__args] = args #somethign here with spawn off
+          func.program_stack.push args
+          parser.parse(stream: func, universe: args)
+          func.program_stack.pop
+        end
+      rescue NoMethodError
+        puts "Invalid `@` for `#{func.inspect}` with args `#{args.inspect}`"
+        exit(1);
       end
     },
 
@@ -48,8 +53,13 @@ module BinaryOperator
       if arg.is_a?(String)
         arg[pos]
       else
-        res = arg.get(pos)
-        res.nil?  && pos.is_a?(Integer) ? arg.stack[pos] : res
+        begin
+          res = arg.get(pos)
+          res.nil?  && pos.is_a?(Integer) ? arg.stack[pos] : res
+        rescue NoMethodError
+          puts("Invalid `.` for `#{arg.inspect}` with pos `#{pos.inspect}`")
+          exit(1)
+        end
       end
     },
   }

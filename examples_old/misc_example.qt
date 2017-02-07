@@ -1,0 +1,10 @@
+Car = class {
+   maker |= 'unknown';
+   wheels |= 4;
+   __text = {
+      text(`I'm a`, __self?.maker, 'with', __self?.wheels, 'wheels')
+   };
+};
+
+car = Car? @ ();
+disp(car?);
