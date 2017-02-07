@@ -142,7 +142,10 @@
           raise "unspecified type yielded both lcls and stack" unless (lcls == 0) || (stck == 0)
           lcls == 0 ? stck : lcls
         else raise "unknown type `#{type.inspect}`"
-        end or raise "`#{a}` doesn't repsond to type param `#{type.inspect}`"
+        end or begin
+          puts "Error: `#{a.inspect}` doesn't repsond to type param `#{type.inspect}`"
+          exit(1)
+        end
       }
     },
 

@@ -10,6 +10,7 @@ module Comment
     stream.next!
     :retry
   end
+  
   MULTI_LINE_START = '/*'
   MULTI_LINE_END = '*/'
   

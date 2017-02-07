@@ -1,37 +1,37 @@
 Users = {
   users |= {};
-  __text = {
-    stop();
-    # return('no users!',0);
-    'a'
-    # if(0 < len(__self?)!, [return('no users!')], [])!;
-    # a
-    # i=0;
-    # res = text(i?, '. ', __self?.get(i?)!, sep='')!;
-    # i++;
 
-    # while{
-    #  (i? < len( __self? )! )
-    #  {
-    #    res = res? + text('\n',i?, '. ', __self?.get(i?)!, sep='';)!;
-    #    i++;
-    #   }
-    # }!;
-    # res?
+  # __text = function(){
+  #   if(0 == len(__self?.users, S), [return('no users!')], []),!;
+  #   # a
+  #   # i=0;
+  #   # res = text(i?, '. ', __self?.get(i?)!, sep='')!;
+  #   # i++;
+
+  #   # while{
+  #   #  (i? < len( __self? )! )
+  #   #  {
+  #   #    res = res? + text('\n',i?, '. ', __self?.get(i?)!, sep='';)!;
+  #   #    i++;
+  #   #   }
+  #   # }!;
+  #   # res?
+  # };
+
+  bar = {
+    pos |= __args?.0;
+    __self?.users.pos?r
   };
-
   get = {
     pos |= __args?.0;
     __self?.users.pos?
   };
 
-  __len = {
-    len(__self?.users)!
-  };
-
+  # __len = {
+  #   len(__self?.users)!
+  # };
   add = {
     disp(__self?);
-    stop();
     __self?.users .= [ len(__self?)!, __args?.0 ]!;
   };
 };
@@ -46,11 +46,8 @@ User = class {
    };
 };
 
-users=Users?@();
+usrs=Users?@()!;
 john=User?@(name='john', pass='password123')!;
-disp(1);
-a=users?.foo @ ()!;
-# disp(a?);
-disp(2);
-# disp? @ ((users?)@()!)!;
-# users?.add(john?);
+usrs?
+
+  
