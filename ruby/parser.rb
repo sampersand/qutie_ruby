@@ -3,8 +3,10 @@ require_relative 'plugins/default'
 
 class Parser
   attr_accessor :plugins
-  def initialize(plugins=nil)
+  attr_accessor :builtins
+  def initialize(plugins: nil, builtins: nil)
     @plugins = plugins || []
+    @builtins = builtins || {}
     @plugins.push Default
   end
 
@@ -12,10 +14,14 @@ class Parser
     @plugins.unshift plugin
   end
 
-  def process(inp, builtins: nil)
+  def add_builtins(builtins)
+    @builtins.update builtins
+  end
+
+  def process(inp)
     stream = Universe.from_string inp
     universe = Universe.new
-    universe.globals.update(builtins) if builtins
+    universe.globals.update(@builtins)
     catch(:EOF){
       parse(stream: stream, universe: universe)
     }
@@ -36,7 +42,7 @@ class Parser
   end
 
   def parse!(stream:, universe:)
-    return `#{stream}` if stream.is_a?(String)
+    return process(stream) if stream.is_a?(String)
     catch_EOF(universe){ 
       until stream.stack.empty?
         token, plugin = next_token!(stream, universe)

@@ -21,13 +21,13 @@ parser.add_plugin BinaryOperator
 parser.add_plugin Keyword
 parser.add_plugin Text
 parser.add_plugin Escape
+parser.add_builtins(Functions::FUNCTIONS)
 
 file = ARGV[0] or fail "No file!"
 text = open(file, 'r').read
 # Parser::PreParser::pre_process!(text)
-
 require_relative 'functions'
-res = parser.process(text, builtins: Functions::FUNCTIONS)
+res = parser.process(text)
 
 require 'pp'
 puts '----[end]----'
