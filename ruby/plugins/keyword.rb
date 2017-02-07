@@ -3,7 +3,7 @@ module Keyword
 
   def handle_get_known(_, universe, _)
     to_get = universe.pop!
-    if to_get == :__func_stack
+    if to_get == :'$'
       universe << universe.spawn_new_stack(new_stack: universe.program_stack)
     else
       universe << universe.get(to_get)
@@ -20,10 +20,10 @@ module Keyword
     end
   end
 
-  def handle_pop_lastv(_stream, universe, parser)
-    handle_eval_univ(_stream, universe, parser)
-    universe << universe.pop!.pop!
-  end
+  # def handle_pop_lastv(_stream, universe, parser)
+  #   handle_eval_univ(_stream, universe, parser)
+  #   universe << universe.pop!.pop!
+  # end
 
   def next_token!(stream, _, _)
     res = KEYWORDS.find{ |val, _| stream.peek?(val) }
@@ -37,7 +37,7 @@ module Keyword
   KEYWORDS = {
     '?' => method(:handle_get_known),
     '!' => method(:handle_eval_univ),
-    '$' => method(:handle_pop_lastv),
+    # '$' => method(:handle_pop_lastv),
   }
 
 end
