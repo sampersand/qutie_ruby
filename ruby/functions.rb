@@ -91,10 +91,8 @@
 
     :prompt => BuiltinFunciton.new{ |args, universe, stream, parser|
       prompt = args.stack.fetch(0){ args.locals.fetch(:__prompt, '') }
+      prefix = args.stack.fetch(2){ args.locals.fetch(:__prefix, "\n>") }
       endl = args.stack.fetch(1){ args.locals.fetch(:__endl, "\n") }
-      prefix = args.stack.fetch(1){ args.locals.fetch(:__prefix, "\n>") }
-      valid = args.stack.fetch(1){ args.locals.fetch(:__valid, []) }
-
       # args.locals[:sep] ||= '' # forces it to be '' if not specified, but doesnt override text's default
       # prefix=FUNCTIONS[:text].call(prefix, universe, stream, parser) 
       print prompt + prefix

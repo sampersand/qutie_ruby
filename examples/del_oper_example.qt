@@ -11,4 +11,20 @@
 # disp( a?  ); #=> does not have '3'
 
 
-prompt('hi')
+# prompt('hi')
+
+Car = class {
+   wheels = {
+      1, 2, 3, 4
+   }!;
+};
+c = Car? @ ();
+disp(c?.wheels.len());
+
+
+
+
+
+
+
+
