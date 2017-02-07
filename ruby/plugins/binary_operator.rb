@@ -18,7 +18,7 @@ module BinaryOperator
     '<'  => proc { |l, r| l <  r },
     '>'  => proc { |l, r| l >  r },
 
-    'or'  => proc { |l, r| l || r },
+    '|'  => proc { |l, r| l || r },
     'and' => proc { |l, r| l && r },
     'xor' => proc { |l, r| l ^ r }, # doesnt work
 
@@ -63,7 +63,7 @@ module BinaryOperator
       when *OPER_END then 40
       when '=' then 30
       when '->', '<-' then 29
-      when 'or' then 25
+      when '|' then 25
       when 'and' then 24
       when '==', '<>', '<=', '>=', '<', '>' then 20
       when '+', '-' then 12

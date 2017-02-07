@@ -110,11 +110,13 @@ class Parser
       #   text.insert(pos, "(#{var}.#{func}@$#{parens[0]}__self=#{var};#{parens[1..-1]}!)$")
       # end
 
+      text.gsub!(/function(\(.*?\))?\s*/i, '') # replace 'function(args)' with''
       text.gsub!(/class\s+([{(\[])/i, '\1__init={};') # replace 'class {'
-      text.gsub!(/([a-z_0-9]+)\s*(\+|-|\*|\/|%|\*\*|or|and|xor)=/i,'\1=\1?\2') # or=
+      text.gsub!(/([a-z_0-9]+)\s*(\*\*|\+|-|\*|\/|%|\||&|\^)=/i,'\1=\1?\2') # x=
+      text.gsub!(/([a-z_0-9]+)\s*<(\*\*|\+|-|\*|\/|%|\||&|\^)-/i,'\1<-\1?\2') # -x>
       text.gsub!(/(^\s*__self\?(?:\s*\.\s*.+?)*)\s*\.\s*(.+?)\s*=\s(.+);/,'\1.=(\2,\3)!;') # replace '__self?.x=y' with '__self?.=(y,z)'
-      text.gsub!(/\b([a-z_0-9]+)(\+|-)(\2)/i,'__temp=\1?;\1=\1?\21;__temp?') # i++
       text.gsub!(/(\+|-)\1([a-z_0-9]+)\b/i,'\2=\2?\11') # ++i
+      text.gsub!(/\b([a-z_0-9]+)(\+|-)(\2)/i,'($?.-1, .=(a,a?+1)!;a?)!.0') # i++
     end
 
     # def pre_process!(text, show_text: false)

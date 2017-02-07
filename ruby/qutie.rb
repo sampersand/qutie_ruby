@@ -23,9 +23,11 @@ parser.add_plugin Text
 parser.add_plugin Escape
 parser.add_builtins(Functions::FUNCTIONS)
 
+ARGV[0] = '/Users/westerhack/code/ruby/qutie/examples/stack_example.qt'
 file = ARGV[0] or fail "No file!"
 text = open(file, 'r').read
 Parser::PreParser::pre_process!(text)
+puts text
 require_relative 'functions'
 res = parser.process(text)
 
