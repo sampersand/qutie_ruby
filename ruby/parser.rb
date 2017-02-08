@@ -129,7 +129,7 @@ class Parser
         func=match[2]
         text.sub!(METHOD_CALL_REG, '')
         parens = get_parens!(text, pos)
-        text.insert(pos, "#{var}.#{func}@0#{parens[0]}__self=#{var};#{parens[1..-1]}!,")
+        text.insert(pos, "#{var}.#{func}@#{parens[0]}__self=#{var};#{parens[1..-1]}!,")
       end
       while pos = text.index(FUNCITON_DECL_REG)
         match=text.match(FUNCITON_DECL_REG)

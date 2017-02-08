@@ -20,6 +20,7 @@ LinkedList = class {
   shift = function(){
     res = __self?.head;
     __self? .= (head, __self?.head.next)!;
+    res?
   };
 };
 
@@ -37,7 +38,7 @@ list = new LinkedList();
 list?.unshift('a');
 list?.unshift('b');
 disp(list?);
-disp( list?.shift().0 );
+disp( list?.shift(),.0 );
 
 
 
