@@ -1,6 +1,4 @@
-square = function(val?){
-  val? ** 2
-};
-disp(square? @0 (    3   )! );
-disp(square? @0 (val = 3 )! );
-disp(square? @0 (val = 3;)! );
+square = { ** 2 };
+
+disp( square? @0 (3)! );
+

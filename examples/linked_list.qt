@@ -35,10 +35,14 @@ Node = class {
 };
 
 list = new LinkedList();
-list?.unshift('a');
+list?.unshift('d');
+list?.unshift('c');
 list?.unshift('b');
-disp(list?);
+list?.unshift('a');
+disp( list? );
 disp( list?.shift(),.0 );
+disp( list? );
+
 
 
 
