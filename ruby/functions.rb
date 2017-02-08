@@ -46,10 +46,13 @@
       parser.parse(stream: body, universe: universe) while parser.parse(stream: cond, universe: universe).pop! 
     },
     :del => BuiltinFunciton.new{ |args, universe, stream, parser|
+        
       uni = args.stack.fetch(0){ args.locals.fetch(:__uni) }
       pos = args.stack.fetch(1){ args.locals.fetch(:__pos) }
       type = args.stack.fetch(2){ args.locals.fetch(:__type, nil) }
-      if type == :V || (type.nil? && uni.locals.include?(pos))
+      if(uni.is_a?(String))
+        uni.slice!(pos)
+      elsif type == :V || (type.nil? && uni.locals.include?(pos))
         uni.locals.delete(pos)
       elsif type == :S || (type.nil? && (0..uni.stack.length).include?(pos))
         uni.stack.delete_at(pos)

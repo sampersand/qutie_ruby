@@ -1,17 +1,26 @@
 LinkedList = class {
   head ||= nil?;
+
   __text = function(){
     current = __self?.head;
     res = '[';
-    if(current? <> nil?, {
+    if( current? == nil?, [return(res? + ']')], {}),!
 
-      }, {})!;
-    while([current? <> nil?], {
-      res += text(current?);
+    while( [current? <> nil?], {
+      res += text(current?, ', ', sep='');
       current = current?.next;
+
     });
+    del(res?, 0-1); del(res?, 0-1); // remove the last `, `
     res? + ']'
-  }
+  };
+  unshift = function(val?){
+    __self? .= (head, new Node(val?, __self?.head))!;
+  };
+  shift = function(){
+    res = __self?.head;
+    __self? .= (head, __self?.head.next)!;
+  };
 };
 
 Node = class {
@@ -25,5 +34,10 @@ Node = class {
 };
 
 list = new LinkedList();
-list? .= (head, new Node('a'))!;
+list?.unshift('a');
+list?.unshift('b');
 disp(list?);
+disp( list?.shift().0 );
+
+
+
