@@ -2,15 +2,21 @@ LinkedList = class {
   head ||= nil?;
   __text = function(){
     current = __self?.head;
-    if(current?==nil?, { return('[]') }, {}),!;
-    res = '';
-    while((current != nil?), { res += })
+    res = '[';
+    if(current? <> nil?, {
+
+      }, {})!;
+    while([current? <> nil?], {
+      res += text(current?);
+      current = current?.next;
+    });
+    res? + ']'
   }
 };
 
 Node = class {
   data = __args?.0;
-  next = __args?.1;
+  next = __args?.1 || nil?;
 
   __text = function() {
     text(__self?.data)
@@ -19,5 +25,5 @@ Node = class {
 };
 
 list = new LinkedList();
-
+list? .= (head, new Node('a'))!;
 disp(list?);

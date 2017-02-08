@@ -105,7 +105,7 @@ class Parser
       keys = Functions::FUNCTIONS.keys.collect(&:to_s).join('|')
       while pos = text.index(/(?<=#{keys})[({\[]/)
         parens = get_parens!(text, pos)
-        text.insert(pos, "?@#{parens}!")
+        text.insert(pos, "?@#{parens}!,")
       end
       # while pos = text.index(NEW_CLS_REG)
       #   cls = text.match(NEW_CLS_REG)[1]
