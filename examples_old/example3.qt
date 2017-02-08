@@ -1,7 +1,0 @@
-a=11;
-disp(
-   if(a? <= 10,
-      '`a` is small!', 
-      if(a? <= 100, '`a` is medium!', '`a` is large!');
-      )
-)
