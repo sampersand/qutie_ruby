@@ -4,9 +4,9 @@ LinkedList = class {
   __text = function(){
     current = __self?.head;
     res = '[';
-    if( current? == nil?, [return(res? + ']')], {}),!
+    if( current? == nil? [return(res? + ']')] {}),!
 
-    while( [current? <> nil?], {
+    while( [current? <> nil?] {
       res += text(current?, ', ', sep='');
       current = current?.next;
 
@@ -40,7 +40,7 @@ list?.unshift('c');
 list?.unshift('b');
 list?.unshift('a');
 disp( list? );
-disp( list?.shift(),.0 );
+disp( list?.shift().0 );
 disp( list? );
 
 

@@ -1,6 +1,6 @@
 Car = class {
-  maker  |= 'honda';
-  wheels |= 4;
+  maker  ||= 'honda';
+  wheels ||= 4;
 
   __text = function {
     text(`I'm a`, __self?.maker, 'with', __self?.wheels, 'wheels!')

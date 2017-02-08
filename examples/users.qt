@@ -1,5 +1,5 @@
 Users = {
-  users = {}@()!;
+  users ||= {};
 
   __text = {
     if(0 == len(__self?.users, S), [return('no users!')], []),!;
