@@ -86,9 +86,9 @@ class Parser
     def handle_func_arg(arg, ind)
       if arg.include?('=')
         name, val = arg.split('=')
-        "#{name.strip}|=#{val.strip};"
+        "#{name.strip}||=#{val.strip};"
       elsif arg.end_with?('?')
-        "#{arg[0...-1]}|=__args?.#{ind};"
+        "#{arg[0...-1]}||=__args?.#{ind};"
       else
         "#{arg}=__args?.#{ind};"
       end
@@ -98,6 +98,7 @@ class Parser
     # METHOD_CALL_REG = /([a-z_][a-z_0-9]*\?(?:\.[a-z_0-9]*)*)\.([a-z_0-9]*)(?=[\[({])/i
     METHOD_CALL_REG = /([a-z_][a-z_0-9]*\?)\.([a-z_0-9]*)(?=[\[({])/i
     FUNCITON_DECL_REG = /([a-z_0-9]+\s*=\s*)function\s*[(]([^)]*?)[)]\s*([{(\[])/i
+    CLASS_INSTANCE_REG = /[nN][eE][wW]\s+([A-Z_][a-z_0-9]*)(?=[(])/
     def pre_process!(text)
       text.gsub!(/(?<!__)(self|args|current)(?!\?)/, '__\1?')
 
@@ -113,6 +114,14 @@ class Parser
       #   text.insert(pos, "(i=clone?@(#{cls}?)$@();i?.__init@(__self=i?;#{parens[1...-1]})!;i?)$")
       # end
 
+
+      while pos = text.index(CLASS_INSTANCE_REG)
+        match=text.match(CLASS_INSTANCE_REG)
+        class_name=match[1]
+        text.sub!(CLASS_INSTANCE_REG, '')
+        parens = get_parens!(text, pos)
+        text.insert(pos, "#{class_name}?@#{parens}!,")
+      end
 
       while pos = text.index(METHOD_CALL_REG)
         match=text.match(METHOD_CALL_REG)
@@ -134,9 +143,9 @@ class Parser
 
       text.gsub!(/(function|class)(\(.*?\))?\s*/i, '') # replace 'function(args)' with''
       text.gsub!(/(?<=[a-z_0-9\$])([({\[])/i, '@\1') # replace 'function(args)' with''
-      text.gsub!(/([a-z_0-9]+)\s*(\*\*|\+|-|\*|\/|%|\||&|\^)=/i,'\1=\1?\2') # x=
-      text.gsub!(/([a-z_0-9]+)\s*<(\*\*|\+|-|\*|\/|%|\||&|\^)-/i,'\1<-\1?\2') # -x>
-      text.gsub!(/-(\*\*|\+|-|\*|\/|%|\||&|\^)>\s*([a-z_0-9]+)/i,'\1\2?->\2') # <x-
+      text.gsub!(/([a-z_0-9]+)\s*(\*\*|\+|-|\*|\/|%|\|\||&&|\^)=/i,'\1=\1?\2') # x=
+      text.gsub!(/([a-z_0-9]+)\s*<(\*\*|\+|-|\*|\/|%|\|\||&&|\^)-/i,'\1<-\1?\2') # -x>
+      text.gsub!(/-(\*\*|\+|-|\*|\/|%|\|\||&&|\^)>\s*([a-z_0-9]+)/i,'\1\2?->\2') # <x-
       # text.gsub!(/(^\s*__self\?(?:\s*\.\s*.+?)*)\s*\.\s*(.+?)\s*=\s(.+);/,'\1.=(\2,\3)!;') # replace '__self?.x=y' with '__self?.=(y,z)'
       text.gsub!(/(\+|-)\1([a-z_0-9]+)\b/i,'\2=\2?\11') # ++i
       # text.gsub!(/\b([a-z_0-9]+)(\+|-)(\2)/i,'($?.-1,.=(\1,\1?\21)!;\1?)!,.0') # i++

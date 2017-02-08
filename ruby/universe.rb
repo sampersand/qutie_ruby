@@ -30,10 +30,10 @@ class Universe
     alias :to_s :inspect
 
     def globals_s
-      @globals.reject{ |k, v| v.respond_to?(:to_s?) && !v.to_s? || k[0..1]=='__' || Constants::CONSTANTS.include?(k)}.keys.to_s[1...-1]
+      @globals.reject{ |k, v| v.respond_to?(:to_s?) && !v.to_s? || k.to_s[0..1]=='__' || Constants::CONSTANTS.include?(k)}.keys.to_s[1...-1]
     end
     def locals_s
-      @locals.reject{ |k, v| v.respond_to?(:to_s?) && !v.to_s? || k[0..1]=='__'}.keys.to_s[1...-1]
+      @locals.reject{ |k, v| v.respond_to?(:to_s?) && !v.to_s? || k.to_s[0..1]=='__'}.keys.to_s[1...-1]
     end
 
   # misc

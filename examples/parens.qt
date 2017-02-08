@@ -1,0 +1,19 @@
+list = [ 39, 'foo', bar ]!;
+dict = { age        = 19;
+         name       = 'fred'; # `;` is used so as to make it so dict has no stack.
+         fav_colour = RED; 
+       }!;
+both = (49, 12.3, 17, 13, 2='a';)!;
+
+disp( list? .    0); #=> 39
+disp( dict? . name); #=> 'fred'
+
+disp( both? .    0); #=> 49
+disp( both? .    2); #=> 'a'
+disp( both? .S   2); #=> 17
+disp( both? .V   2); #=> 'a'
+
+func = { a? + b? }; # notice no ending `!`
+
+
+

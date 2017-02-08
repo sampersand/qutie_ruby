@@ -1,14 +1,6 @@
-# square = { ** 2 };
-# square? @ (3)!;
-
-a  = 3;
-b <- 4;
-5 -> c;
-disp(a?, b?, c?, sep=', ';);
-
-foo = {
-  # ->a;
-  __args?.0 -> a;
-  disp('a: ', a?);
+square = function(val?){
+  val? ** 2
 };
-foo?@(3)!;
+disp(square? @$ (    3   )! );
+disp(square? @$ (val = 3 )! );
+disp(square? @$ (val = 3;)! );
