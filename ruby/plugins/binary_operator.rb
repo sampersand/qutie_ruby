@@ -23,7 +23,7 @@ module BinaryOperator
     'xor' => proc { |l, r| l ^ r }, # doesnt work
 
     '='   => proc { |l, r, u| u.locals[l] = r},
-    '@$' => proc { |func, args, universe, stream, parser| OPERATORS['@'].(func, args, universe, stream, parser).stack.last },
+    '@0' => proc { |func, args, universe, stream, parser| OPERATORS['@'].(func, args, universe, stream, parser).stack.last },
     '@'  => proc { |func, args, universe, stream, parser|
       if func.respond_to?(:call)
         func.call(args, universe, stream, parser)
@@ -79,7 +79,7 @@ module BinaryOperator
       when '+', '-' then 12
       when '*', '/', '%' then 11
       when '**', '^' then 10
-      when '@$', '@' then 7
+      when '@0', '@' then 7
       when '.=', '.S=', '.V=' then 6
       when '.', '.S', '.V' then 5
       when  '$', '!', '?' then 1

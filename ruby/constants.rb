@@ -1,11 +1,11 @@
 module Constants
   module_function
   CONSTANTS = {
-    true: 'true',
-    false: 'false',
-    nil: 'nil',
-    null: 'null',
-    none: 'none'
+    true: true,
+    false: false,
+    nil: nil,
+    null: nil,
+    none: nil
   }
 
   # def next_token!(stream, _, _)

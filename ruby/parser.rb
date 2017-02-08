@@ -98,9 +98,9 @@ class Parser
     # METHOD_CALL_REG = /([a-z_][a-z_0-9]*\?(?:\.[a-z_0-9]*)*)\.([a-z_0-9]*)(?=[\[({])/i
     METHOD_CALL_REG = /([a-z_][a-z_0-9]*\?)\.([a-z_0-9]*)(?=[\[({])/i
     FUNCITON_DECL_REG = /([a-z_0-9]+\s*=\s*)function\s*[(]([^)]*?)[)]\s*([{(\[])/i
-    CLASS_INSTANCE_REG = /[nN][eE][wW]\s+([A-Z_][a-z_0-9]*)(?=[(])/
+    CLASS_INSTANCE_REG = /[nN][eE][wW]\s+([A-Z_][a-zA-Z_0-9]*)(?=[(])/
     def pre_process!(text)
-      text.gsub!(/(?<!__)(self|args|current)(?!\?)/, '__\1?')
+      text.gsub!(/(?<!__)(self|args)(?!\?)/, '__\1?')
 
       keys = Functions::FUNCTIONS.keys.collect(&:to_s).join('|')
       while pos = text.index(/(?<=#{keys})[({\[]/)

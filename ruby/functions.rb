@@ -113,11 +113,10 @@
       if args.respond_to?(:get)
         sep  = args.get(:sep) || " "
         args.stack.collect{ |arg|
-            # p args.stack.length
             qutie_func(arg, universe, parser, :__text){ |a| a.nil? ? a.inspect : a.to_s }
           }.join(sep)
       else
-        args.to_s 
+        args.nil? ? args.inspect : args.to_s 
       end
     },
 

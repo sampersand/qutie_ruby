@@ -1,0 +1,23 @@
+LinkedList = class {
+  head ||= nil?;
+  __text = function(){
+    current = __self?.head;
+    if(current?==nil?, { return('[]') }, {}),!;
+    res = '';
+    while((current != nil?), { res += })
+  }
+};
+
+Node = class {
+  data = __args?.0;
+  next = __args?.1;
+
+  __text = function() {
+    text(__self?.data)
+  };
+
+};
+
+list = new LinkedList();
+
+disp(list?);
