@@ -14,6 +14,12 @@ module Variable
       @value.to_s
     end
 
+    # qt methods
+      # conversion
+        def qt_to_text
+          to_s
+        end
+
   end
 
   module_function

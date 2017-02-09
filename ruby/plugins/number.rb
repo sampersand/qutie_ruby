@@ -23,15 +23,21 @@ module Number
       ZERO = QT_Number.new(num_val: 0)
 
     # qt methods
-      def qt_add(right:)
-        QT_Number.new(num_val: @num_val + right.qt_to_num.num_val)
-      end
-      def qt_add_r(left:)
-        QT_Number.new(num_val: left.qt_to_num.num_val + @num_val)
-      end
-      def qt_to_num
-        self
-      end
+      # conversion
+        def qt_to_text
+          to_s
+        end
+
+      # math
+        def qt_add(right:)
+          QT_Number.new(num_val: @num_val + right.qt_to_num.num_val)
+        end
+        def qt_add_r(left:)
+          QT_Number.new(num_val: left.qt_to_num.num_val + @num_val)
+        end
+        def qt_to_num
+          self
+        end
 
   end
 

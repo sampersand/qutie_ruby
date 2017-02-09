@@ -16,6 +16,12 @@ module Text
       "#{@quotes[0]}#{@body}#{@quotes[1]}"
     end
 
+    # qt methods
+      # conversion
+        def qt_to_text
+          to_s
+        end
+
   end
 
   QUOTES = ["'", '"', '`']
