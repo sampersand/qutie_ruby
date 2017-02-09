@@ -26,12 +26,14 @@ class Parser
     universe.globals.update(@builtins)
     universe.globals.update(additional_builtins)
     catch(:EOF){
-      parse(stream: stream, universe: universe)
+      parse(stream: stream,
+            universe: universe)
     }
   end
 
   def parse(stream:, universe:)
-    parse!(stream: stream.clone, universe: universe)
+    parse!(stream: stream.clone,
+           universe: universe)
   end
 
   def catch_EOF(universe, &block)
@@ -66,6 +68,7 @@ class Parser
                            universe: universe,
                            parser: parser)
   end
+
   def self.next_token!(stream:, universe:, parser:)
     parser.plugins.each{ |pl|
       token = pl.next_token!(stream: stream,

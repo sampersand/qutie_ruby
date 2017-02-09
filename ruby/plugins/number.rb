@@ -3,6 +3,10 @@ module Number
   require_relative 'object'
 
   class QT_Number < QT_Object
+
+    MATH_E = QT_Number.new(source: 'MATH_E', value: Math::E)
+    MATH_PI = QT_Number.new(source: 'MATH_PI', value: Math::PI)
+
     def self.from(source:)
       new(source: source, num_val: source.to_f)
     end
