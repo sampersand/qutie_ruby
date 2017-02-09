@@ -20,7 +20,7 @@ class QT_Object
     # conversion
       def qt_to_num;  end
       def qt_to_text; Text::QT_Text.new(text_val: to_s) end
-      # def qt_to_bool; Text::QT_Text.new(text_val: to_s) end
+      def qt_to_bool; Text::QT_Text.new(text_val: to_s) end
 
     # operators 
       # access
@@ -50,6 +50,7 @@ class QT_Object
           eql = qt_eql(right: right)
           eql && eql.qt_not
         end
+
         def qt_leq(right:)
           lth = qt_lth(right: right)
           lth || qt_eql(right: right)
