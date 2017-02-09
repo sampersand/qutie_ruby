@@ -1,20 +1,35 @@
-# false1 = '';
-# false2 = 0;
-# false3 = []!;
-# false4 = false?;
-# false4 = null?;
+a = 3;
+b = 9.3;
+'abc' -> c;
+d = false?;
 
-# '' || 1,
-# false3? || 1,
-# 1 && '',
+b?; #=> gives 9.3
+c?; #=> gives 'abc'
 
-# # true == foo,
+func = {
+  a? + b?
+};
+  # (a=3; b=4;)! is 'evaluate the inside, but do not switch scope'
+  # (a=3; b=4;)@() is 'evaluate the inside, but do switch scope'
+func? @ ()!; #=> 12.3 (you do not have to specify the variables)
+func? @ (a=3; b=4;)!; #=> 7
+b?; #=> still 9.3
 
-# ()!,
+list = [1, 2, 3]@(); # makes a conventional list
+hash = {a:   1;
+        b =  2;
+        c <- 3;}@(); # makes a conventional hash
+list?.a; #=> nil
+list?.0; #=> 1
+
+hash?.0; #=> nil
+hash?.a; #=> 1
+hash?.c; #=> 3
 
 
-# # 
 
-# # not?@(foo)!
-foo = 0;
-bool? @ (foo?)! == false?
+
+
+
+
+
