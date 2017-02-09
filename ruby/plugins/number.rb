@@ -3,12 +3,6 @@ module Number
   require_relative 'object'
 
   class QT_Number < QT_Object
-
-    MATH_E = QT_Number.new(source: 'MATH_E', value: Math::E)
-    MATH_PI = QT_Number.new(source: 'MATH_PI', value: Math::PI)
-    ONE = QT_Number.new(source: '1', value: 1.0)
-    ZERO = QT_Number.new(source: '0', value: 0)
-
     def self.from(source:)
       new(source: source, num_val: source.to_f)
     end
@@ -17,6 +11,13 @@ module Number
       super(source: source)
       @num_val = num_val
     end
+
+
+    MATH_E = QT_Number.new(source: 'MATH_E', num_val: Math::E)
+    MATH_PI = QT_Number.new(source: 'MATH_PI', num_val: Math::PI)
+    ONE = QT_Number.new(source: '1', num_val: 1.0)
+    ZERO = QT_Number.new(source: '0', num_val: 0)
+
   end
 
   module_function

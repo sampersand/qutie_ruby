@@ -23,7 +23,7 @@ module Constants
     nil: QT_Boolean::NULL,
     null: QT_Boolean::NULL,
     none: QT_Boolean::NULL,
-    math_e: Number::QT_Number::MATH_E
-    math_pi: Number::QT_Number::MATH_PI
+    math_e: Number::QT_Number::MATH_E,
+    math_pi: Number::QT_Number::MATH_PI,
   }
 end

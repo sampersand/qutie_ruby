@@ -123,13 +123,19 @@ module BinaryOperator
                                       universe: rhs,
                                       parser: parser)
           rhs << fix_lhs(ntoken[0])
-          ntoken[1].handle(ntoken[0], stream, rhs, parser)
+          ntoken[1].handle(token: ntoken[0],
+                           stream: stream,
+                           universe: rhs,
+                           parser: parser)
         else
           break if token_priority <= priority(*ntoken) 
           ntoken = parser.next_token!(stream: stream,
                                       universe: rhs,
                                       parser: parser)
-          ntoken[1].handle(ntoken[0], stream, rhs, parser) # pretty sure this will bite me...
+          ntoken[1].handle(token: ntoken[0],
+                           stream: stream,
+                           universe: rhs,
+                           parser: parser) # pretty sure this will bite me...
         end
       end
       nil
