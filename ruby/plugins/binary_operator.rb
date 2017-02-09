@@ -55,6 +55,7 @@ module BinaryOperator
     '.V'  => proc { |arg, pos| arg.get(pos) },
     '.'  => proc { |arg, pos|
       if arg.is_a?(String)
+        raise "Bad accessor `#{pos}` for string `#{arg}`" unless arg.is_a?(Integer)
         arg[pos]
       else
         begin

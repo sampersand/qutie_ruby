@@ -1,6 +1,4 @@
-import_2_code = syscall('cat import_2.qt');
-code = "greet = function(user?) {disp('Hello, ', user?);};";
-# code?!.greet@('fred')!;
-# import_2_code?.greet@('fred',__preprocess=true?;)!,
-code?.greet,
-import_2_code?.greet,
+# code = "greet = function(user?) {disp('Hello, ', user?);};";
+# code?@()!,.greet@(fred)!,
+# import('import_2.qt')@()!,.greet@(fred)!
+import('import_2.qt').greet@(fred)!

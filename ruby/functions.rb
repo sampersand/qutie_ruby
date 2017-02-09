@@ -121,8 +121,20 @@
       args.locals[:sep] = sep # forces it to be '' if not specified, but doesnt override text's default
       to_call=FUNCTIONS[:text].call(args, universe, stream, parser) 
       `#{to_call}`
+    },
+
+    :import => BuiltinFunciton.new{ |args, universe, stream, parser|
+      file = args.stack.fetch(0){ args.locals.fetch(:__file) }
+      passed_args = args.stack.fetch(1){ args.locals.fetch(:__args, universe.class.new) }
+      pre_process = args.stack.fetch(2){ args.locals.fetch(:__preprocess, true) }
+
+      imported = open(file).read
+
+      parser.class::PreParser.pre_process!(imported) if pre_process
+      parser.process(imported, additional_builtins: passed_args.locals)
 
     },
+
     :stop => BuiltinFunciton.new{ |args, universe, stream, parser|
       exit_code = args.stack.last
       exit(exit_code || 0)
