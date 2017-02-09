@@ -34,10 +34,51 @@ module Number
             right = right.qt_to_num or return
             QT_Number.new(num_val: @num_val + right.num_val)
           end
+          def qt_sub(right:)
+            right = right.qt_to_num or return
+            QT_Number.new(num_val: @num_val - right.num_val)
+          end
+          def qt_mul(right:)
+            right = right.qt_to_num or return
+            QT_Number.new(num_val: @num_val * right.num_val)
+          end
+          def qt_div(right:)
+            right = right.qt_to_num or return
+            QT_Number.new(num_val: @num_val / right.num_val)
+          end
+          def qt_mod(right:)
+            right = right.qt_to_num or return
+            QT_Number.new(num_val: @num_val % right.num_val)
+          end
+          def qt_pow(right:)
+            right = right.qt_to_num or return
+            QT_Number.new(num_val: @num_val ** right.num_val)
+          end
+
 
           def qt_add_r(left:)
             left = left.qt_to_num or return
             QT_Number.new(num_val: left.num_val + @num_val)
+          end
+          def qt_sub_r(left:)
+            left = left.qt_to_num or return
+            QT_Number.new(num_val: left.num_val - @num_val)
+          end
+          def qt_mul_r(left:)
+            left = left.qt_to_num or return
+            QT_Number.new(num_val: left.num_val * @num_val)
+          end
+          def qt_div_r(left:)
+            left = left.qt_to_num or return
+            QT_Number.new(num_val: left.num_val / @num_val)
+          end
+          def qt_mod_r(left:)
+            left = left.qt_to_num or return
+            QT_Number.new(num_val: left.num_val % @num_val)
+          end
+          def qt_pow_r(left:)
+            left = left.qt_to_num or return
+            QT_Number.new(num_val: left.num_val ** @num_val)
           end
   end
 
