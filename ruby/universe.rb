@@ -10,17 +10,30 @@ class Universe
     @globals = globals || {}
   end
 
+  # stack
+    def stack_empty?
+      @stack.empty?
+    end
+
+  # locals
+    def locals_empty?
+      @locals.empty?
+    end
+
   # repr
     def inspect        
-      "<#{@stack}|{#{locals_s}}|{#{globals_s}}>"
+      # "<#{@stack}|{#{locals_s}}|{#{globals_s}}>"
+      "#{self.class.name}(stack: #{@stack}, locals: #{@locals})"
     end
-    alias :to_s :inspect
 
-    def globals_s
-      @globals.reject{ |k, v| v.respond_to?(:to_s?) && !v.to_s? || k.to_s[0..1]=='__' || Constants::CONSTANTS.include?(k)}.keys.to_s[1...-1]
-    end
-    def locals_s
-      @locals.reject{ |k, v| v.respond_to?(:to_s?) && !v.to_s? || k.to_s[0..1]=='__'}.keys.to_s[1...-1]
+    def to_s
+      if locals_empty?
+        "[#{@stack.collect(&:to_s).join}]"
+      elsif stack_empty?
+        "{#{@locals.collect{|k,v| "#{k}: #{v}"}.join(', ')}"
+      else
+        '()'
+      end
     end
 
   # misc
@@ -71,10 +84,6 @@ class Universe
 
     def pop!
       @stack.pop
-    end
-
-    def stream_empty?
-      @stack.empty?
     end
 
     def get(val)

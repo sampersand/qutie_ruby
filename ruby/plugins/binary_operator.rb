@@ -121,7 +121,7 @@ module BinaryOperator
     rhs = universe.spawn_new_stack(new_stack: nil)
     token_priority = priority(token, BinaryOperator)
     parser.catch_EOF(universe) {
-      until stream.stream_empty?
+      until stream.stack_empty?
         next_token = parser.next_token(stream, rhs)
         if next_token[0] =~ /[-+*\/]/ and next_token[1] == BinaryOperator and rhs.stack.empty?
           next_token = parser.next_token!(stream, rhs)
@@ -145,7 +145,7 @@ module BinaryOperator
   # def handle_oper(token, stream, universe, parser)
   #   lhs = universe.pop!
   #   parser.catch_EOF(universe) {
-  #     until stream.stream_empty?
+  #     until stream.stack_empty?
   #       break if priority(token, BinaryOperator) <= priority(*parser.next_token(stream, universe)) 
   #       next_token = parser.next_token!(stream, universe)
   #       next_token[1].handle(next_token[0], stream, universe, parser) # pretty sure this will bite me...
