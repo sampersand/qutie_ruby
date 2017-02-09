@@ -14,23 +14,22 @@ class Universe
   #stream methods
     def next!(amnt)
       return next!(amnt.length) if amnt.is_a?(String)
-      throw :EOF, [-1] if @stack.empty?
-      return @stack.shift unless amnt
+      throw :EOF if stack_empty?
       @stack.shift(amnt).join
     end
 
-    def peek(amnt=nil)
-      throw :EOF, [-1] if @stack.empty?
-      return @stack.first unless amnt
-      @stack.first(amnt).join
+    def peek(amnt) # deprecated
+      warn('Universe.peek is depreciated!')
+      peek?(/./, len: 1)
     end
 
     def peek?(*vals, len: nil)
+      throw :EOF, [-1] if @stack.empty?
       vals.any? do |val|
         if val.is_a?(Regexp)
-          self.peek(len || val.source.length) =~ val 
+          @stack.first(len || val.source.length).join =~ val 
         else
-          self.peek(len || val.length) == val
+          @stack.first(len || val.length).join == val
         end
       end
     end
