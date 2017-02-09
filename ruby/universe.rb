@@ -84,9 +84,6 @@ class Universe
     end
 
   # misc
-    def spawn_frame
-      self.class.new(globals: @globals.clone.update(@locals))
-    end
 
     def spawn_new_stack(new_stack:)
       self.class.new(stack: new_stack, locals: @locals, globals: @globals)

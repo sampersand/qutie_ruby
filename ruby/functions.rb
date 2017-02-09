@@ -182,7 +182,7 @@
 
   module_function
   def qutie_func(arg, universe, parser, name)
-    uni = universe.spawn_frame
+    uni = universe.class.new(globals: universe.globals.clone.update(universe.locals))
     uni.locals[:__self] ||= arg
     if arg.respond_to?(:locals) && arg.locals.include?(name)
       func = arg.locals[name] or fail "no #{name}` function for #{arg}"
