@@ -1,4 +1,5 @@
 require_relative 'default'
+require_relative 'text'
 class QT_BooleanNull < QT_Object
   def self.get_class(oper)
     (oper ? QT_True : QT_False)::INSTANCE
@@ -11,7 +12,7 @@ class QT_BooleanNull < QT_Object
   # qt methods
     # operators
       # conversion
-        def qt_to_text; Text::QT_Text.new(text_val: to_s) end
+        def qt_to_text; QT_Text.new(text_val: to_s) end
         def qt_to_bool; self end
 
       # operators 
