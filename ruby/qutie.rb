@@ -8,7 +8,6 @@ require_relative 'plugins/variable'
 require_relative 'plugins/comment'
 require_relative 'plugins/text'
 require_relative 'plugins/keyword'
-require_relative 'plugins/escape'
 
 require_relative 'functions'
 require_relative 'constants'
@@ -21,7 +20,6 @@ parser.add_plugin(plugin: BinaryOperator)
 parser.add_plugin(plugin: Comment)
 parser.add_plugin(plugin: Keyword)
 parser.add_plugin(plugin: Text)
-parser.add_plugin(plugin: Escape)
 parser.add_builtins(builtins: Functions::FUNCTIONS)
 parser.add_builtins(builtins: Constants::CONSTANTS)
 
