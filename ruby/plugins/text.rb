@@ -4,12 +4,16 @@ module Text
   class QT_Text < QT_Object
 
     def self.from(source:)
-      new(source: source, quotes: [source[0], source[-1]])
+      new(body: source, quotes: [source[0], source[-1]])
     end
 
-    def initialize(source:, quotes:)
-      super(source: source)
+    def initialize(body:, quotes:)
+      @body = body
       @quotes = quotes
+    end
+
+    def to_s
+      "#{@quotes[0]}#{@body}#{@quotes[1]}"
     end
 
   end

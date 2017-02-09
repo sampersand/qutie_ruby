@@ -4,7 +4,9 @@ require_relative 'plugins/number'
 module Constants
   class QT_Boolean < QT_Object
     class QT_Boolean_True < QT_Boolean
+
     end
+
     class QT_Boolean_False < QT_Boolean
 
     end
@@ -12,9 +14,10 @@ module Constants
 
     end
 
-    TRUE = QT_Boolean_True::from(source: 'true')
-    FALSE = QT_Boolean_False::from(source: 'false')
-    NULL = QT_Boolean_Null::from(source: 'null')
+    # consts
+      TRUE = QT_Boolean_True::from(source: 'true')
+      FALSE = QT_Boolean_False::from(source: 'false')
+      NULL = QT_Boolean_Null::from(source: 'null')
   end
 
   CONSTANTS = {
@@ -23,7 +26,7 @@ module Constants
     nil: QT_Boolean::NULL,
     null: QT_Boolean::NULL,
     none: QT_Boolean::NULL,
-    math_e: Number::QT_Number::MATH_E,
-    math_pi: Number::QT_Number::MATH_PI,
+    math_e: Number::QT_Number::E,
+    math_pi: Number::QT_Number::PI,
   }
 end

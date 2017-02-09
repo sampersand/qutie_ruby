@@ -1,10 +1,19 @@
 require_relative 'object'
 module Variable
   class QT_Variable < QT_Object
-    def initialize(source:)
-      super
-      @value = source.to_sym
+
+    def self.from(source:)
+      new(value: source.to_sym )
     end
+    
+    def initialize(value:)
+      @value = value
+    end
+
+    def to_s
+      @value.to_s
+    end
+
   end
 
   module_function
