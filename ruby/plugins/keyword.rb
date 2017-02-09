@@ -2,7 +2,7 @@ module Keyword
   module_function
 
   def handle_get_known(universe:, **_)
-    # universe << universe.qt_index(pos: universe.pop, type: :BOTH)
+    # universe << universe.qt_get(pos: universe.pop, type: :BOTH)
     universe << (universe[universe.pop] || QT_Boolean::NULL)
   end
 

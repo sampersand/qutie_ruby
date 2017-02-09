@@ -27,7 +27,7 @@ class QT_Object
 
     # operators 
       # access
-        def qt_index(pos:, type:);  end
+        def qt_get(pos:, type:);  end
         def qt_set(pos, val:, type:);  end
       # math
         def qt_add(right:);  end

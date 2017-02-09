@@ -99,8 +99,8 @@
       end
     },
     QT_Variable::from(source: 'disp') => BuiltinFunciton.new{ |args, universe, stream, parser|
-      endl = args.qt_index(pos: QT_Variable::from(source: 'end'), type: :BOTH)
-      sep  = args.qt_index(pos: QT_Variable::from(source: 'sep'), type: :BOTH) || ""
+      endl = args.qt_get(pos: QT_Variable::from(source: 'end'), type: :BOTH)
+      sep  = args.qt_get(pos: QT_Variable::from(source: 'sep'), type: :BOTH) || ""
       endl = QT_Text.new(text_val: "\n") if endl == QT_Boolean::NULL
       sep = QT_Text.new(text_val: '') if sep == QT_Boolean::NULL
       args.locals[:sep] = sep # forces it to be '' if not specified, but doesnt override text's default
@@ -143,8 +143,8 @@
       exit(exit_code || 0)
     },
     QT_Variable::from(source: 'text') => BuiltinFunciton.new{ |args, universe, stream, parser|
-      if args.respond_to?(:qt_index)
-        sep  = args.qt_index(pos: QT_Variable::from(source: 'sep'), type: :BOTH)
+      if args.respond_to?(:qt_get)
+        sep  = args.qt_get(pos: QT_Variable::from(source: 'sep'), type: :BOTH)
         sep = QT_Text::new(text_val: ' ') if sep == QT_Boolean::NULL;
         QT_Text::new(text_val: args.stack.collect{ |arg|
             qutie_func(arg, universe, parser, :__text){ |a| a.nil? ? a.inspect : a.qt_to_text.text_val }

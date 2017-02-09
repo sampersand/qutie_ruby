@@ -61,7 +61,7 @@ class QT_Universe < QT_Object
       parser.parse(stream: @universe, universe: passed_args)
       # func.program_stack.pop
     end
-    def qt_index(pos:, type: ) # fix this
+    def qt_get(pos:, type: ) # fix this
       if type == :BOTH
         if @universe.locals.include?(pos)
           type = :LOCALS
@@ -73,7 +73,7 @@ class QT_Universe < QT_Object
       when :STACK then @universe.stack[(pos.qt_to_num or return QT_Boolean::NULL).num_val] or QT_Boolean::NULL
       when :LOCALS then @universe.locals[pos] or QT_Boolean::NULL
       when :GLOBALS then @universe.globals[pos] or QT_Boolean::NULL
-      else fail "Unknown qt_index type `#{type}`!"
+      else fail "Unknown qt_get type `#{type}`!"
       end
     end
 end

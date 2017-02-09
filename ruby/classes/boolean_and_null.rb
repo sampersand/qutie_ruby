@@ -15,7 +15,7 @@ class QT_Boolean < QT_Object
 
   # qt methods
     # methods
-      def qt_index(pos:, type:)
+      def qt_get(pos:, type:)
         if pos == QT_Variable::from(source: 'not')
           qt_not
         end

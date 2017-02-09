@@ -4,7 +4,7 @@ require_relative 'parser'
 require_relative 'plugins/whitespace'
 require_relative 'plugins/parenthesis'
 require_relative 'plugins/number'
-require_relative 'plugins/operator'
+require_relative 'plugins/operator/operators'
 require_relative 'plugins/variable'
 require_relative 'plugins/comment'
 require_relative 'plugins/text'
@@ -17,9 +17,9 @@ parser.add_plugin(plugin: Whitespace)
 parser.add_plugin(plugin: Variable)
 parser.add_plugin(plugin: Number)
 parser.add_plugin(plugin: Parenthesis)
-parser.add_plugin(plugin: Operator)
+parser.add_plugin(plugin: Operators)
 parser.add_plugin(plugin: Comment)
-parser.add_plugin(plugin: Keyword)
+# parser.add_plugin(plugin: Keyword)
 parser.add_plugin(plugin: Text)
 parser.add_builtins(builtins: Functions::FUNCTIONS)
 parser.add_builtins(builtins: Constants::CONSTANTS)
