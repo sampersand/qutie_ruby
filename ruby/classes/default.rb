@@ -20,4 +20,26 @@ class QT_Default < QT_Object
   def hash
     @source.hash
   end
+
+ # qt methods
+    # conversion
+      def qt_to_text
+        self
+      end
+      def qt_to_bool
+        QT_Boolean::get(@text_val.length != 0)
+      end
+
+    # operators
+      # math
+        def qt_add(right:)
+          right = right.qt_to_text or return
+          QT_Text.new(text_val: @text_val + right.text_val)
+        end
+
+        def qt_add_r(left:)
+          left = left.qt_to_text or return
+          QT_Text.new(text_val: left.text_val + @text_val)
+        end
+
 end

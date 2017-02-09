@@ -9,6 +9,10 @@ class QT_Boolean < QT_Object
     self.class::VALUE.inspect
   end
 
+  def bool_value
+    self.class::VALUE
+  end
+
   # qt methods
     # operators
       # conversion

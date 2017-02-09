@@ -16,8 +16,8 @@ module Operator
     '<'  => proc { |l, r| l.qt_lth(right: r) || r.qt_lth_r(left: l) },
     '>'  => proc { |l, r| l.qt_gth(right: r) || r.qt_gth_r(left: l) },
 
-    '||'  => proc { |l, r| l || r },
-    '&&' => proc { |l, r| l && r },
+    '||'  => proc { |l, r| l.qt_to_bool.bool_value ? l : r },
+    '&&'  => proc { |l, r| l.qt_to_bool.bool_value ? r : l },
     'xor' => proc { |l, r| l ^ r }, # doesnt work
 
     '='   => proc { |l, r, u| u.locals[l] = r},

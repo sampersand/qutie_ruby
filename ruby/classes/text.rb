@@ -3,7 +3,6 @@ class QT_Text < QT_Object
 
   attr_reader :text_val
   def self.from(source:)
-    # new(body: source[1...-1], quotes: [source[0], source[-1]])
     new(text_val: source[1...-1])
   end
 
@@ -36,20 +35,43 @@ class QT_Text < QT_Object
   end
 
   # qt methods
+    # methods
+      def qt_length
+        QT_Number.new(num_val: @text_val.length)
+      end
     # conversion
       def qt_to_text
         self
       end
+      def qt_to_bool
+        QT_Boolean::get(@text_val.length != 0)
+      end
 
     # operators
-      # math
-        def qt_add(right:)
-          right = right.qt_to_text or return
-          QT_Text.new(text_val: @text_val + right.text_val)
+      private
+      def text_func(right:, lmeth:, rmeth: :qt_to_text)
+          right = right.method(rmeth).() or return
+          QT_Text.new(text_val: @text_val.method(lmeth).call(right.text_val))
         end
+        def text_func_r(left:, lmeth:, rmeth: :qt_to_text)
+          left = left.method(rmeth).() or return
+          QT_Text.new(text_val: left.text_val.method(lmeth).call(@text_val) )
+        end
+      public
 
-        def qt_add_r(left:)
-          left = left.qt_to_text or return
-          QT_Text.new(text_val: left.text_val + @text_val)
+      # math
+        def qt_cmp(right:)
+          return unless right.is_a?(QT_Text)
+          QT_Number.new(num_val: @text_val <=> right.text_val)
         end
+        def qt_add(right:) text_func(right: right, lmeth: :+) end
+        def qt_mul(right:) text_func(right: right, lmeth: :*, rmeth: :qt_to_num) end
+        def qt_add_r(right:) text_func_r(right: right, lmeth: :+) end
 end
+
+
+
+
+
+
+

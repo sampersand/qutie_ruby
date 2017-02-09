@@ -34,34 +34,36 @@ class QT_Number < QT_Object
       def qt_to_num
         self
       end
+      def qt_to_bool
+        QT_Boolean::get(@num_val != 0)
+      end
 
     # operators
-      # math
         private
-          def numer_func(right:, meth:)
+          def numer_func(right:, lmeth:)
             right = right.qt_to_num or return
-            QT_Number.new(num_val: @num_val.method(meth).call(right.num_val))
+            QT_Number.new(num_val: @num_val.method(lmeth).call(right.num_val))
           end
-          def numer_func_r(left:, meth:)
+          def numer_func_r(left:, lmeth:)
             left = left.qt_to_num or return
-            QT_Number.new(num_val: left.num_val.method(meth).call(@num_val) )
+            QT_Number.new(num_val: left.num_val.method(lmeth).call(@num_val) )
           end
 
         public
-          def qt_cmp(right:) numer_func(right: right, meth: :<=>) end
+        # math
+          def qt_cmp(right:) numer_func(right: right, lmeth: :<=>) end
 
-          def qt_add(right:) numer_func(right: right, meth: :+) end
-          def qt_sub(right:) numer_func(right: right, meth: :-) end
-          def qt_mul(right:) numer_func(right: right, meth: :*) end
-          def qt_div(right:) numer_func(right: right, meth: :/) end
-          def qt_mod(right:) numer_func(right: right, meth: :%) end
-          def qt_pow(right:) numer_func(right: right, meth: :**) end
-          def qt_cmp_r(left:) numer_func_r(left: left, meth: :<=>) end
-          def qt_add_r(left:) numer_func_r(left: left, meth: :+) end
-          def qt_sub_r(left:) numer_func_r(left: left, meth: :-) end
-          def qt_mul_r(left:) numer_func_r(left: left, meth: :*) end
-          def qt_div_r(left:) numer_func_r(left: left, meth: :/) end
-          def qt_mod_r(left:) numer_func_r(left: left, meth: :%) end
-          def qt_pow_r(left:) numer_func_r(left: left, meth: :**) end
+          def qt_add(right:) numer_func(right: right, lmeth: :+) end
+          def qt_sub(right:) numer_func(right: right, lmeth: :-) end
+          def qt_mul(right:) numer_func(right: right, lmeth: :*) end
+          def qt_div(right:) numer_func(right: right, lmeth: :/) end
+          def qt_mod(right:) numer_func(right: right, lmeth: :%) end
+          def qt_pow(right:) numer_func(right: right, lmeth: :**) end
+          def qt_add_r(left:) numer_func_r(left: left, lmeth: :+) end
+          def qt_sub_r(left:) numer_func_r(left: left, lmeth: :-) end
+          def qt_mul_r(left:) numer_func_r(left: left, lmeth: :*) end
+          def qt_div_r(left:) numer_func_r(left: left, lmeth: :/) end
+          def qt_mod_r(left:) numer_func_r(left: left, lmeth: :%) end
+          def qt_pow_r(left:) numer_func_r(left: left, lmeth: :**) end
 end
 

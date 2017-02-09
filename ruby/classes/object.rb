@@ -17,10 +17,12 @@ class QT_Object
 
   # qt methods
 
+    # methods
+      def qt_length; end
     # conversion
       def qt_to_num;  end
-      def qt_to_text; Text::QT_Text.new(text_val: to_s) end
-      def qt_to_bool; Text::QT_Text.new(text_val: to_s) end
+      def qt_to_text; QT_Text.new(text_val: to_s) end
+      def qt_to_bool; QT_Boolean::get(true) end
 
     # operators 
       # access
@@ -50,7 +52,7 @@ class QT_Object
         def qt_leq(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val <= 0) end
         def qt_geq(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val >= 0) end
 
-        def qt_cmp_r(left:); res = qt_cmp(right: left); res && -res end
+        def qt_cmp_r(left:); res = qt_cmp(right: left); res && QT_Number.new(num_val: -res.num_val) end
         def qt_eql_r(left:); qt_eql(right: left) end
         def qt_lth_r(left:); qt_gth(right: left) end
         def qt_gth_r(left:); qt_lth(right: left) end
