@@ -15,25 +15,25 @@ module Parenthesis
         # this is very hacky right here
 
         if stream.peek?("'", '"', '`')
-          quote = stream.next!
+          quote = stream.next!(1)
           new_container << quote
           until stream.peek?(quote)
-            new_container << stream.next! if stream.peek?('\\')
-            new_container << stream.next!
+            new_container << stream.next!(1) if stream.peek?('\\')
+            new_container << stream.next!(1)
           end
-          new_container << stream.next!
+          new_container << stream.next!(1)
           next
         end
 
         if stream.peek?('#', '//')
-          new_container << stream.next! until stream.peek?("\n")
-          new_container << stream.next!
+          new_container << stream.next!(1) until stream.peek?("\n")
+          new_container << stream.next!(1)
           
           next
         end
 
         if stream.peek?('/*')
-          new_container << stream.next! until stream.peek?('*/')
+          new_container << stream.next!(1) until stream.peek?('*/')
           new_container << stream.next!(2)
           next
         end
@@ -44,7 +44,7 @@ module Parenthesis
         elsif stream.peek?(*R_PAREN)
           parens -= 1
         elsif stream.peek?('\\')
-          new_container << stream.next!
+          new_container << stream.next!(1)
         end
         new_container << stream.next!(1)
       end

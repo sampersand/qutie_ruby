@@ -6,8 +6,8 @@ module Comment
   SINGLE_END = "\n"
   def next_single!(stream)
     return unless stream.peek?(SINGLE_START_1) || stream.peek?(SINGLE_START_2)
-    stream.next! until stream.peek?(SINGLE_END)
-    stream.next!
+    stream.next!(1) until stream.peek?(SINGLE_END)
+    stream.next!(1)
     :retry
   end
   
@@ -16,7 +16,7 @@ module Comment
   
   def next_multi!(stream)
     return unless stream.peek?(MULTI_LINE_START)
-    stream.next! until stream.peek?(MULTI_LINE_END) # this will fail inside strings, but that's ok C does as well.
+    stream.next!(1) until stream.peek?(MULTI_LINE_END) # this will fail inside strings, but that's ok C does as well.
     stream.next!(MULTI_LINE_END)
     :retry
   end

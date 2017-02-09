@@ -16,10 +16,10 @@ module Text
       until stream.peek?(quote)
         body += (if stream.peek?('\\')
                     stream.next!(1) # pop the \
-                    to_find = stream.next!
+                    to_find = stream.next!(1)
                     REPLACEMENTS.fetch(to_find, to_find)
                  else
-                    stream.next!
+                    stream.next!(1)
                  end)
       end
       raise unless stream.peek?(quote)

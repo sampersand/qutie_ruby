@@ -4,7 +4,7 @@ module Variable
   VARIABLE_START = /[a-z_]/i
   VARIABLE_CONT  = /[a-z_0-9]/i
   def next_token!(stream, universe, parser)
-    return stream.next! if stream.peek?('$')
+    return stream.next!(1) if stream.peek?('$')
     return unless stream.peek?(VARIABLE_START, len: 1)
     result = ''
     parser.catch_EOF(universe) {

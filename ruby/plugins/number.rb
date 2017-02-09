@@ -5,10 +5,10 @@ module Number
     return unless stream.peek?(/0[oxdb]/i, len: 2)
     res = stream.next!(2)
     case res[1]
-    when 'b' then res += stream.next! while stream.peek?(/[01]/, len: 1)
-    when 'o' then res += stream.next! while stream.peek?(/[0-7]/, len: 1)
-    when 'd' then res += stream.next! while stream.peek?(/[0-9]/, len: 1)
-    when 'x' then res += stream.next! while stream.peek?(/[0-9A-F]/i, len: 1)
+    when 'b' then res += stream.next!(1) while stream.peek?(/[01]/, len: 1)
+    when 'o' then res += stream.next!(1) while stream.peek?(/[0-7]/, len: 1)
+    when 'd' then res += stream.next!(1) while stream.peek?(/[0-9]/, len: 1)
+    when 'x' then res += stream.next!(1) while stream.peek?(/[0-9A-F]/i, len: 1)
     else raise "Unknown base `#{res}`"
     end
     res
@@ -17,7 +17,7 @@ module Number
     return unless stream.peek?(/\d/, len: 1)
     num = ''
     parser.catch_EOF(universe) {
-      num += stream.next! while stream.peek?(/\d/, len: 1)
+      num += stream.next!(1) while stream.peek?(/\d/, len: 1)
       nil
     }
     num
@@ -27,7 +27,7 @@ module Number
     start = next_int!(stream, universe, parser) or return
     parser.catch_EOF(universe) {
       return start unless stream.peek?('.')
-      return start + stream.next! + next_int!(stream, universe, parser) || '0'
+      return start + stream.next!(1) + next_int!(stream, universe, parser) || '0'
       nil
     }
     start

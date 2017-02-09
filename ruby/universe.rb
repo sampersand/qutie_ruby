@@ -10,6 +10,31 @@ class Universe
     @globals = globals || {}
   end
 
+
+  #stream methods
+    def next!(amnt)
+      return next!(amnt.length) if amnt.is_a?(String)
+      throw :EOF, [-1] if @stack.empty?
+      return @stack.shift unless amnt
+      @stack.shift(amnt).join
+    end
+
+    def peek(amnt=nil)
+      throw :EOF, [-1] if @stack.empty?
+      return @stack.first unless amnt
+      @stack.first(amnt).join
+    end
+
+    def peek?(*vals, len: nil)
+      vals.any? do |val|
+        if val.is_a?(Regexp)
+          self.peek(len || val.source.length) =~ val 
+        else
+          self.peek(len || val.length) == val
+        end
+      end
+    end
+
   # stack
     def stack_empty?
       @stack.empty?
@@ -49,31 +74,6 @@ class Universe
       self.class.new(stack: @stack.clone,
                      locals: @locals.clone,
                      globals: @globals.clone)
-    end
-
-  #stream methods
-
-    def next!(amnt=nil)
-      return next!(amnt.length) if amnt.is_a?(String)
-      throw :EOF, [-1] if @stack.empty?
-      return @stack.shift unless amnt
-      @stack.shift(amnt).join
-    end
-
-    def peek(amnt=nil)
-      throw :EOF, [-1] if @stack.empty?
-      return @stack.first unless amnt
-      @stack.first(amnt).join
-    end
-
-    def peek?(*vals, len: nil)
-      vals.any? do |val|
-        if val.is_a?(Regexp)
-          self.peek(len || val.source.length) =~ val 
-        else
-          self.peek(len || val.length) == val
-        end
-      end
     end
 
     def push!(val)
