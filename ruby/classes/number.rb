@@ -48,13 +48,15 @@ class QT_Number < QT_Object
           end
 
         public
+          def qt_cmp(right:) numer_func(right: right, meth: :<=>) end
+
           def qt_add(right:) numer_func(right: right, meth: :+) end
           def qt_sub(right:) numer_func(right: right, meth: :-) end
           def qt_mul(right:) numer_func(right: right, meth: :*) end
           def qt_div(right:) numer_func(right: right, meth: :/) end
           def qt_mod(right:) numer_func(right: right, meth: :%) end
-
           def qt_pow(right:) numer_func(right: right, meth: :**) end
+          def qt_cmp_r(left:) numer_func_r(left: left, meth: :<=>) end
           def qt_add_r(left:) numer_func_r(left: left, meth: :+) end
           def qt_sub_r(left:) numer_func_r(left: left, meth: :-) end
           def qt_mul_r(left:) numer_func_r(left: left, meth: :*) end

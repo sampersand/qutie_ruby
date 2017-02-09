@@ -1,7 +1,7 @@
 require_relative 'default'
 require_relative 'text'
-class QT_BooleanNull < QT_Object
-  def self.get_class(oper)
+class QT_Boolean < QT_Object
+  def self.get(oper)
     (oper ? QT_True : QT_False)::INSTANCE
   end
 
@@ -16,23 +16,23 @@ class QT_BooleanNull < QT_Object
         def qt_to_bool; self end
 
       # operators 
-        def qt_eql(right:); QT_BooleanNull::get_class right.is_a? self.class end
+        def qt_eql(right:); QT_Boolean::get right.is_a? self.class end
       # logic
-        def qt_not; QT_BooleanNull::get_class !self.class::VALUE end
+        def qt_not; QT_Boolean::get !self.class::VALUE end
 
 end
 
-class QT_True < QT_BooleanNull
+class QT_True < QT_Boolean
   VALUE = true
   INSTANCE = new
 end
 
-class QT_False < QT_BooleanNull
+class QT_False < QT_Boolean
   VALUE = false
   INSTANCE = new
 end
 
-class QT_Null < QT_BooleanNull
+class QT_Null < QT_Boolean
   VALUE = nil
   INSTANCE = new
 end
