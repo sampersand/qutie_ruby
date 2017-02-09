@@ -9,8 +9,8 @@ module Operators
     end
 
     def handle(token:, stream:, universe:, parser:, **_)
-      if OPERATORS[token].type == :UNARY
-        handle_unary(token: token,
+      if OPERATORS[token].type == :UNARY_POSTFIX
+        handle_unary_postfix(token: token,
                      stream: stream,
                      universe: universe,
                      parser: parser)
@@ -22,7 +22,11 @@ module Operators
       end
     end
 
-    def handle_unary(token:, stream:, universe:, parser:)
+    def handle_unary_postfix(token:, stream:, universe:, parser:)
+      lhs = universe.pop
+      result = OPERATORS[token].call(lhs, universe, stream, parser)
+      result or raise "Invalid operand types for `#{token}`: `#{lhs.class}`"
+      universe << result
     end
 
     def fix_lhs(token)
@@ -67,11 +71,7 @@ module Operators
       universe.stack.concat(rhs.stack)
       lhs ||= fix_lhs(token)
       rhs = universe.pop
-      result = OPERATORS[token].call(lhs: lhs,
-                                     rhs: rhs,
-                                     universe: universe,
-                                     stream: stream,
-                                     parser: parser)
+      result = OPERATORS[token].call(lhs, rhs, universe, stream, parser)
       result or raise "Invalid operand types for `#{token}`: `#{lhs.class}` and `#{rhs.class}`"
       universe << result
     end

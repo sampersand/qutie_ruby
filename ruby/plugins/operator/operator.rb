@@ -8,8 +8,8 @@ module Operators
       @type = type
       @func = func
     end
-    def call(**kw)
-      @func.call(**kw)
+    def call(*a)
+      @func.call(*a)
     end
 
   end
@@ -24,7 +24,7 @@ module Operators
     '>=' => Operator.new(name: '>=', priority: 20){ |l, r| l.qt_geq(right: r) || r.qt_geq_r(left: l) },
     '&&' => Operator.new(name: '&&', priority: 24){ |l, r| l.qt_to_bool.bool_val ? r : l  },
     '||' => Operator.new(name: '||', priority: 25){ |l, r| l.qt_to_bool.bool_val ? l : r  },
-    '@0' => Operator.new(name: '@0', priority:  7) { |f, a, u, s, p| OPERATORS['@'].call(f, a, u, s, p).qt_get(QT_Numeric.new(num_val: -1), type: :STACK) },
+    '@0' => Operator.new(name: '@0', priority:  7) { |f, a, u, s, p| OPERATORS['@'].call(f, a, u, s, p).qt_get(QT_Number.new(num_val: -1), type: :STACK) },
     '.=' => Operator.new(name: '.=', priority: 6){ |arg, pos| args.qt_set(pos, type: :STACK) }, # todo: fix this
     '.S'  => Operator.new(name: '.S', priority: 5){ |arg, pos| arg.qt_get(pos: pos, type: :STACK) },
     '.L'  => Operator.new(name: '.L', priority: 5){ |arg, pos| arg.qt_get(pos: pos, type: :LOCALS) },
@@ -37,7 +37,7 @@ module Operators
     '-'  => Operator.new(name: '-' , priority: 12){ |l, r| l.qt_sub(right: r) || r.qt_sub_r(left: l) },
     '<'  => Operator.new(name: '<' , priority: 20){ |l, r| l.qt_lth(right: r) || r.qt_lth_r(left: l) },
     '>'  => Operator.new(name: '>' , priority: 20){ |l, r| l.qt_gth(right: r) || r.qt_gth_r(left: l) },
-    '='  => Operator.new(name: '=' , priority: 30){ |lhs:, rhs:, universe:, **_| universe.locals[lhs] = rhs },
+    '='  => Operator.new(name: '=' , priority: 30){ |lhs, rhs, universe, | universe.locals[lhs] = rhs },
     '@'  => Operator.new(name: '@',  priority:  7) { |func, args, universe, stream, parser|
       if func.respond_to?(:call)
         func.call(args, universe, stream, parser)
@@ -51,9 +51,9 @@ module Operators
       else
         arg.qt_get(pos: pos, type: :BOTH) || QT_Boolean::NULL
       end },
-    ';'  => Operator.new(name: ';', priority: 40, type: :UNARY){ |args| args.qt_del(pos: QT_Numeric.new(num_val: -1), type: :STACK) },
-    ','  => Operator.new(name: ',', priority: 40, type: :UNARY){ },
-    '?'  => Operator.new(name: '?', priority:  1, type: :UNARY){ |args, universe| universe.qt_get(pos: args) },
+    ';'  => Operator.new(name: ';', priority: 40, type: :UNARY_POSTFIX){ |_, _, universe| universe.qt_del(pos: QT_Number.new(num_val: -1), type: :STACK) },
+    ','  => Operator.new(name: ',', priority: 40, type: :UNARY_POSTFIX){},
+    '?'  => Operator.new(name: '?', priority:  1, type: :UNARY_POSTFIX){ |args, universe| universe.qt_get(pos: args) },
   }
 end
 

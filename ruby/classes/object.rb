@@ -27,8 +27,9 @@ class QT_Object
 
     # operators 
       # access
-        def qt_get(pos:, type:);  end
-        def qt_set(pos, val:, type:);  end
+        def qt_get(pos:, type:) end
+        def qt_set(pos:, val:, type:) end
+        def qt_del(pos:, type:)end
       # math
         def qt_add(right:);  end
         def qt_sub(right:);  end

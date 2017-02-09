@@ -76,17 +76,23 @@ class QT_Universe < QT_Object
       else fail "Unknown qt_get type `#{type}`!"
       end
     end
+    def qt_del(pos:, type:)
+      if type == :BOTH
+        if @universe.locals.include?(pos)
+          type = :LOCALS
+        else
+          type = :STACK
+        end
+      end
+      case type 
+      when :STACK then @universe.stack.delete((pos.qt_to_num or return QT_Boolean::NULL).num_val)
+      when :LOCALS then @universe.locals.delete(pos) or QT_Boolean::NULL
+      when :GLOBALS then @universe.globals.delete(pos) or QT_Boolean::NULL
+      else fail "Unknown qt_get type `#{type}`!"
+      end
+      QT_Boolean::NULL
+    end
 end
-
-
-
-
-
-
-
-
-
-
 
 
 
