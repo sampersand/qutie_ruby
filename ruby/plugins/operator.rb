@@ -7,11 +7,7 @@ module Operator
     '*'  => proc { |l, r| l *  r},
     '/'  => proc { |l, r| l /  r},
     '%'  => proc { |l, r| l %  r},
-    '+'  => proc { |l, r|
-      l.qt_add(right: r) ||
-      r.qt_add_r(left: l) ||
-      fail("Cannot add `#{l.inspect}` and `#{r.inspect}` together")
-    },
+    '+'  => proc { |l, r| l.qt_add(right: r) || r.qt_add_r(left: l) },
     '-'  => proc { |l, r| l -  r},
     '==' => proc { |l, r| l == r },
     '<>' => proc { |l, r| l != r },
@@ -145,11 +141,18 @@ module Operator
       }
       universe.stack.concat(rhs.stack)
       lhs ||= fix_lhs(token)
-      universe << OPERATORS[token].call(lhs, universe.pop, universe, stream, parser)
+      rhs = universe.pop
+      result = OPERATORS[token].call(lhs, rhs, universe, stream, parser)
+      result or raise "Invalid operand types for `#{token}`: `#{lhs.class}` and `#{rhs.class}`"
+      universe << result
     end
 
 
 end
+
+
+
+
 
 
 

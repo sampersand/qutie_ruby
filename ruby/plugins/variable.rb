@@ -17,7 +17,7 @@ module Variable
     # qt methods
       # conversion
         def qt_to_text
-          to_s
+          Text::QT_Text.new(text_val: to_s)
         end
 
   end

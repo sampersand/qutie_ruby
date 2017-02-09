@@ -18,6 +18,9 @@ module Constants
       TRUE = QT_Boolean_True::from(source: 'true')
       FALSE = QT_Boolean_False::from(source: 'false')
       NULL = QT_Boolean_Null::from(source: 'null')
+    def qt_to_text
+      Text::QT_Text.new(text_val: to_s)
+    end
   end
 
   CONSTANTS = {

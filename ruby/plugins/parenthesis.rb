@@ -19,13 +19,6 @@ module Parenthesis
       "#{@parens[0]} ... #{@parens[1]}"
     end
 
-    # qt methods
-      # conversion
-        def qt_to_text
-          to_s
-        end
-
-
   end
 
   L_PARENS = ['[', '(', '{']

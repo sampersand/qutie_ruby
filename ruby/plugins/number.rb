@@ -24,21 +24,21 @@ module Number
 
     # qt methods
       # conversion
-        def qt_to_text
-          to_s
-        end
-
-      # math
-        def qt_add(right:)
-          QT_Number.new(num_val: @num_val + right.qt_to_num.num_val)
-        end
-        def qt_add_r(left:)
-          QT_Number.new(num_val: left.qt_to_num.num_val + @num_val)
-        end
         def qt_to_num
           self
         end
 
+      # operators
+        # math
+          def qt_add(right:)
+            right = right.qt_to_num or return
+            QT_Number.new(num_val: @num_val + right.num_val)
+          end
+
+          def qt_add_r(left:)
+            left = left.qt_to_num or return
+            QT_Number.new(num_val: left.num_val + @num_val)
+          end
   end
 
   module_function
