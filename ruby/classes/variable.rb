@@ -24,6 +24,9 @@ class QT_Variable < QT_Object
 
   # qt methods
     # conversion
+      def qt_eql(right:) self == right end
+      def qt_eql_r(left:) self == left end
+
       def qt_to_text
         Text::QT_Text.new(text_val: to_s)
       end

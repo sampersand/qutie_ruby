@@ -10,7 +10,7 @@ module Operator
     '%'  => proc { |l, r| l.qt_mod(right: r) || r.qt_mod_r(left: l) },
     '+'  => proc { |l, r| l.qt_add(right: r) || r.qt_add_r(left: l) },
     '-'  => proc { |l, r| l.qt_sub(right: r) || r.qt_sub_r(left: l) },
-    '==' => proc { |l, r| l.qt_eql(right: r) || r.qt_eql_r(left: l) },
+    '==' => proc { |l, r| l.qt_eql(right: r) || r.qt_eql_r(left: l) || QT_Boolean::FALSE },
     '<>' => proc { |l, r| l.qt_neq(right: r) || r.qt_neq_r(left: l) },
     '<=' => proc { |l, r| l.qt_leq(right: r) || r.qt_leq_r(left: l) },
     '>=' => proc { |l, r| l.qt_geq(right: r) || r.qt_geq_r(left: l) },

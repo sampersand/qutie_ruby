@@ -14,6 +14,12 @@ class QT_Boolean < QT_Object
   end
 
   # qt methods
+    # methods
+      def qt_index(pos:, type:)
+        if pos == QT_Variable::from(source: 'not')
+          qt_not
+        end
+      end
     # operators
       # conversion
         def qt_to_text; QT_Text.new(text_val: to_s) end

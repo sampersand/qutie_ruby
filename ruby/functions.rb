@@ -147,16 +147,19 @@
         sep  = args.qt_index(pos: QT_Variable::from(source: 'seps'), type: :BOTH)
         sep = ' ' if sep == QT_Boolean::NULL;
         args.stack.collect{ |arg|
-            qutie_func(arg, universe, parser, :__text){ |a| a.nil? ? a.inspect : a.to_s }
+            qutie_func(arg, universe, parser, :__text){ |a| a.nil? ? a.inspect : a.qt_to_text }
           }.join(sep)
       else
-        args.nil? ? args.inspect : args.to_s 
+        args.qt_to_text
       end
     },
 
     QT_Variable::from(source: 'num') => BuiltinFunciton.new{ |args, universe, stream, parser|
-      qutie_func(args, universe, parser, :__num){ |a| a.to_i }
+      qutie_func(args, universe, parser, :__num){ |a| a.qt_to_num }
+    },
 
+    QT_Variable::from(source: 'bool') => BuiltinFunciton.new{ |args, universe, stream, parser|
+      qutie_func(args.pop, universe, parser, :__bool){ |a| a.qt_to_bool }
     },
 
     QT_Variable::from(source: 'len') => BuiltinFunciton.new{ |args, universe, stream, parser|
