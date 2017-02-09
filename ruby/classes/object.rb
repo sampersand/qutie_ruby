@@ -18,6 +18,7 @@ class QT_Object
   # qt methods
 
     # methods
+      def qt_method(meth:); end
       def qt_length; end
     # conversion
       def qt_to_num;  end

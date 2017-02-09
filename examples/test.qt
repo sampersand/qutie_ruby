@@ -1,10 +1,2 @@
-list = [39, 10.3, 'hello', true?]@();
-
-dict = {a: 1, b: 2, c: 3}@();
-func = {
-  a? + b?
-};
-
-func? @ (a=3;b=4;)!,
-dict?.fav_colour,
-dict?.list,
+a = [1,2]!;
+a?.__append@('foo')!

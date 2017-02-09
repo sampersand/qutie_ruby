@@ -1,18 +1,19 @@
-Car = class {
-  maker  ||= 'honda';
-  wheels ||= 4;
+Car = {
+  maker = maker? || 'honda';
+  wheels = wheels? || 4;
 
-  __text = function {
-    text(`I'm a`, __self?.maker, 'with', __self?.wheels, 'wheels!')
+  __text = {
+    `I'm a ` + __self?.maker + ' with ' + __self?.wheels + ' wheels!'
   };
 
-  drive = function(dist?) {
-    disp( if(dist?, text('I drove', dist?, 'miles'), 'vroom vroom!') );
+  drive = {dist=dist?||__args?.0;
+    disp? @ ( if? @ (dist?, 'I drove ' + dist? + ' miles!', 'vroom vroom!')! )!;
   };
 
 };
 
-car = Car? @ (maker='toyoya')!;
-disp(car?);
-car?.drive( 5 );
-car?.drive();
+car = Car? @ {maker: 'toyoya'}!;
+disp? @ (car?.__text @ (__self=car?;)!,.0 )!;
+car?.drive @ ( 5 )!;
+car?.drive @ ( dist=9.3 )!;
+car?.drive @ ()!;

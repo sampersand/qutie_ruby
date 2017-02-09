@@ -1,25 +1,25 @@
 require 'classes/object'
 class QT_Variable < QT_Object
 
-  attr_reader :value
+  attr_reader :var_val
   def self.from(source:)
-    new(value: source.to_sym )
+    new(var_val: source.to_sym )
   end
   
-  def initialize(value:)
-    @value = value
+  def initialize(var_val:)
+    @var_val = var_val
   end
 
   def to_s
-    @value.to_s
+    @var_val.to_s
   end
 
   def ==(other)
-    other.is_a?(QT_Variable) && @value == other.value
+    other.is_a?(QT_Variable) && @var_val == other.var_val
   end
 
   def hash
-    @value.hash
+    @var_val.hash
   end
 
   # qt methods

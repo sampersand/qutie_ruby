@@ -31,6 +31,16 @@ class QT_Universe < QT_Object
     @universe.method(meth).call(*a)
   end
   # qt methods
+
+    def qt_method(meth:)
+      case meth
+      when :append then proc{|args|
+        @universe.stack << args.stack[0]
+      }
+      else fail "Unknown method `#{meth}`"
+      end
+    end
+
     def qt_to_bool
       QT_Boolean::get(@universe.stack_empty? && @universe.shortened_locals_empty?)
     end

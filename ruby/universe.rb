@@ -48,7 +48,7 @@ class Universe
 
   # locals
     def shortened_locals
-      @locals.reject{|k, v| k.is_a?(QT_Variable) && k.value.to_s.start_with?('__')}
+      @locals.reject{|k, v| k.is_a?(QT_Variable) && k.var_val.to_s.start_with?('__')}
     end
 
     def locals_empty?
@@ -94,10 +94,10 @@ class Universe
         stack_s
       elsif stack_empty?
         locals_s
-      elsif shortened_locals_empty? && !stack_empty?
-        "< #{stack_s} | #{locals_s} >"
+      # elsif shortened_locals_empty? && !stack_empty?
       else
-        '()'
+        "< #{stack_s} | #{locals_s} >"
+      #   '()'
       end
     end
 

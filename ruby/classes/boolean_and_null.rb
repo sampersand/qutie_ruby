@@ -9,7 +9,7 @@ class QT_Boolean < QT_Object
     self.class::VALUE.inspect
   end
 
-  def bool_value
+  def bool_val
     self.class::VALUE
   end
 

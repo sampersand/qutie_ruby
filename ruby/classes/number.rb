@@ -12,7 +12,7 @@ class QT_Number < QT_Object
   end
 
   def to_s
-    @num_val.to_s
+    @num_val == @num_val.to_i ? @num_val.to_i.to_s : @num_val.to_s
   end
 
   def ==(other)

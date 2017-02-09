@@ -36,8 +36,8 @@
     QT_Variable::from(source: 'if') => BuiltinFunciton.new{ |args, universe, stream, parser|
       cond     = args.stack.fetch(0){ args.locals.fetch(:__cond) }
       if_true  = args.locals.fetch(true){ args.stack.fetch(1){ args.locals.fetch(:true) }   }
-      if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false, nil) } }
-      cond ? if_true : if_false
+      if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false, QT_Boolean::NIL) } }
+      cond.qt_to_bool.bool_val ? if_true : if_false
     },
     QT_Variable::from(source: 'while') => BuiltinFunciton.new{ |args, universe, stream, parser|
       cond = args.stack.fetch(0){ args.locals.fetch(:__cond) }
@@ -101,11 +101,11 @@
     QT_Variable::from(source: 'disp') => BuiltinFunciton.new{ |args, universe, stream, parser|
       endl = args.qt_index(pos: QT_Variable::from(source: 'end'), type: :BOTH)
       sep  = args.qt_index(pos: QT_Variable::from(source: 'sep'), type: :BOTH) || ""
-      endl = "\n" if endl == QT_Boolean::NULL
-      sep = '' if sep == QT_Boolean::NULL
+      endl = QT_Text.new(text_val: "\n") if endl == QT_Boolean::NULL
+      sep = QT_Text.new(text_val: '') if sep == QT_Boolean::NULL
       args.locals[:sep] = sep # forces it to be '' if not specified, but doesnt override text's default
       to_print=FUNCTIONS[QT_Variable::from(source: 'text')].call(args, universe, stream, parser) 
-      print(to_print + endl)
+      print(to_print.qt_add(right: endl).text_val)
       true
     },
 
@@ -144,11 +144,11 @@
     },
     QT_Variable::from(source: 'text') => BuiltinFunciton.new{ |args, universe, stream, parser|
       if args.respond_to?(:qt_index)
-        sep  = args.qt_index(pos: QT_Variable::from(source: 'seps'), type: :BOTH)
-        sep = ' ' if sep == QT_Boolean::NULL;
-        args.stack.collect{ |arg|
+        sep  = args.qt_index(pos: QT_Variable::from(source: 'sep'), type: :BOTH)
+        sep = QT_Text::new(text_val: ' ') if sep == QT_Boolean::NULL;
+        QT_Text::new(text_val: args.stack.collect{ |arg|
             qutie_func(arg, universe, parser, :__text){ |a| a.nil? ? a.inspect : a.qt_to_text.text_val }
-          }.join(sep)
+          }.join(sep.qt_to_text.text_val))
       else
         args.qt_to_text
       end

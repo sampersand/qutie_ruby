@@ -17,8 +17,8 @@ module Operator
     '<'  => proc { |l, r| l.qt_lth(right: r) || r.qt_lth_r(left: l) },
     '>'  => proc { |l, r| l.qt_gth(right: r) || r.qt_gth_r(left: l) },
 
-    '||'  => proc { |l, r| l.qt_to_bool.bool_value ? l : r },
-    '&&'  => proc { |l, r| l.qt_to_bool.bool_value ? r : l },
+    '||'  => proc { |l, r| l.qt_to_bool.bool_val ? l : r },
+    '&&'  => proc { |l, r| l.qt_to_bool.bool_val ? r : l },
     'xor' => proc { |l, r| l ^ r }, # doesnt work
 
     '='   => proc { |l, r, u| u.locals[l] = r},
@@ -48,7 +48,12 @@ module Operator
     '.S'  => proc { |arg, pos| arg.qt_index(pos: pos, type: :STACK) },
     '.L'  => proc { |arg, pos| arg.qt_index(pos: pos, type: :LOCALS) },
     '.G'  => proc { |arg, pos| arg.qt_index(pos: pos, type: :GLOBALS) },
-    '.'   => proc { |arg, pos| arg.qt_index(pos: pos, type: :BOTH) },
+    '.'   => proc { |arg, pos|
+      if pos.is_a?(QT_Variable) && pos.var_val.to_s.start_with?('__')
+        arg.qt_method(meth: pos.to_s[2..-1].to_sym) || QT_Boolean::NULL
+      else
+        arg.qt_index(pos: pos, type: :BOTH) || QT_Boolean::NULL
+      end },
   }
 
   OPER_END = [';', ',']
