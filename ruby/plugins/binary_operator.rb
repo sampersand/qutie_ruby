@@ -36,13 +36,13 @@ module BinaryOperator
       else
         begin
           args.locals[:__args] = args #somethign here with spawn off
-          func.program_stack.push args
+          # func.program_stack.push args
         rescue NoMethodError
           puts "Invalid `@` for `#{func.inspect}` with args `#{args.inspect}`"
           exit(1);
         end
         parser.parse(stream: func, universe: args)
-        func.program_stack.pop
+        # func.program_stack.pop
       end
     },
 

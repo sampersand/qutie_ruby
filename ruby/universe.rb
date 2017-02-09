@@ -4,17 +4,10 @@ class Universe
   attr_accessor :locals
   attr_accessor :globals
   
-  Universe::PROGRAM_STACK = []
-
   def initialize(stack: nil, locals: nil, globals: nil)
-    program_stack[0] = self if program_stack.empty?
     @stack = stack || []
     @locals = locals || {}
     @globals = globals || {}
-  end
-
-  def program_stack
-    self.class::PROGRAM_STACK
   end
 
   # repr

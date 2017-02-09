@@ -3,11 +3,11 @@ module Keyword
 
   def handle_get_known(_, universe, _)
     to_get = universe.pop!
-    if to_get == :'$'
-      universe << universe.spawn_new_stack(new_stack: universe.program_stack)
-    else
+    # if to_get == :'$'
+    #   universe << universe.spawn_new_stack(new_stack: universe.program_stack)
+    # else
       universe << universe.get(to_get)
-    end
+    # end
   end
 
   def handle_eval_univ(_, universe, parser)
