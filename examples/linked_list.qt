@@ -6,12 +6,11 @@ LinkedList = class {
     res = '[';
     if( current? == nil? [return(res? + ']')] {}),!
 
-    while( [current? <> nil?] {
-      res += text(current?, ', ', sep='');
+    until( [current? == nil?] {
+      res += text(current? ', ' sep='');
       current = current?.next;
-
     });
-    del(res?, 0-1); del(res?, 0-1); // remove the last `, `
+    del(res?, __pos=-1); del(res?, __pos=-1); // remove the last `, `
     res? + ']'
   };
   unshift = function(val?){
@@ -40,7 +39,8 @@ list?.unshift('c');
 list?.unshift('b');
 list?.unshift('a');
 disp( list? );
-disp( list?.shift().0 );
+# disp( list?.shift().0   );
+list?.shift();
 disp( list? );
 
 

@@ -1,0 +1,3 @@
+import_2_code = syscall('cat import_2.qt');
+import_2_code?!;
+import_2_code?!

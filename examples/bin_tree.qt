@@ -64,13 +64,13 @@ Node = class {
 };
 
 tree = new BinaryTree();
-tree?.add('d');
-tree?.add('c');
+tree?.add(5);
+tree?.add(3);
 tree?.add('b');
 tree?.add('a');
 disp( tree? );
 # disp( tree?.pop(),.0 );
-disp( tree? );
+disp( tree?.root );
 
 
 

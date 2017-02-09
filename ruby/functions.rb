@@ -25,7 +25,6 @@
 
     :return => BuiltinFunciton.new{ |args, universe, stream|
 
-      value = args.stack[0]
       value = args.locals.fetch(:__value){ args.stack.fetch(0, NoRet) }
       levels = args.locals.fetch(:__levels){ args.stack.fetch(1, 1) }
       if levels > 0
@@ -45,6 +44,22 @@
       body = args.stack.fetch(1){ args.locals.fetch(:__body) }
       parser.parse(stream: body, universe: universe) while parser.parse(stream: cond, universe: universe).pop! 
     },
+    :unless => BuiltinFunciton.new{ |args, universe, stream, parser|
+      cond     = args.stack.fetch(0){ args.locals.fetch(:__cond) }
+      if_true  = args.locals.fetch(true){ args.stack.fetch(1){ args.locals.fetch(:true) }   }
+      if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false, nil) } }
+      cond ? if_false : if_true
+    },
+    :until => BuiltinFunciton.new{ |args, universe, stream, parser|
+      cond = args.stack.fetch(0){ args.locals.fetch(:__cond) }
+      body = args.stack.fetch(1){ args.locals.fetch(:__body) }
+      parser.parse(stream: body, universe: universe) until parser.parse(stream: cond, universe: universe).pop! 
+    },
+
+
+
+
+
     :del => BuiltinFunciton.new{ |args, universe, stream, parser|
         
       uni = args.stack.fetch(0){ args.locals.fetch(:__uni) }

@@ -72,7 +72,7 @@ module BinaryOperator
       case token
       when *OPER_END then 40
       when '=' then 30
-      when '->', '<-' then 29
+      when '->', '<-' then 30
       when '||' then 25
       when '&&' then 24
       when '==', '<>', '<=', '>=', '<', '>' then 20

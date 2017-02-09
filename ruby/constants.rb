@@ -23,3 +23,49 @@ module Constants
   # end
 
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+p = 7
+q = 19
+n = p * q
+e = 5
+
+n2 = 3;
+d = (1 + n2 * (p-1) * (q-1)) / e
+
+
+
+# n = 133
+# e = 5
+# n =133
+# d = 65
+P = 10
+C = P ** e % n
+puts C ** d % n
+puts (132 ** e) ** d % n
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
