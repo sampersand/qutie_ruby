@@ -8,8 +8,10 @@ dict = { 'red' -> fav_colour;
 
 args = (a=3, b=4)!;
 func = {
+  -> a;
   a? + b? -> c;
   disp? @ (c?)!;
-  stop? @ ();
+  1,,2,3
 };
 func? @ args?,
+args?

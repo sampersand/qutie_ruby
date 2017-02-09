@@ -77,9 +77,9 @@ class Universe
       if locals_empty?
         "[#{@stack.collect(&:to_s).join(', ')}]"
       elsif stack_empty?
-        "{#{@locals.collect{|k,v| "#{k}: #{v}"}.join(', ')}"
+        "{ #{@locals.collect{|k,v| "#{k}: #{v}"}.join(', ')} }"
       elsif !locals_empty? && !stack_empty?
-        "< " + "[#{@stack.collect(&:to_s).join(', ')}]" + " | " + "{#{@locals.collect{|k,v| "#{k}: #{v}"}.join(', ')}" + " >"
+        "< " + "[#{@stack.collect(&:to_s).join(', ')}]" + " | " + "{ #{@locals.collect{|k,_| "#{k}"}.join(', ')} }" + " >"
       else
         '()'
       end

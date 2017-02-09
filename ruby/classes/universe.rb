@@ -23,40 +23,43 @@ class QT_Universe < QT_Object
     # @body
     @universe.to_s
   end
+  def clone
+    self.class.new(body: @body.clone, universe: @universe.clone, parens: @parens.clone)
+  end
 
   def method_missing(meth, *a)
     @universe.method(meth).call(*a)
   end
+  # qt methods
+    def qt_eval(universe:, parser:, **_) # fix this
+      res = parser.parse(stream: @universe, universe: universe)
+      QT_Universe.new(body: '', universe: res, parens: ['<', '>']) # this is where it gets hacky
+    end
 
-  def qt_eval(universe:, parser:, **_)
-    res = parser.parse(stream: @universe, universe: universe)
-    QT_Universe.new(body: '', universe: res, parens: nil) # this is where it gets hacky
-  end
-
-  def qt_call(args:, parser:, **_)
-    passed_args = args.clone
-    passed_args.globals.update(passed_args.locals)
-    passed_args.locals.clear
-    passed_args.stack.clear
-    passed_args.locals[:__args] = args #somethign here with spawn off
-    # func.program_stack.push args
-    parser.parse(stream: @universe, universe: passed_args)
-    # func.program_stack.pop
-  end
-  def qt_index(pos:, type: )
-    if type == :BOTH
-      if @universe.locals.include?(pos)
-        type = :LOCALS
-      else
-        type = :STACK
+    def qt_call(args:, parser:, **_) # fix this
+      passed_args = args.clone
+      passed_args.globals.update(passed_args.locals)
+      # passed_args.locals.clear
+      # passed_args.stack.clear
+      passed_args.locals[:__args] = args #somethign here with spawn off
+      # func.program_stack.push args
+      parser.parse(stream: @universe, universe: passed_args)
+      # func.program_stack.pop
+    end
+    def qt_index(pos:, type: ) # fix this
+      if type == :BOTH
+        if @universe.locals.include?(pos)
+          type = :LOCALS
+        else
+          type = :STACK
+        end
+      end
+      case type 
+      when :STACK then @universe.stack[(pos.qt_to_num or return QT_Boolean::NULL).num_val] or QT_Boolean::NULL
+      when :LOCALS then @universe.locals[pos] or QT_Boolean::NULL
+      else fail "Unknown qt_index type `#{type}`!"
       end
     end
-    case type 
-    when :STACK then @universe.stack[(pos.qt_to_num or return QT_Boolean::NULL).num_val] or QT_Boolean::NULL
-    when :LOCALS then @universe.locals[pos] or QT_Boolean::NULL
-    else fail "Unknown qt_index type `#{type}`!"
-    end
-  end
 end
 
 
