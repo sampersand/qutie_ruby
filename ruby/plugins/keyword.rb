@@ -5,15 +5,16 @@ module Keyword
     universe << universe[universe.pop]
   end
 
-  def handle_eval_univ(universe:, parser:, **_)
+  def handle_eval(universe:, **kw)
     last = universe.pop
-    if last == nil || last == false
-      universe << last
-    else
-      # this isn't parse! cause i dont want it being destroyed each time we read it
-      universe << parser.parse(stream: last,
-                               universe: universe.spawn_new_stack(new_stack: nil).clone)
-    end
+    universe << last.qt_eval(universe: universe.spawn_new_stack(new_stack: nil).clone, **kw)
+    # if last == nil || last == false
+    #   universe << last
+    # else
+    #   # this isn't parse! cause i dont want it being destroyed each time we read it
+    #   universe << parser.parse(stream: last,
+    #                            universe: universe.spawn_new_stack(new_stack: nil).clone)
+    # end
   end
 
   def next_token!(stream:, **_)
@@ -29,7 +30,7 @@ module Keyword
 
   KEYWORDS = {
     '?' => method(:handle_get_known),
-    '!' => method(:handle_eval_univ),
+    '!' => method(:handle_eval),
   }
 
 end
