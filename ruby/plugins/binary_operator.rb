@@ -28,6 +28,10 @@ module BinaryOperator
       if func.respond_to?(:call)
         func.call(args, universe, stream, parser)
       elsif func.is_a?(String)
+        func = func.clone
+        if args.locals.include?(:'__preprocess') && args.locals[:__preprocess]
+          parser.class::PreParser::pre_process!(func)
+        end
         parser.process(func, additional_builtins: args.locals)
       else
         begin
