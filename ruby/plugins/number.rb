@@ -6,6 +6,8 @@ module Number
 
     MATH_E = QT_Number.new(source: 'MATH_E', value: Math::E)
     MATH_PI = QT_Number.new(source: 'MATH_PI', value: Math::PI)
+    ONE = QT_Number.new(source: '1', value: 1.0)
+    ZERO = QT_Number.new(source: '0', value: 0)
 
     def self.from(source:)
       new(source: source, num_val: source.to_f)

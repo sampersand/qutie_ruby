@@ -103,9 +103,9 @@ module BinaryOperator
 
   def fix_lhs(token)
     case token
-    when '**' then Math::E
-    when '*', '/' then 1.0
-    when '+', '-' then 0
+    when '**' then QT_Number::Math_E
+    when '*', '/' then QT_Number::ONE
+    when '+', '-' then QT_Number::ZERO
     end
   end
 
