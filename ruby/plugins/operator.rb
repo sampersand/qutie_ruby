@@ -1,4 +1,4 @@
-module BinaryOperator
+module Operator
   OPERATORS = { # order matters!
     '<-'  => proc { |l, r, u| OPERATORS['='].(l, r, u) },
     '->'  => proc { |l, r, u| OPERATORS['='].(r, l, u)},
@@ -66,7 +66,7 @@ module BinaryOperator
     module_function
     def priority(token, plugin)
       case
-      when plugin == BinaryOperator
+      when plugin == Operator
         case token
         when *OPER_END then 40
         when '=' then 30
@@ -115,13 +115,13 @@ module BinaryOperator
     def handle_oper(token:, stream:, universe:, parser:)
       lhs = universe.pop
       rhs = universe.spawn_new_stack(new_stack: nil)
-      token_priority = priority(token, BinaryOperator)
+      token_priority = priority(token, Operator)
       parser.catch_EOF(universe) {
         until stream.stack_empty?
           ntoken = parser.next_token!(stream: stream.clone,
                                       universe: rhs,
                                       parser: parser)
-          if ntoken[0] =~ /[-+*\/]/ and ntoken[1] == BinaryOperator and rhs.stack_empty?  # this is dangerous
+          if ntoken[0] =~ /[-+*\/]/ and ntoken[1] == Operator and rhs.stack_empty?  # this is dangerous
             ntoken = parser.next_token!(stream: stream,
                                         universe: rhs,  
                                         parser: parser)
