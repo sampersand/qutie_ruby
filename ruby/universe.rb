@@ -12,13 +12,6 @@ class Universe
 
 
   #stream methods
-    # private
-    # def stream_inp_to_num(amnt:, str:, regex:)
-    #   amnt ||
-    #   str && str.length || 
-    #   regex && regex.length or
-    #     fail "Invalid stream inputs: #{amnt}, #{str}, #{regex}"
-    # end
 
     def next(amnt:)
       warn("Asking for `#{amnt.inspect}` elements") unless amnt.is_a?(Integer) && amnt != 0
@@ -32,18 +25,12 @@ class Universe
       @stack.first(amnt).join
     end
 
-    def peek?(str: nil, regex: nil, amnt: nil)
-      warn("None or both of Regex and str were specified") unless str ^ regex
-      if str
-        warn("Passing both `amnt` and `str` makes no sense - using str.length") if amnt
-        peek(amnt: str.length ) == str
-      else
-        peek(amnt: amnt || regex.source.length) =~ regex
-      end
+    def peek?(str: nil)
+      peek(amnt: str.length ) == str
     end
 
     def peek_any?(vals:)
-      vals.each()
+      vals.any?{ |val| peek?(str: val) }
     end
 
   # stack
