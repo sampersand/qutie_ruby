@@ -27,7 +27,7 @@ parser.add_builtins(builtins: Constants::CONSTANTS)
 # ARGV[0] = '/Users/westerhack/code/ruby/qutie/examples/users.qt'
 file = ARGV[0] or fail "No file!"
 text = open(file, 'r').read
-Parser::PreParser::pre_process!(text)
+PreParser::pre_process!(text)
 
 # puts text
 # exit

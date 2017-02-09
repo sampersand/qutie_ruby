@@ -30,7 +30,7 @@ module BinaryOperator
       elsif func.is_a?(String)
         func = func.clone
         if args.locals.include?(:'__preprocess') && args.locals[:__preprocess]
-          parser.class::PreParser::pre_process!(func)
+          PreParser::pre_process!(func)
         end
         parser.process(input: func, additional_builtins: args.locals)
       else
@@ -112,7 +112,7 @@ module BinaryOperator
     token_priority = priority(token, BinaryOperator)
     parser.catch_EOF(universe) {
       until stream.stack_empty?
-        next_token = parser.next_token(stream, rhs)
+        next_token = parser.next_token(stream.clone, rhs)
         if next_token[0] =~ /[-+*\/]/ and next_token[1] == BinaryOperator and rhs.stack_empty?
           next_token = parser.next_token!(stream, rhs)
           rhs << fix_lhs(next_token[0])
