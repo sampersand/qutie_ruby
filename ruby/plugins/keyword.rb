@@ -2,7 +2,7 @@ module Keyword
   module_function
 
   def handle_get_known(_, universe, _)
-    to_get = universe.pop!
+    to_get = universe.pop
     # if to_get == :'$'
     #   universe << universe.spawn_new_stack(new_stack: universe.program_stack)
     # else
@@ -11,7 +11,7 @@ module Keyword
   end
 
   def handle_eval_univ(_, universe, parser)
-    last = universe.pop!
+    last = universe.pop
     if last == nil || last == false
       universe << last
     else
@@ -22,7 +22,7 @@ module Keyword
 
   # def handle_pop_lastv(_stream, universe, parser)
   #   handle_eval_univ(_stream, universe, parser)
-  #   universe << universe.pop!.pop!
+  #   universe << universe.pop.pop
   # end
 
   def next_token!(stream, _, _)

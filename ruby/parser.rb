@@ -45,7 +45,7 @@ class Parser
   def parse!(stream:, universe:)
     return process(stream) if stream.is_a?(String)
     catch_EOF(universe){ 
-      until stream.stack.empty?
+      until stream.stack_empty?
         token, plugin = next_token!(stream, universe)
         plugin.handle(token, stream, universe, self)
       end

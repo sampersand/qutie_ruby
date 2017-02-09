@@ -42,7 +42,7 @@
     :while => BuiltinFunciton.new{ |args, universe, stream, parser|
       cond = args.stack.fetch(0){ args.locals.fetch(:__cond) }
       body = args.stack.fetch(1){ args.locals.fetch(:__body) }
-      parser.parse(stream: body, universe: universe) while parser.parse(stream: cond, universe: universe).pop! 
+      parser.parse(stream: body, universe: universe) while parser.parse(stream: cond, universe: universe).pop 
     },
     :unless => BuiltinFunciton.new{ |args, universe, stream, parser|
       cond     = args.stack.fetch(0){ args.locals.fetch(:__cond) }
@@ -53,7 +53,7 @@
     :until => BuiltinFunciton.new{ |args, universe, stream, parser|
       cond = args.stack.fetch(0){ args.locals.fetch(:__cond) }
       body = args.stack.fetch(1){ args.locals.fetch(:__body) }
-      parser.parse(stream: body, universe: universe) until parser.parse(stream: cond, universe: universe).pop! 
+      parser.parse(stream: body, universe: universe) until parser.parse(stream: cond, universe: universe).pop 
     },
 
 
@@ -84,7 +84,7 @@
       incr = args.stack.fetch(2){ args.locals.fetch(:__incr) }
       body = args.stack.fetch(3){ args.locals.fetch(:__body) }
       parser.parse(stream: start, universe: universe)
-      while parser.parse(stream: cond, universe: universe).pop! 
+      while parser.parse(stream: cond, universe: universe).pop
         parser.parse(stream: body, universe: universe)
         parser.parse(stream: incr, universe: universe)
       end

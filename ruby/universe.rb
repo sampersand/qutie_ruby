@@ -25,7 +25,7 @@ class Universe
       @stack.first(amnt).join
     end
 
-    def peek?(str: nil)
+    def peek?(str:)
       peek(amnt: str.length ) == str
     end
 
@@ -38,14 +38,27 @@ class Universe
       @stack.empty?
     end
 
+    def <<(val) # used to be push! but that's removed
+      @stack.push val
+    end
+
+    def pop
+      @stack.pop
+    end
+
   # locals
     def locals_empty?
       @locals.empty?
     end
 
+  # All
+    def [](val)
+      if @local
+      @locals.include?(val) ? @locals[val] : @globals[val]
+    end
+
   # repr
     def inspect        
-      # "<#{@stack}|{#{locals_s}}|{#{globals_s}}>"
       "#{self.class.name}(stack: #{@stack}, locals: #{@locals})"
     end
 
@@ -72,20 +85,6 @@ class Universe
       self.class.new(stack: @stack.clone,
                      locals: @locals.clone,
                      globals: @globals.clone)
-    end
-
-    def push!(val)
-      @stack.push val
-    end
-
-    alias :<< :push!
-
-    def pop!
-      @stack.pop
-    end
-
-    def get(val)
-      @locals.include?(val) ? @locals[val] : @globals[val]
     end
 end
 

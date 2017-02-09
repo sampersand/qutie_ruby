@@ -52,20 +52,10 @@ module BinaryOperator
       OPERATORS[pos.stack[0].is_a?(Numeric) ? '.S=' : '.V='].(arg, pos)
       },
     '.S'  => proc { |arg, pos| arg.stack[pos] },
-    '.V'  => proc { |arg, pos| arg.get(pos) },
+    '.V'  => proc { |arg, pos| arg.locals[pos] },
     '.'  => proc { |arg, pos|
-      if arg.is_a?(String)
-        raise "Bad accessor `#{pos}` for string `#{arg}`" unless arg.is_a?(Integer)
-        arg[pos]
-      else
-        begin
-          res = arg.get(pos)
-          res.nil?  && pos.is_a?(Integer) ? arg.stack[pos] : res
-        rescue NoMethodError
-          puts("Invalid `.` for `#{arg.inspect}` with pos `#{pos.inspect}`")
-          exit(1)
-        end
-      end
+      STDERR.puts("Invalid `.` for `#{arg.inspect}` with pos `#{pos.inspect}`") unless arg.respond_to?(:[])
+      arg[pos]
     },
   }
 
@@ -102,7 +92,7 @@ module BinaryOperator
 
   def handle(token, stream, universe, parser)
     if OPER_END.include?(token)
-      universe.pop! if token == ';'
+      universe.pop if token == ';'
     else
       handle_oper(token, stream, universe, parser)
     end
@@ -117,15 +107,15 @@ module BinaryOperator
   end
 
   def handle_oper(token, stream, universe, parser)
-    lhs = universe.pop!
+    lhs = universe.pop
     rhs = universe.spawn_new_stack(new_stack: nil)
     token_priority = priority(token, BinaryOperator)
     parser.catch_EOF(universe) {
       until stream.stack_empty?
         next_token = parser.next_token(stream, rhs)
-        if next_token[0] =~ /[-+*\/]/ and next_token[1] == BinaryOperator and rhs.stack.empty?
+        if next_token[0] =~ /[-+*\/]/ and next_token[1] == BinaryOperator and rhs.stack_empty?
           next_token = parser.next_token!(stream, rhs)
-          rhs.push!(fix_lhs(next_token[0]))
+          rhs << fix_lhs(next_token[0])
           # puts rhs, next_token, stream
           next_token[1].handle(next_token[0], stream, rhs, parser)
         else
@@ -138,12 +128,12 @@ module BinaryOperator
     }
     universe.stack.concat(rhs.stack)
     lhs ||= fix_lhs(token)
-    universe << OPERATORS[token].(lhs, universe.pop!, universe, stream, parser)
+    universe << OPERATORS[token].(lhs, universe.pop, universe, stream, parser)
   end
 
 
   # def handle_oper(token, stream, universe, parser)
-  #   lhs = universe.pop!
+  #   lhs = universe.pop
   #   parser.catch_EOF(universe) {
   #     until stream.stack_empty?
   #       break if priority(token, BinaryOperator) <= priority(*parser.next_token(stream, universe)) 
@@ -152,7 +142,7 @@ module BinaryOperator
   #     end
   #     nil
   #   }
-  #   universe << OPERATORS[token].(lhs, universe.pop!, universe, stream, parser)
+  #   universe << OPERATORS[token].(lhs, universe.pop, universe, stream, parser)
   # end
 
 end
