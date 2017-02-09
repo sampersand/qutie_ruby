@@ -4,11 +4,11 @@ module Default
   class QT_Default < QT_Object; end
 
   module_function
-  def next_token!(stream, _, _)
+  def next_token!(stream:, **_)
     stream.next
   end
   
-  def handle(token, _, universe, _)
+  def handle(token, universe, **_)
     universe << QT_Default::from(source: token)
   end
 end

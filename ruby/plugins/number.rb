@@ -15,7 +15,7 @@ module Number
 
   module_function
 
-  def next_token!(stream, universe, parser)
+  def next_token!(stream:, universe:, parser:, **_)
     return unless stream.peek =~ /\d/
     num = ''
     parser.catch_EOF(universe) {
@@ -29,7 +29,7 @@ module Number
     num
   end
 
-  def handle(token, _, universe, _)
+  def handle(token:, universe:, **_)
     universe << QT_Number::from(source: token)
   end
 

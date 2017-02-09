@@ -48,16 +48,24 @@ class Parser
     return process(input: stream) if stream.is_a?(String)
     catch_EOF(universe){ 
       until stream.stack_empty?
-        token, plugin = self.class.next_token!(stream: stream,
-                                               universe: universe,
-                                               parser: self)
-        plugin.handle(token, stream, universe, self)
+        token, plugin = next_token!(stream: stream,
+                                    universe: universe,
+                                    parser: self)
+        plugin.handle(token: token,
+                      stream: stream,
+                      universe: universe,
+                      parser: self)
       end
       nil
     }
     universe
   end
 
+  def next_token!(stream:, universe:, parser:)
+    self.class.next_token!(stream: stream,
+                           universe: universe,
+                           parser: parser)
+  end
   def self.next_token!(stream:, universe:, parser:)
     parser.plugins.each{ |pl|
       token = pl.next_token!(stream: stream,

@@ -84,17 +84,20 @@ module BinaryOperator
     end
   end
 
-  def next_token!(stream, _, _)
+  def next_token!(stream:, **_)
     OPERATORS.each{ |oper, _| return stream.next(amnt: oper.length) if stream.peek?(str: oper) }
     OPER_END.each{  |o_end| return stream.next(amnt: o_end.length) if stream.peek?(str: o_end) }
     nil
   end
 
-  def handle(token, stream, universe, parser)
+  def handle(token:, stream:, universe:, parser:, **_)
     if OPER_END.include?(token)
       universe.pop if token == ';'
     else
-      handle_oper(token, stream, universe, parser)
+      handle_oper(token: token,
+                  stream: stream,
+                  universe: universe,
+                  parser: parser)
     end
   end
 
@@ -106,22 +109,27 @@ module BinaryOperator
     end
   end
 
-  def handle_oper(token, stream, universe, parser)
+  def handle_oper(token:, stream:, universe:, parser:)
     lhs = universe.pop
     rhs = universe.spawn_new_stack(new_stack: nil)
     token_priority = priority(token, BinaryOperator)
     parser.catch_EOF(universe) {
       until stream.stack_empty?
-        next_token = parser.next_token(stream.clone, rhs)
-        if next_token[0] =~ /[-+*\/]/ and next_token[1] == BinaryOperator and rhs.stack_empty?
-          next_token = parser.next_token!(stream, rhs)
-          rhs << fix_lhs(next_token[0])
-          # puts rhs, next_token, stream
-          next_token[1].handle(next_token[0], stream, rhs, parser)
+        ntoken = parser.next_token!(stream: stream.clone,
+                                    universe: rhs,
+                                    parser: parser)
+        if ntoken[0] =~ /[-+*\/]/ and ntoken[1] == BinaryOperator and rhs.stack_empty?
+          ntoken = parser.next_token!(stream: stream,
+                                      universe: rhs,
+                                      parser: parser)
+          rhs << fix_lhs(ntoken[0])
+          ntoken[1].handle(ntoken[0], stream, rhs, parser)
         else
-          break if token_priority <= priority(*next_token) 
-          next_token = parser.next_token!(stream, rhs)
-          next_token[1].handle(next_token[0], stream, rhs, parser) # pretty sure this will bite me...
+          break if token_priority <= priority(*ntoken) 
+          ntoken = parser.next_token!(stream: stream,
+                                      universe: rhs,
+                                      parser: parser)
+          ntoken[1].handle(ntoken[0], stream, rhs, parser) # pretty sure this will bite me...
         end
       end
       nil

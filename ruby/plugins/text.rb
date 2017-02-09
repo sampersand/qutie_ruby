@@ -22,7 +22,7 @@ module Text
     'f' => "\f",
   }
   module_function
-  def next_token!(stream, universe, parser)
+  def next_token!(stream:, universe:, parser:, **_)
     return unless stream.peek_any?(vals: QUOTES)
     quote = stream.next
     body = quote
@@ -45,7 +45,7 @@ module Text
 
   end
 
-  def handle(token, _, universe, _)
+  def handle(token:, universe:, **_)
     universe << QT_Text::from(source: token)
   end
 end

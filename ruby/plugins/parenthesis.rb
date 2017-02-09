@@ -19,7 +19,7 @@ module Parenthesis
 
   module_function
   
-  def next_token!(stream, universe, parser)
+  def next_token!(stream:, universe:, parser:, **_)
     return unless stream.peek_any?(vals: L_PARENS)
     start_paren = stream.next
     new_container = start_paren
@@ -67,7 +67,7 @@ module Parenthesis
     new_container
   end
 
-  def handle(token, stream, universe, parser)
+  def handle(token:, universe:, **_)
     universe << QT_Universe::from(source: token, current_universe: universe)
   end
 
