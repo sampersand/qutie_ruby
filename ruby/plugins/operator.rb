@@ -11,7 +11,7 @@ module Operator
     '+'  => proc { |l, r| l.qt_add(right: r) || r.qt_add_r(left: l) },
     '-'  => proc { |l, r| l.qt_sub(right: r) || r.qt_sub_r(left: l) },
     '==' => proc { |l, r| l.qt_eql(right: r) || r.qt_eql_r(left: l) || QT_Boolean::FALSE },
-    '<>' => proc { |l, r| l.qt_neq(right: r) || r.qt_neq_r(left: l) },
+    '<>' => proc { |l, r| l.qt_neq(right: r) || r.qt_neq_r(left: l) || QT_Boolean::TRUE },
     '<=' => proc { |l, r| l.qt_leq(right: r) || r.qt_leq_r(left: l) },
     '>=' => proc { |l, r| l.qt_geq(right: r) || r.qt_geq_r(left: l) },
     '<'  => proc { |l, r| l.qt_lth(right: r) || r.qt_lth_r(left: l) },
@@ -37,16 +37,6 @@ module Operator
       #     PreParser::pre_process!(func)
       #   end
       #   parser.process(input: func, additional_builtins: args.locals)
-      # else
-      #   begin
-      #     args.locals[:__args] = args #somethign here with spawn off
-      #     # func.program_stack.push args
-      #   rescue NoMethodError
-      #     puts "Invalid `@` for `#{func.inspect}` with args `#{args.inspect}`"
-      #     exit(1);
-      #   end
-      #   parser.parse(stream: func, universe: args)
-      #   # func.program_stack.pop
       end
     },
 

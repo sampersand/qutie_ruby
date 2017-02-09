@@ -28,7 +28,7 @@ class QT_Variable < QT_Object
       def qt_eql_r(left:) self == left end
 
       def qt_to_text
-        Text::QT_Text.new(text_val: to_s)
+        QT_Text.new(text_val: to_s)
       end
 
 end

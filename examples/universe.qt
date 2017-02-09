@@ -25,8 +25,8 @@ list?.0; #=> 1
 hash?.0; #=> nil
 hash?.a; #=> 1
 hash?.c; #=> 3
-
-
+'abc'.0; #=> 'a'
+'abc'.4; #=> nil
 
 
 

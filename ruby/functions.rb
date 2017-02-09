@@ -147,7 +147,7 @@
         sep  = args.qt_index(pos: QT_Variable::from(source: 'seps'), type: :BOTH)
         sep = ' ' if sep == QT_Boolean::NULL;
         args.stack.collect{ |arg|
-            qutie_func(arg, universe, parser, :__text){ |a| a.nil? ? a.inspect : a.qt_to_text }
+            qutie_func(arg, universe, parser, :__text){ |a| a.nil? ? a.inspect : a.qt_to_text.text_val }
           }.join(sep)
       else
         args.qt_to_text

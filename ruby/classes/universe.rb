@@ -2,7 +2,7 @@ require_relative 'object'
 class QT_Universe < QT_Object
   def self.from(source:, current_universe:)
     # warn("QT_Universe::from doesnt conform to others!")
-    new_universe = current_universe.class.new
+    new_universe = Universe.new
     new_universe.stack = source[1...-1].each_char.to_a
     new_universe.locals = current_universe.locals
     new_universe.globals = current_universe.globals

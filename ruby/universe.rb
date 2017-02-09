@@ -71,7 +71,8 @@ class Universe
       elsif globals_incl
         @globals[val]
       else
-        STDERR.puts("Neither Locals, Globals, nor Stack respond to `#{val.inspect}`")
+        # STDERR.puts("Neither Locals, Globals, nor Stack respond to `#{val.inspect}`")
+        QT_Boolean::NULL
       end
     end
 

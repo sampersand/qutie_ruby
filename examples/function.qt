@@ -1,6 +1,15 @@
-
+/*
 greet = function(name, age?, fav_color=green) {
   disp('Hello,', name?, '(', age?, ') whose favourite colour is', fav_color?, sep=' ';);
+};
+greet?@('Sam', 18, fav_color=red)!;
+*/
+
+
+
+
+greet = {name=__args?.0;age=age?||__args?.1;fav_color=fav_color?||green;
+  disp?@('Hello,', name?, '(', age?, ') whose favourite colour is', fav_color?, sep=' ';)!;
 };
 greet?@('Sam', 18, fav_color=red)!;
 
