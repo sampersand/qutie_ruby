@@ -1,3 +1,4 @@
+require_relative 'pre_parser'
 require_relative 'parser'
 require_relative 'plugins/whitespace'
 require_relative 'plugins/parenthesis'
@@ -31,7 +32,7 @@ PreParser::pre_process!(text)
 
 # puts text
 # exit
-res = parser.process(text)
+res = parser.process(input: text)
 
 require 'pp'
 puts '----[end]----'

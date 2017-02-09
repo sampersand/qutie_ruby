@@ -22,7 +22,7 @@ class Parser
 
   def process(input:, additional_builtins: {})
     universe = Universe.new
-    stream = Universe.new(stack: inp.each_char.to_a)
+    stream = Universe.new(stack: input.each_char.to_a)
     universe.globals.update(@builtins)
     universe.globals.update(additional_builtins)
     catch(:EOF){
@@ -58,9 +58,9 @@ class Parser
     universe
   end
 
-  def next_token!(stream:, universe:, parser:)
+  def self.next_token!(stream:, universe:, parser:)
     parser.plugins.each{ |pl|
-      token = pl.next_token!(stream: steram,
+      token = pl.next_token!(stream: stream,
                              universe: universe,
                              parser: parser)
       next unless token
