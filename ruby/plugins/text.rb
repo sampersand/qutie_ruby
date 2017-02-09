@@ -1,4 +1,12 @@
 module Text
+  require_relative 'object'
+  class QT_Text < QT_Object
+    def initialize(source:, parens:)
+      super(source:)
+      @parens = parens
+    end
+  end
+
   QUOTES = ["'", '"', '`']
   REPLACEMENTS = {
     'n' => "\n",

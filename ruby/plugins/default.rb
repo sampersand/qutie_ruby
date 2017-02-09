@@ -9,6 +9,6 @@ module Default
   end
   
   def handle(token, _, universe, _)
-    universe << QT_Default::from(source: token)
+    universe << QT_Default.new(source: token)
   end
 end

@@ -2,6 +2,7 @@ module Variable
   require_relative 'object'
   class QT_Variable < QT_Object
     def initialize(source:)
+      super
       @value = source.to_sym
     end
   end
@@ -22,6 +23,6 @@ module Variable
   end
 
   def handle(token, stream, universe, _)
-    universe << QT_Variable::from(source: token)
+    universe << QT_Variable.new(source: token)
   end
 end
