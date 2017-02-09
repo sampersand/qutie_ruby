@@ -23,7 +23,6 @@ class QT_Boolean < QT_Object
         def qt_eql(right:); QT_Boolean::get right.is_a? self.class end
       # logic
         def qt_not; QT_Boolean::get !self.class::VALUE end
-
 end
 
 class QT_True < QT_Boolean
@@ -39,4 +38,10 @@ end
 class QT_Null < QT_Boolean
   VALUE = nil
   INSTANCE = new
+end
+
+class QT_Boolean
+  TRUE = QT_True::INSTANCE
+  FALSE = QT_False::INSTANCE
+  NULL = QT_Null::INSTANCE
 end

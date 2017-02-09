@@ -39,6 +39,7 @@ class QT_Text < QT_Object
       def qt_length
         QT_Number.new(num_val: @text_val.length)
       end
+
     # conversion
       def qt_to_text
         self
@@ -48,6 +49,12 @@ class QT_Text < QT_Object
       end
 
     # operators
+      # access
+      def qt_index(pos:)
+        text = @text_val[(pos.qt_to_num or return).num_val]
+        text and QT_Text.new(text_val: text) or QT_Boolean::NULL
+      end
+
       private
       def text_func(right:, lmeth:, rmeth: :qt_to_text)
           right = right.method(rmeth).() or return
@@ -58,7 +65,6 @@ class QT_Text < QT_Object
           QT_Text.new(text_val: left.text_val.method(lmeth).call(@text_val) )
         end
       public
-
       # math
         def qt_cmp(right:)
           return unless right.is_a?(QT_Text)
