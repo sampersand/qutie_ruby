@@ -1,0 +1,8 @@
+false1 = '';
+false2 = 0;
+false3 = []!;
+false4 = false?;
+false4 = null?;
+
+'' || 1,
+1 && ''

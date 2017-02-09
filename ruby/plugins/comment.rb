@@ -16,7 +16,7 @@ module Comment
   def next_multi!(stream:, **_)
     return unless stream.peek?(str: MULTI_LINE_START)
     stream.next until stream.peek?(str: MULTI_LINE_END) # this will fail inside strings, but that's ok C does as well.
-    stream.next(amnt: MULTI_LINE_END) # and ignore
+    stream.next(amnt: MULTI_LINE_END.length) # and ignore
     :retry
   end
 

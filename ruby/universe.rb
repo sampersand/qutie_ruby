@@ -47,8 +47,15 @@ class Universe
     end
 
   # locals
+    def shortened_locals
+      @locals.reject{|k, v| k.is_a?(QT_Variable) && k.value.to_s.start_with?('__')}
+    end
+
     def locals_empty?
       @locals.empty?
+    end
+    def shortened_locals_empty?
+      shortened_locals.empty?
     end
 
   # locals, globals, and stack
@@ -76,16 +83,17 @@ class Universe
     def stack_s
       "[#{@stack.collect(&:to_s).join(', ')}]"
     end
+
     def locals_s
-      "{ " + @locals.reject{|k, v| k.is_a?(QT_Variable) && k.value.to_s.start_with?('__')}.collect{|k,v| "#{k}: #{v}"}.join(', ') + " }"
+      "{ " + shortened_locals.collect{|k,v| "#{k}: #{v}"}.join(', ') + " }"
     end
 
     def to_s
-      if @locals.reject{|k, v| k.is_a?(QT_Variable) && k.value.to_s.start_with?('__')}
+      if shortened_locals_empty?
         stack_s
       elsif stack_empty?
         locals_s
-      elsif !@locals.reject{|k, v| k.is_a?(QT_Variable) && k.value.to_s.start_with?('__')} && !stack_empty?
+      elsif shortened_locals_empty? && !stack_empty?
         "< #{stack_s} | #{locals_s} >"
       else
         '()'

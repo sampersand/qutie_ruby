@@ -31,6 +31,11 @@ class QT_Universe < QT_Object
     @universe.method(meth).call(*a)
   end
   # qt methods
+    def qt_to_bool
+      QT_Boolean::get(@universe.stack_empty? && @universe.shortened_locals_empty?)
+    end
+
+
     def qt_eval(universe:, parser:, **_) # fix this
       res = parser.parse(stream: @universe, universe: universe)
       QT_Universe.new(body: '', universe: res, parens: ['<', '>']) # this is where it gets hacky
@@ -62,7 +67,6 @@ class QT_Universe < QT_Object
       end
     end
 end
-
 
 
 
