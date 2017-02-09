@@ -2,27 +2,29 @@ require_relative 'universe'
 require_relative 'plugins/default'
 
 class Parser
+
   attr_accessor :plugins
   attr_accessor :builtins
+
   def initialize(plugins: nil, builtins: nil)
     @plugins = plugins || []
     @builtins = builtins || {}
     @plugins.push Default
   end
 
-  def add_plugin(plugin)
+  def add_plugin(plugin:)
     @plugins.unshift plugin
   end
 
-  def add_builtins(builtins)
+  def add_builtins(builtins:)
     @builtins.update builtins
   end
 
-  def process(inp, additional_builtins: nil)
+  def process(input:, additional_builtins: {})
     universe = Universe.new
     stream = Universe.new(stack: inp.each_char.to_a)
     universe.globals.update(@builtins)
-    universe.globals.update(additional_builtins) if additional_builtins
+    universe.globals.update(additional_builtins)
     catch(:EOF){
       parse(stream: stream, universe: universe)
     }
@@ -43,19 +45,17 @@ class Parser
   end
 
   def parse!(stream:, universe:)
-    return process(stream) if stream.is_a?(String)
+    return process(input: stream) if stream.is_a?(String)
     catch_EOF(universe){ 
       until stream.stack_empty?
-        token, plugin = next_token!(stream, universe)
+        token, plugin = self.class.next_token!(stream: stream,
+                                               universe: universe,
+                                               parser: self)
         plugin.handle(token, stream, universe, self)
       end
       nil
     }
     universe
-  end
-
-  def next_token(stream, universe)
-    next_token!(stream.clone, universe)
   end
 
   def next_token!(stream, universe)

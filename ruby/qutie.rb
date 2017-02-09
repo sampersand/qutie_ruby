@@ -12,17 +12,17 @@ require_relative 'plugins/escape'
 require_relative 'functions'
 require_relative 'constants'
 parser = Parser.new
-parser.add_plugin Whitespace
-parser.add_plugin Variable
-parser.add_plugin Number
-parser.add_plugin Parenthesis
-parser.add_plugin BinaryOperator
-parser.add_plugin Comment
-parser.add_plugin Keyword
-parser.add_plugin Text
-parser.add_plugin Escape
-parser.add_builtins(Functions::FUNCTIONS)
-parser.add_builtins(Constants::CONSTANTS)
+parser.add_plugin(plugin: Whitespace)
+parser.add_plugin(plugin: Variable)
+parser.add_plugin(plugin: Number)
+parser.add_plugin(plugin: Parenthesis)
+parser.add_plugin(plugin: BinaryOperator)
+parser.add_plugin(plugin: Comment)
+parser.add_plugin(plugin: Keyword)
+parser.add_plugin(plugin: Text)
+parser.add_plugin(plugin: Escape)
+parser.add_builtins(builtins: Functions::FUNCTIONS)
+parser.add_builtins(builtins: Constants::CONSTANTS)
 
 # ARGV[0] = '/Users/westerhack/code/ruby/qutie/examples/users.qt'
 file = ARGV[0] or fail "No file!"

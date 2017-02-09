@@ -131,7 +131,7 @@
       imported = open(file).read
 
       parser.class::PreParser.pre_process!(imported) if pre_process
-      parser.process(imported, additional_builtins: passed_args.locals)
+      parser.process(input: imported, additional_builtins: passed_args.locals)
 
     },
 

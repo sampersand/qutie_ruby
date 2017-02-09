@@ -32,7 +32,7 @@ module BinaryOperator
         if args.locals.include?(:'__preprocess') && args.locals[:__preprocess]
           parser.class::PreParser::pre_process!(func)
         end
-        parser.process(func, additional_builtins: args.locals)
+        parser.process(input: func, additional_builtins: args.locals)
       else
         begin
           args.locals[:__args] = args #somethign here with spawn off
