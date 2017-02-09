@@ -26,8 +26,8 @@ module Keyword
   # end
 
   def next_token!(stream, _, _)
-    res = KEYWORDS.find{ |val, _| stream.peek?(val) }
-    res and stream.next(amnt: res[0])
+    res = KEYWORDS.find{ |val, _| stream.peek?(str: val) }
+    res and stream.next(amnt: res[0].length)
   end
 
   def handle(token, stream, universe, parser)

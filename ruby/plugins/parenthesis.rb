@@ -1,52 +1,51 @@
 module Parenthesis
   module_function
   
-  L_PAREN = ['[', '(', '{']
-  R_PAREN = [']', ')', '}']
+  L_PARENS = ['[', '(', '{']
+  R_PARENS = [']', ')', '}']
   
   def next_token!(stream, universe, parser)
-    return unless stream.peek?(*L_PAREN)
-    start_paren = stream.next(amnt: 1)
+    return unless stream.peek_any?(vals: L_PARENS)
+    start_paren = stream.next
     new_container = start_paren
     parens = 1
     parser.catch_EOF(universe) {
       # this will break if there are uneven parens inside comments
       until parens == 0 do
         # this is very hacky right here
-
-        if stream.peek?("'", '"', '`')
-          quote = stream.next(amnt: 1)
-          new_container << quote
-          until stream.peek?(quote)
-            new_container << stream.next(amnt: 1) if stream.peek?('\\')
-            new_container << stream.next(amnt: 1)
+        begin # UNSAFE AND HACKY
+          if stream.peek_any?(vals: ["'", '"', '`'])
+            quote = stream.next
+            new_container << quote
+            until stream.peek?(str: quote)
+              new_container << stream.next if stream.peek?(str: '\\')
+              new_container << stream.next
+            end
+            new_container << stream.next
+            next
           end
-          new_container << stream.next(amnt: 1)
-          next
+
+          if stream.peek_any?(vals: ['#', '//'])
+            new_container << stream.next until stream.peek?(str: "\n")
+            new_container << stream.next
+            next
+          end
+
+          if stream.peek_any?(vals: ['/*'])
+            new_container << stream.next until stream.peek?(str: '*/')
+            new_container << stream.next(amnt: 2)
+            next
+          end
         end
 
-        if stream.peek?('#', '//')
-          new_container << stream.next(amnt: 1) until stream.peek?("\n")
-          new_container << stream.next(amnt: 1)
-          
-          next
-        end
-
-        if stream.peek?('/*')
-          new_container << stream.next(amnt: 1) until stream.peek?('*/')
-          new_container << stream.next(amnt: 2)
-          next
-        end
-
-
-        if stream.peek?(*L_PAREN)
+        if stream.peek_any?(vals: L_PARENS)
           parens += 1
-        elsif stream.peek?(*R_PAREN)
+        elsif stream.peek_any?(vals: R_PARENS)
           parens -= 1
-        elsif stream.peek?('\\')
-          new_container << stream.next(amnt: 1)
+        elsif stream.peek?(str: '\\')
+          new_container << stream.next
         end
-        new_container << stream.next(amnt: 1)
+        new_container << stream.next
       end
       nil
     }

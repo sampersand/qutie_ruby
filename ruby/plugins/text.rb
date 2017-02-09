@@ -8,22 +8,22 @@ module Text
   }
   module_function
   def next_token!(stream, universe, parser)
-    return unless stream.peek?(*QUOTES)
-    quote = stream.next(amnt: 1)
+    return unless stream.peek_any?(vals: QUOTES)
+    quote = stream.next
     body = ''
 
     parser.catch_EOF(universe) {
-      until stream.peek?(quote)
-        body += (if stream.peek?('\\')
-                    stream.next(amnt: 1) # pop the \
-                    to_find = stream.next(amnt: 1)
-                    REPLACEMENTS.fetch(to_find, to_find)
-                 else
-                    stream.next(amnt: 1)
-                 end)
+      until stream.peek?(str: quote)
+        if stream.peek?(str: '\\')
+           stream.next # pop the \
+           to_find = stream.next
+           body += REPLACEMENTS.fetch(to_find, to_find)
+        else
+           body += stream.next
+        end
       end
-      raise unless stream.peek?(quote)
-      stream.next(amnt: quote)
+      fail unless stream.peek?(str: quote)
+      stream.next(amnt: quote.length)
       nil
     }
     body

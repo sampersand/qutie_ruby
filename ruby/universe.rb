@@ -13,13 +13,13 @@ class Universe
 
   #stream methods
 
-    def next(amnt:)
+    def next(amnt: 1)
       warn("Asking for `#{amnt.inspect}` elements") unless amnt.is_a?(Integer) && amnt != 0
       throw :EOF if stack_empty?
       @stack.shift(amnt).join
     end
 
-    def peek(amnt:)
+    def peek(amnt: 1)
       warn("Asking for `#{amnt.inspect}` elements") unless amnt.is_a?(Integer) && amnt != 0
       throw :EOF if stack_empty?
       @stack.first(amnt).join

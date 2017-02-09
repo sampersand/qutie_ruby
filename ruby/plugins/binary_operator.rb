@@ -95,8 +95,8 @@ module BinaryOperator
   end
 
   def next_token!(stream, _, _)
-    OPERATORS.each{ |oper, _| return stream.next(amnt: oper) if stream.peek?(oper) }
-    OPER_END.each{  |o_end| return stream.next(amnt: o_end) if stream.peek?(o_end) }
+    OPERATORS.each{ |oper, _| return stream.next(amnt: oper.length) if stream.peek?(str: oper) }
+    OPER_END.each{  |o_end| return stream.next(amnt: o_end.length) if stream.peek?(str: o_end) }
     nil
   end
 
