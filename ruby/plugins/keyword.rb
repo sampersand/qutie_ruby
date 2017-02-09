@@ -6,7 +6,7 @@ module Keyword
     # if to_get == :'$'
     #   universe << universe.spawn_new_stack(new_stack: universe.program_stack)
     # else
-      universe << universe.get(to_get)
+      universe << universe[to_get]
     # end
   end
 
