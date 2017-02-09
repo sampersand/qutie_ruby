@@ -1,10 +1,17 @@
 module Text
   require_relative 'object'
+
   class QT_Text < QT_Object
-    def initialize(source:, parens:)
-      super(source: source)
-      @parens = parens
+
+    def self.from(source:)
+      new(source: source, quotes: [source[0], source[-1]])
     end
+
+    def initialize(source:, quotes:)
+      super(source: source)
+      @quotes = quotes
+    end
+
   end
 
   QUOTES = ["'", '"', '`']
@@ -39,8 +46,6 @@ module Text
   end
 
   def handle(token, _, universe, _)
-    puts token
-    exit
     universe << QT_Text::from(source: token)
   end
 end
