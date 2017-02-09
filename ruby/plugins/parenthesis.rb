@@ -1,8 +1,23 @@
 module Parenthesis
-  module_function
-  
+
+  class QT_Universe < QT_Object
+    def self.from(source:, current_universe:)
+      warn("QT_Universe::from doesnt conform to others!")
+      new(source: source,
+          current_universe: current_universe,
+          parens: [source[0], source[-1]])
+    end
+    def initialize(source:, current_universe:, parens:)
+      super(source: source)
+      @current_universe = current_universe
+      @parens = parens
+    end
+  end
+
   L_PARENS = ['[', '(', '{']
   R_PARENS = [']', ')', '}']
+
+  module_function
   
   def next_token!(stream, universe, parser)
     return unless stream.peek_any?(vals: L_PARENS)
@@ -49,12 +64,11 @@ module Parenthesis
       end
       nil
     }
-
-    new_container[1...-1]
+    new_container
   end
 
   def handle(token, stream, universe, parser)
-    universe << universe.spawn_new_stack(new_stack: token.each_char.to_a)
+    universe << QT_Universe::from(source: token, current_universe: universe)
   end
 
 end
