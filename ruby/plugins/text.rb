@@ -2,7 +2,7 @@ module Text
   require_relative 'object'
   class QT_Text < QT_Object
     def initialize(source:, parens:)
-      super(source:)
+      super(source: source)
       @parens = parens
     end
   end
@@ -18,7 +18,7 @@ module Text
   def next_token!(stream, universe, parser)
     return unless stream.peek_any?(vals: QUOTES)
     quote = stream.next
-    body = ''
+    body = quote
 
     parser.catch_EOF(universe) {
       until stream.peek?(str: quote)
@@ -31,7 +31,7 @@ module Text
         end
       end
       fail unless stream.peek?(str: quote)
-      stream.next(amnt: quote.length)
+      body += stream.next(amnt: quote.length)
       nil
     }
     body
@@ -39,6 +39,8 @@ module Text
   end
 
   def handle(token, _, universe, _)
-    universe << token
+    puts token
+    exit
+    universe << QT_Text::from(source: token)
   end
 end

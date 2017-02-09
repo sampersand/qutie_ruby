@@ -23,6 +23,6 @@ module Variable
   end
 
   def handle(token, stream, universe, _)
-    universe << QT_Variable.new(source: token)
+    universe << QT_Variable::from(source: token)
   end
 end

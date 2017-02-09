@@ -11,9 +11,9 @@ module Constants
 
     end
 
-    TRUE = QT_Boolean_True.new(source: 'true')
-    FALSE = QT_Boolean_False.new(source: 'false')
-    NULL = QT_Boolean_Null.new(source: 'null')
+    TRUE = QT_Boolean_True::from(source: 'true')
+    FALSE = QT_Boolean_False::from(source: 'false')
+    NULL = QT_Boolean_Null::from(source: 'null')
   end
 
   CONSTANTS = {
