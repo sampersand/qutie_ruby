@@ -56,6 +56,7 @@ module Operator
       },
     '.S'  => proc { |arg, pos| arg.qt_index(pos: pos, type: :STACK) },
     '.L'  => proc { |arg, pos| arg.qt_index(pos: pos, type: :LOCALS) },
+    '.G'  => proc { |arg, pos| arg.qt_index(pos: pos, type: :GLOBALS) },
     '.'  => proc { |arg, pos| arg.qt_index(pos: pos, type: :BOTH) },
   }
 
@@ -76,8 +77,8 @@ module Operator
         when '*', '/', '%' then 11
         when '**', '^' then 10
         when '@0', '@' then 7
-        when '.=', '.S=', '.L=' then 6
-        when '.', '.S', '.L' then 5
+        when '.=', '.S=', '.L=', '.G=' then 6
+        when '.', '.S', '.L', '.G' then 5
         when  '$', '!', '?' then 1
         else raise "Unknown operator `#{token}`"
         end

@@ -39,7 +39,7 @@ class QT_Universe < QT_Object
     def qt_call(args:, parser:, **_) # fix this
       passed_args = args.clone
       passed_args.globals.update(passed_args.locals)
-      # passed_args.locals.clear
+      passed_args.locals.clear
       # passed_args.stack.clear
       passed_args.locals[:__args] = args #somethign here with spawn off
       # func.program_stack.push args
@@ -57,6 +57,7 @@ class QT_Universe < QT_Object
       case type 
       when :STACK then @universe.stack[(pos.qt_to_num or return QT_Boolean::NULL).num_val] or QT_Boolean::NULL
       when :LOCALS then @universe.locals[pos] or QT_Boolean::NULL
+      when :GLOBALS then @universe.globals[pos] or QT_Boolean::NULL
       else fail "Unknown qt_index type `#{type}`!"
       end
     end

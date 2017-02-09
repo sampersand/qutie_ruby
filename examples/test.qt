@@ -2,16 +2,7 @@ list = [39, 10.3, 'hello', true?]!;
 dict = { 'red' -> fav_colour;
          'fred' -> name;
          age = 10;
-       }!;
-# func = [39, 10.3, 'hello', true?]!;
+         A=a?;
 
-
-args = (a=3, b=4)!;
-func = {
-  -> a;
-  a? + b? -> c;
-  disp? @ (c?)!;
-  1,,2,3
-};
-func? @ args?,
-args?
+       }@(a=3;)!;
+dict?.G list
