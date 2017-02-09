@@ -4,7 +4,7 @@ module Text
   class QT_Text < QT_Object
 
     def self.from(source:)
-      new(body: source, quotes: [source[0], source[-1]])
+      new(body: source[1...-1], quotes: [source[0], source[-1]])
     end
 
     def initialize(body:, quotes:)
