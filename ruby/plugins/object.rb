@@ -1,0 +1,2 @@
+class QT_Object
+end
