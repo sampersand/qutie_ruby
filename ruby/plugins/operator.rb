@@ -25,22 +25,27 @@ module Operator
     '@'  => proc { |func, args, universe, stream, parser|
       if func.respond_to?(:call)
         func.call(args, universe, stream, parser)
-      elsif func.is_a?(String)
-        func = func.clone
-        if args.locals.include?(:'__preprocess') && args.locals[:__preprocess]
-          PreParser::pre_process!(func)
-        end
-        parser.process(input: func, additional_builtins: args.locals)
       else
-        begin
-          args.locals[:__args] = args #somethign here with spawn off
-          # func.program_stack.push args
-        rescue NoMethodError
-          puts "Invalid `@` for `#{func.inspect}` with args `#{args.inspect}`"
-          exit(1);
-        end
-        parser.parse(stream: func, universe: args)
-        # func.program_stack.pop
+        func.qt_call(args: args,
+                     universe: universe,
+                     stream: stream,
+                     parser: parser)
+      # elsif func.is_a?(String)
+      #   func = func.clone
+      #   if args.locals.include?(:'__preprocess') && args.locals[:__preprocess]
+      #     PreParser::pre_process!(func)
+      #   end
+      #   parser.process(input: func, additional_builtins: args.locals)
+      # else
+      #   begin
+      #     args.locals[:__args] = args #somethign here with spawn off
+      #     # func.program_stack.push args
+      #   rescue NoMethodError
+      #     puts "Invalid `@` for `#{func.inspect}` with args `#{args.inspect}`"
+      #     exit(1);
+      #   end
+      #   parser.parse(stream: func, universe: args)
+      #   # func.program_stack.pop
       end
     },
 
@@ -51,10 +56,7 @@ module Operator
       },
     '.S'  => proc { |arg, pos| arg.stack[pos] },
     '.V'  => proc { |arg, pos| arg.locals[pos] },
-    '.'  => proc { |arg, pos|
-      STDERR.puts("Invalid `.` for `#{arg.inspect}` with pos `#{pos.inspect}`") unless arg.respond_to?(:[])
-      arg[pos]
-    },
+    '.'  => proc { |arg, pos| arg.qt_index(pos: pos) },
   }
 
   OPER_END = [';', ',']
