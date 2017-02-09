@@ -1,4 +1,11 @@
 module Variable
+  require_relative 'object'
+  class QT_Variable < QT_Object
+    def initialize(source:)
+      @value = source.to_sym
+    end
+  end
+
   module_function
   
   VARIABLE_START = /[a-z_]/i
@@ -15,6 +22,6 @@ module Variable
   end
 
   def handle(token, stream, universe, _)
-    universe << token.to_sym
+    universe << QT_Variable::from(source: token)
   end
 end

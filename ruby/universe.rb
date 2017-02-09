@@ -53,15 +53,15 @@ class Universe
 
   # locals, globals, and stack
     def [](val)
-      stack_incl? = @stack.include?(val)
-      locals_incl? = @locals.include?(val)
-      globals_incl? = @globals.include?(val)
-      STDERR.puts("Both locals and stack respond to `#{val}`!") if locals_incl? && stack_incl?
-      if locals_incl?
+      stack_incl = @stack.include?(val)
+      locals_incl = @locals.include?(val)
+      globals_incl = @globals.include?(val)
+      STDERR.puts("Both locals and stack respond to `#{val}`!") if locals_incl && stack_incl
+      if locals_incl
         @locals[val]
-      elsif stack_incl?
+      elsif stack_incl
         @stack[val]
-      elsif globals_incl?
+      elsif globals_incl
         @globals[val]
       else
         STDERR.puts("Neither Locals, Globals, nor Stack respond to `#{val}`")

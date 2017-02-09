@@ -4,7 +4,7 @@ module Comment
   SINGLE_STARTS = ['#', '//']
   SINGLE_END = "\n"
   def next_single!(stream) # this will break if somehow SINGLE_STARTS includes single_end
-    return unless stream.peek_any?(vals: SINGLE_STARTS]
+    return unless stream.peek_any?(vals: SINGLE_STARTS)
     stream.next until stream.peek?(str: SINGLE_END)
     stream.next # and ignore
     true
