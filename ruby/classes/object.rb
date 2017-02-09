@@ -11,6 +11,10 @@ class QT_Object
     ''
   end
 
+  def eql?(other)
+    self == other
+  end
+
   # qt methods
 
     # conversion

@@ -1,27 +1,5 @@
-require_relative 'object'
+require 'classes/variable'
 module Variable
-  class QT_Variable < QT_Object
-
-    def self.from(source:)
-      new(value: source.to_sym )
-    end
-    
-    def initialize(value:)
-      @value = value
-    end
-
-    def to_s
-      @value.to_s
-    end
-
-    # qt methods
-      # conversion
-        def qt_to_text
-          Text::QT_Text.new(text_val: to_s)
-        end
-
-  end
-
   module_function
   
   VARIABLE_START = /[a-z_]/i

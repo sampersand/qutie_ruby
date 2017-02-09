@@ -1,11 +1,11 @@
 module Keyword
   module_function
 
-  def handle_get_known(universe, **_)
+  def handle_get_known(universe:, **_)
     universe << universe[universe.pop]
   end
 
-  def handle_eval_univ(universe, parser, **_)
+  def handle_eval_univ(universe:, parser:, **_)
     last = universe.pop
     if last == nil || last == false
       universe << last
