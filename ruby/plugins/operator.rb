@@ -49,14 +49,14 @@ module Operator
       end
     },
 
-    '.V='  => proc { |arg, pos| arg.locals[pos.stack[0]] = pos.stack[1] },
+    '.L='  => proc { |arg, pos| arg.locals[pos.stack[0]] = pos.stack[1] },
     '.S='  => proc { |arg, pos| arg.stack[pos.stack[0]] = pos.stack[1] },
     '.='  => proc { |arg, pos| 
       OPERATORS[pos.stack[0].is_a?(Numeric) ? '.S=' : '.V='].(arg, pos)
       },
-    '.S'  => proc { |arg, pos| arg.stack[pos] },
-    '.V'  => proc { |arg, pos| arg.locals[pos] },
-    '.'  => proc { |arg, pos| arg.qt_index(pos: pos) },
+    '.S'  => proc { |arg, pos| arg.qt_index(pos: pos, type: :STACK) },
+    '.L'  => proc { |arg, pos| arg.qt_index(pos: pos, type: :LOCALS) },
+    '.'  => proc { |arg, pos| arg.qt_index(pos: pos, type: :BOTH) },
   }
 
   OPER_END = [';', ',']
@@ -76,10 +76,10 @@ module Operator
         when '*', '/', '%' then 11
         when '**', '^' then 10
         when '@0', '@' then 7
-        when '.=', '.S=', '.V=' then 6
-        when '.', '.S', '.V' then 5
+        when '.=', '.S=', '.L=' then 6
+        when '.', '.S', '.L' then 5
         when  '$', '!', '?' then 1
-        else raise "Unknown operator #{token}"
+        else raise "Unknown operator `#{token}`"
         end
       else 0
       end

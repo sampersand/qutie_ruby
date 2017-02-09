@@ -83,7 +83,6 @@ module PreParser
     # text.gsub!(/\b([a-z_0-9]+)(\+|-)(\2)/i,'($?.-1,.=(\1,\1?\21)!;\1?)!,.0') # i++
     text.gsub!(/\b([a-z_0-9]+)(\+|-)(\2)/i,'($?.-1,.=(\1,\1?\21)!;\1?)@(),') # i++
   end
-
   # def pre_process!(text, show_text: false)
   #   text.gsub!(/
   #       new\s+

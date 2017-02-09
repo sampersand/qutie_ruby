@@ -1,5 +1,15 @@
-# 1,
-a=(1 + 2,4)!;
-a?.1;
-'abc',
-a?.1
+list = [39, 10.3, 'hello', true?]!;
+dict = { 'red' -> fav_colour;
+         'fred' -> name;
+         age = 10;
+       }!;
+# func = [39, 10.3, 'hello', true?]!;
+
+
+args = (a=3, b=4)!;
+func = {
+  a? + b? -> c;
+  disp? @ (c?)!;
+  stop? @ ();
+};
+func? @ args?,

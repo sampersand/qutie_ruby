@@ -99,11 +99,14 @@
       end
     },
     QT_Variable::from(source: 'disp') => BuiltinFunciton.new{ |args, universe, stream, parser|
-      endl = args.get(:end) || "\n"
-      sep  = args.get(:sep) || ""
+      endl = args.qt_index(pos: QT_Variable::from(source: 'end'), type: :BOTH)
+      sep  = args.qt_index(pos: QT_Variable::from(source: 'sep'), type: :BOTH) || ""
+      endl = "\n" if endl == QT_Boolean::NULL
+      sep = '' if sep == QT_Boolean::NULL
       args.locals[:sep] = sep # forces it to be '' if not specified, but doesnt override text's default
-      to_print=FUNCTIONS[:text].call(args, universe, stream, parser) 
+      to_print=FUNCTIONS[QT_Variable::from(source: 'text')].call(args, universe, stream, parser) 
       print(to_print + endl)
+      true
     },
 
     QT_Variable::from(source: 'prompt') => BuiltinFunciton.new{ |args, universe, stream, parser|
@@ -140,8 +143,9 @@
       exit(exit_code || 0)
     },
     QT_Variable::from(source: 'text') => BuiltinFunciton.new{ |args, universe, stream, parser|
-      if args.respond_to?(:get)
-        sep  = args.get(:sep) || " "
+      if args.respond_to?(:qt_index)
+        sep  = args.qt_index(pos: QT_Variable::from(source: 'seps'), type: :BOTH)
+        sep = ' ' if sep == QT_Boolean::NULL;
         args.stack.collect{ |arg|
             qutie_func(arg, universe, parser, :__text){ |a| a.nil? ? a.inspect : a.to_s }
           }.join(sep)
@@ -182,7 +186,7 @@
 
   module_function
   def qutie_func(arg, universe, parser, name)
-    uni = universe.class.new(globals: universe.globals.clone.update(universe.locals))
+    uni = Universe.new(globals: universe.globals.clone.update(universe.locals))
     uni.locals[:__self] ||= arg
     if arg.respond_to?(:locals) && arg.locals.include?(name)
       func = arg.locals[name] or fail "no #{name}` function for #{arg}"

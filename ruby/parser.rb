@@ -32,8 +32,7 @@ class Parser
   end
 
   def parse(stream:, universe:)
-    parse!(stream: stream.clone,
-           universe: universe)
+    parse!(stream: stream.clone, universe: universe)
   end
 
   def catch_EOF(universe, &block)
@@ -47,7 +46,6 @@ class Parser
   end
 
   def parse!(stream:, universe:)
-    return process(input: stream) if stream.is_a?(String)
     catch_EOF(universe){ 
       until stream.stack_empty?
         token, plugin = next_token!(stream: stream,
