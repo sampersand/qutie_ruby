@@ -27,6 +27,7 @@ class QT_Number < QT_Object
     E    = QT_Number.new(num_val: Math::E)
     PI   = QT_Number.new(num_val: Math::PI)
     ONE  = QT_Number.new(num_val: 1.0)
+    NaN  = QT_Number.new(num_val: Float::NAN)
     ZERO = QT_Number.new(num_val: 0)
 
   # qt methods

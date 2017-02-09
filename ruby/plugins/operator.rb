@@ -105,7 +105,7 @@ module Operator
 
     def fix_lhs(token)
       case token
-      when '**' then QT_Number::Math_E
+      when '**'     then QT_Number::Math_E
       when '*', '/' then QT_Number::ONE
       when '+', '-' then QT_Number::ZERO
       end

@@ -73,13 +73,20 @@ class Universe
       "#{self.class.name}(stack: #{@stack}, locals: #{@locals})"
     end
 
+    def stack_s
+      "[#{@stack.collect(&:to_s).join(', ')}]"
+    end
+    def locals_s
+      "{ " + @locals.reject{|k, v| k.is_a?(QT_Variable) && k.value.to_s.start_with?('__')}.collect{|k,v| "#{k}: #{v}"}.join(', ') + " }"
+    end
+
     def to_s
-      if locals_empty?
-        "[#{@stack.collect(&:to_s).join(', ')}]"
+      if @locals.reject{|k, v| k.is_a?(QT_Variable) && k.value.to_s.start_with?('__')}
+        stack_s
       elsif stack_empty?
-        "{ #{@locals.collect{|k,v| "#{k}: #{v}"}.join(', ')} }"
-      elsif !locals_empty? && !stack_empty?
-        "< " + "[#{@stack.collect(&:to_s).join(', ')}]" + " | " + "{ #{@locals.collect{|k,_| "#{k}"}.join(', ')} }" + " >"
+        locals_s
+      elsif !@locals.reject{|k, v| k.is_a?(QT_Variable) && k.value.to_s.start_with?('__')} && !stack_empty?
+        "< #{stack_s} | #{locals_s} >"
       else
         '()'
       end

@@ -1,8 +1,13 @@
-list = [39, 10.3, 'hello', true?]!;
-dict = { 'red' -> fav_colour;
-         'fred' -> name;
-         age = 10;
-         A=a?;
+list = [39, 10.3, 'hello', true?]@();
 
-       }@(a=3;)!;
-dict?.G list
+dict = {
+  'red' -> fav_colour;
+  'fred' -> name;
+  age = 10;
+}@();
+
+func = {
+  a? + b?
+};
+
+func? @ (a=3;b=4;)!

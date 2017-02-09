@@ -41,7 +41,7 @@ class QT_Universe < QT_Object
       passed_args.globals.update(passed_args.locals)
       passed_args.locals.clear
       # passed_args.stack.clear
-      passed_args.locals[:__args] = args #somethign here with spawn off
+      passed_args.locals[QT_Variable::from(source: '__args')] = args #somethign here with spawn off
       # func.program_stack.push args
       parser.parse(stream: @universe, universe: passed_args)
       # func.program_stack.pop
