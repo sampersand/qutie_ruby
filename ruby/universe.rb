@@ -51,7 +51,7 @@ class Universe
       @locals.empty?
     end
 
-  # All
+  # locals, globals, and stack
     def [](val)
       stack_incl? = @stack.include?(val)
       locals_incl? = @locals.include?(val)
@@ -83,10 +83,11 @@ class Universe
       end
     end
 
-  # misc
-
+  # cloning
     def spawn_new_stack(new_stack:)
-      self.class.new(stack: new_stack, locals: @locals, globals: @globals)
+      self.class.new(stack: new_stack,
+                     locals: @locals,
+                     globals: @globals)
     end
 
     def clone
