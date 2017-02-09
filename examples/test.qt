@@ -2,8 +2,8 @@ list = [39, 10.3, 'hello', true?]@();
 
 dict = {
   'red' -> fav_colour;
-  'fred' -> name;
-  age = 10;
+  name <- 'fred'
+  age: 10;
 }@();
 
 func = {

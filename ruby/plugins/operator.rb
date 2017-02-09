@@ -1,6 +1,7 @@
 module Operator
   OPERATORS = { # order matters!
     '<-'  => proc { |l, r, u| OPERATORS['='].(l, r, u) },
+    ':'   => proc { |l, r, u| OPERATORS['='].(l, r, u) },
     '->'  => proc { |l, r, u| OPERATORS['='].(r, l, u)},
 
     '**' => proc { |l, r| l.qt_pow(right: r) || r.qt_pow_r(left: l) },
@@ -57,7 +58,7 @@ module Operator
     '.S'  => proc { |arg, pos| arg.qt_index(pos: pos, type: :STACK) },
     '.L'  => proc { |arg, pos| arg.qt_index(pos: pos, type: :LOCALS) },
     '.G'  => proc { |arg, pos| arg.qt_index(pos: pos, type: :GLOBALS) },
-    '.'  => proc { |arg, pos| arg.qt_index(pos: pos, type: :BOTH) },
+    '.'   => proc { |arg, pos| arg.qt_index(pos: pos, type: :BOTH) },
   }
 
   OPER_END = [';', ',']
@@ -68,8 +69,7 @@ module Operator
       when plugin == Operator
         case token
         when *OPER_END then 40
-        when '=' then 30
-        when '->', '<-' then 30
+        when '=', '->', '<-', ':' then 30
         when '||' then 25
         when '&&' then 24
         when '==', '<>', '<=', '>=', '<', '>' then 20
