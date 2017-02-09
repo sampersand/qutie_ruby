@@ -3,7 +3,7 @@ module Whitespace
   WHITESPACE_REGEX = /\s/
   def next_token!(stream, _, _)
     if stream.peek?(WHITESPACE_REGEX, len: 1)
-      stream.next!(1) # and ignore
+      stream.next(amnt: 1) # and ignore
       :retry
     end
   end

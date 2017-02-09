@@ -10,7 +10,7 @@ module Constants
 
   # def next_token!(stream, _, _)
   #   res = BOOELEANS.find{ |_, sym| stream.peek?(sym) }
-  #   res and stream.next!(res[-1])
+  #   res and stream.next(amnt: res[-1])
   # end
 
   # def handle(token, stream, universe, parser)

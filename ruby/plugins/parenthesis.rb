@@ -6,7 +6,7 @@ module Parenthesis
   
   def next_token!(stream, universe, parser)
     return unless stream.peek?(*L_PAREN)
-    start_paren = stream.next!(1)
+    start_paren = stream.next(amnt: 1)
     new_container = start_paren
     parens = 1
     parser.catch_EOF(universe) {
@@ -15,26 +15,26 @@ module Parenthesis
         # this is very hacky right here
 
         if stream.peek?("'", '"', '`')
-          quote = stream.next!(1)
+          quote = stream.next(amnt: 1)
           new_container << quote
           until stream.peek?(quote)
-            new_container << stream.next!(1) if stream.peek?('\\')
-            new_container << stream.next!(1)
+            new_container << stream.next(amnt: 1) if stream.peek?('\\')
+            new_container << stream.next(amnt: 1)
           end
-          new_container << stream.next!(1)
+          new_container << stream.next(amnt: 1)
           next
         end
 
         if stream.peek?('#', '//')
-          new_container << stream.next!(1) until stream.peek?("\n")
-          new_container << stream.next!(1)
+          new_container << stream.next(amnt: 1) until stream.peek?("\n")
+          new_container << stream.next(amnt: 1)
           
           next
         end
 
         if stream.peek?('/*')
-          new_container << stream.next!(1) until stream.peek?('*/')
-          new_container << stream.next!(2)
+          new_container << stream.next(amnt: 1) until stream.peek?('*/')
+          new_container << stream.next(amnt: 2)
           next
         end
 
@@ -44,9 +44,9 @@ module Parenthesis
         elsif stream.peek?(*R_PAREN)
           parens -= 1
         elsif stream.peek?('\\')
-          new_container << stream.next!(1)
+          new_container << stream.next(amnt: 1)
         end
-        new_container << stream.next!(1)
+        new_container << stream.next(amnt: 1)
       end
       nil
     }

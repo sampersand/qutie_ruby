@@ -12,26 +12,38 @@ class Universe
 
 
   #stream methods
-    def next!(amnt)
-      return next!(amnt.length) if amnt.is_a?(String)
+    # private
+    # def stream_inp_to_num(amnt:, str:, regex:)
+    #   amnt ||
+    #   str && str.length || 
+    #   regex && regex.length or
+    #     fail "Invalid stream inputs: #{amnt}, #{str}, #{regex}"
+    # end
+
+    def next(amnt:)
+      warn("Asking for `#{amnt.inspect}` elements") unless amnt.is_a?(Integer) && amnt != 0
       throw :EOF if stack_empty?
       @stack.shift(amnt).join
     end
 
-    def peek(amnt) # deprecated
-      warn('Universe.peek is depreciated!')
-      peek?(/./, len: 1)
+    def peek(amnt:)
+      warn("Asking for `#{amnt.inspect}` elements") unless amnt.is_a?(Integer) && amnt != 0
+      throw :EOF if stack_empty?
+      @stack.first(amnt).join
     end
 
-    def peek?(*vals, len: nil)
-      throw :EOF, [-1] if @stack.empty?
-      vals.any? do |val|
-        if val.is_a?(Regexp)
-          @stack.first(len || val.source.length).join =~ val 
-        else
-          @stack.first(len || val.length).join == val
-        end
+    def peek?(str: nil, regex: nil, amnt: nil)
+      warn("None or both of Regex and str were specified") unless str ^ regex
+      if str
+        warn("Passing both `amnt` and `str` makes no sense - using str.length") if amnt
+        peek(amnt: str.length ) == str
+      else
+        peek(amnt: amnt || regex.source.length) =~ regex
       end
+    end
+
+    def peek_any?(vals:)
+      vals.each()
     end
 
   # stack
