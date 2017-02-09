@@ -1,16 +1,10 @@
-require_relative 'functions' # for global print
 class Universe
 
   attr_accessor :stack
   attr_accessor :locals
   attr_accessor :globals
-
   
   Universe::PROGRAM_STACK = []
-
-  def self.from_string(input)
-    new(stack: input.each_char.to_a)
-  end
 
   def initialize(stack: nil, locals: nil, globals: nil)
     program_stack[0] = self if program_stack.empty?

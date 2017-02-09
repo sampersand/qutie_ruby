@@ -20,7 +20,7 @@ class Parser
 
   def process(inp, additional_builtins: nil)
     universe = Universe.new
-    stream = Universe.from_string inp
+    stream = Universe.new(stack: inp.each_char.to_a)
     universe.globals.update(@builtins)
     universe.globals.update(additional_builtins) if additional_builtins
     catch(:EOF){
