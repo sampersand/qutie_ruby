@@ -30,56 +30,30 @@ module Number
 
       # operators
         # math
-          def qt_add(right:)
-            right = right.qt_to_num or return
-            QT_Number.new(num_val: @num_val + right.num_val)
-          end
-          def qt_sub(right:)
-            right = right.qt_to_num or return
-            QT_Number.new(num_val: @num_val - right.num_val)
-          end
-          def qt_mul(right:)
-            right = right.qt_to_num or return
-            QT_Number.new(num_val: @num_val * right.num_val)
-          end
-          def qt_div(right:)
-            right = right.qt_to_num or return
-            QT_Number.new(num_val: @num_val / right.num_val)
-          end
-          def qt_mod(right:)
-            right = right.qt_to_num or return
-            QT_Number.new(num_val: @num_val % right.num_val)
-          end
-          def qt_pow(right:)
-            right = right.qt_to_num or return
-            QT_Number.new(num_val: @num_val ** right.num_val)
-          end
+          private
+            def numer_func(right:, meth:)
+              right = right.qt_to_num or return
+              QT_Number.new(num_val: @num_val.method(meth).call(right.num_val))
+            end
+            def numer_func_r(left:, meth:)
+              left = left.qt_to_num or return
+              QT_Number.new(num_val: left.num_val.method(meth).call(@num_val) )
+            end
 
+          public
+            def qt_add(right:) numer_func(right: right, meth: :+) end
+            def qt_sub(right:) numer_func(right: right, meth: :-) end
+            def qt_mul(right:) numer_func(right: right, meth: :*) end
+            def qt_div(right:) numer_func(right: right, meth: :/) end
+            def qt_mod(right:) numer_func(right: right, meth: :%) end
 
-          def qt_add_r(left:)
-            left = left.qt_to_num or return
-            QT_Number.new(num_val: left.num_val + @num_val)
-          end
-          def qt_sub_r(left:)
-            left = left.qt_to_num or return
-            QT_Number.new(num_val: left.num_val - @num_val)
-          end
-          def qt_mul_r(left:)
-            left = left.qt_to_num or return
-            QT_Number.new(num_val: left.num_val * @num_val)
-          end
-          def qt_div_r(left:)
-            left = left.qt_to_num or return
-            QT_Number.new(num_val: left.num_val / @num_val)
-          end
-          def qt_mod_r(left:)
-            left = left.qt_to_num or return
-            QT_Number.new(num_val: left.num_val % @num_val)
-          end
-          def qt_pow_r(left:)
-            left = left.qt_to_num or return
-            QT_Number.new(num_val: left.num_val ** @num_val)
-          end
+            def qt_pow(right:) numer_func(right: right, meth: :**) end
+            def qt_add_r(left:) numer_func_r(left: left, meth: :+) end
+            def qt_sub_r(left:) numer_func_r(left: left, meth: :-) end
+            def qt_mul_r(left:) numer_func_r(left: left, meth: :*) end
+            def qt_div_r(left:) numer_func_r(left: left, meth: :/) end
+            def qt_mod_r(left:) numer_func_r(left: left, meth: :%) end
+            def qt_pow_r(left:) numer_func_r(left: left, meth: :**) end
   end
 
   module_function
