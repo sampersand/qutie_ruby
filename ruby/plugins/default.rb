@@ -1,5 +1,5 @@
+require_relative 'object'
 module Default
-  require_relative 'object'
 
   class QT_Default < QT_Object; end
 

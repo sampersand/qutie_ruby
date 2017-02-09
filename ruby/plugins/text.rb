@@ -1,5 +1,5 @@
+require_relative 'object'
 module Text
-  require_relative 'object'
 
   class QT_Text < QT_Object
 

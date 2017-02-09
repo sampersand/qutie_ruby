@@ -16,4 +16,9 @@ class QT_Object
     @source.to_s
   end
 
+  # qt methods
+
+    def qt_add(right:);  end
+    def qt_add_r(left:); end
+
 end

@@ -1,5 +1,5 @@
+require_relative 'object'
 module Variable
-  require_relative 'object'
   class QT_Variable < QT_Object
     def initialize(source:)
       super

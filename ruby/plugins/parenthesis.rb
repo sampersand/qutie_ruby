@@ -1,3 +1,4 @@
+require_relative 'object'
 module Parenthesis
 
   class QT_Universe < QT_Object

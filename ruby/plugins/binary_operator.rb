@@ -1,7 +1,5 @@
 module BinaryOperator
-  module_function
   OPERATORS = { # order matters!
-
     '<-'  => proc { |l, r, u| OPERATORS['='].(l, r, u) },
     '->'  => proc { |l, r, u| OPERATORS['='].(r, l, u)},
 
@@ -9,7 +7,11 @@ module BinaryOperator
     '*'  => proc { |l, r| l *  r},
     '/'  => proc { |l, r| l /  r},
     '%'  => proc { |l, r| l %  r},
-    '+'  => proc { |l, r| l +  r},
+    '+'  => proc { |l, r|
+      l.qt_add(right: r) ||
+      r.qt_add_r(left: l) ||
+      fail("Cannot add `#{l.inspect}` and `#{r.inspect}` together")
+    },
     '-'  => proc { |l, r| l -  r},
     '==' => proc { |l, r| l == r },
     '<>' => proc { |l, r| l != r },
@@ -60,104 +62,92 @@ module BinaryOperator
   }
 
   OPER_END = [';', ',']
-
-  def priority(token, plugin)
-    case
-    when plugin == BinaryOperator
-      case token
-      when *OPER_END then 40
-      when '=' then 30
-      when '->', '<-' then 30
-      when '||' then 25
-      when '&&' then 24
-      when '==', '<>', '<=', '>=', '<', '>' then 20
-      when '+', '-' then 12
-      when '*', '/', '%' then 11
-      when '**', '^' then 10
-      when '@0', '@' then 7
-      when '.=', '.S=', '.V=' then 6
-      when '.', '.S', '.V' then 5
-      when  '$', '!', '?' then 1
-      else raise "Unknown operator #{token}"
-      end
-    else 0
-    end
-  end
-
-  def next_token!(stream:, **_)
-    OPERATORS.each{ |oper, _| return stream.next(amnt: oper.length) if stream.peek?(str: oper) }
-    OPER_END.each{  |o_end| return stream.next(amnt: o_end.length) if stream.peek?(str: o_end) }
-    nil
-  end
-
-  def handle(token:, stream:, universe:, parser:, **_)
-    if OPER_END.include?(token)
-      universe.pop if token == ';'
-    else
-      handle_oper(token: token,
-                  stream: stream,
-                  universe: universe,
-                  parser: parser)
-    end
-  end
-
-  def fix_lhs(token)
-    case token
-    when '**' then QT_Number::Math_E
-    when '*', '/' then QT_Number::ONE
-    when '+', '-' then QT_Number::ZERO
-    end
-  end
-
-  def handle_oper(token:, stream:, universe:, parser:)
-    lhs = universe.pop
-    rhs = universe.spawn_new_stack(new_stack: nil)
-    token_priority = priority(token, BinaryOperator)
-    parser.catch_EOF(universe) {
-      until stream.stack_empty?
-        ntoken = parser.next_token!(stream: stream.clone,
-                                    universe: rhs,
-                                    parser: parser)
-        if ntoken[0] =~ /[-+*\/]/ and ntoken[1] == BinaryOperator and rhs.stack_empty?
-          ntoken = parser.next_token!(stream: stream,
-                                      universe: rhs,
-                                      parser: parser)
-          rhs << fix_lhs(ntoken[0])
-          ntoken[1].handle(token: ntoken[0],
-                           stream: stream,
-                           universe: rhs,
-                           parser: parser)
-        else
-          break if token_priority <= priority(*ntoken) 
-          ntoken = parser.next_token!(stream: stream,
-                                      universe: rhs,
-                                      parser: parser)
-          ntoken[1].handle(token: ntoken[0],
-                           stream: stream,
-                           universe: rhs,
-                           parser: parser) # pretty sure this will bite me...
+  # handling the operators
+    module_function
+    def priority(token, plugin)
+      case
+      when plugin == BinaryOperator
+        case token
+        when *OPER_END then 40
+        when '=' then 30
+        when '->', '<-' then 30
+        when '||' then 25
+        when '&&' then 24
+        when '==', '<>', '<=', '>=', '<', '>' then 20
+        when '+', '-' then 12
+        when '*', '/', '%' then 11
+        when '**', '^' then 10
+        when '@0', '@' then 7
+        when '.=', '.S=', '.V=' then 6
+        when '.', '.S', '.V' then 5
+        when  '$', '!', '?' then 1
+        else raise "Unknown operator #{token}"
         end
+      else 0
       end
+    end
+
+    def next_token!(stream:, **_)
+      OPERATORS.each{ |oper, _| return stream.next(amnt: oper.length) if stream.peek?(str: oper) }
+      OPER_END.each{  |o_end| return stream.next(amnt: o_end.length) if stream.peek?(str: o_end) }
       nil
-    }
-    universe.stack.concat(rhs.stack)
-    lhs ||= fix_lhs(token)
-    universe << OPERATORS[token].(lhs, universe.pop, universe, stream, parser)
-  end
+    end
 
+    def handle(token:, stream:, universe:, parser:, **_)
+      if OPER_END.include?(token)
+        universe.pop if token == ';'
+      else
+        handle_oper(token: token,
+                    stream: stream,
+                    universe: universe,
+                    parser: parser)
+      end
+    end
 
-  # def handle_oper(token, stream, universe, parser)
-  #   lhs = universe.pop
-  #   parser.catch_EOF(universe) {
-  #     until stream.stack_empty?
-  #       break if priority(token, BinaryOperator) <= priority(*parser.next_token(stream, universe)) 
-  #       next_token = parser.next_token!(stream, universe)
-  #       next_token[1].handle(next_token[0], stream, universe, parser) # pretty sure this will bite me...
-  #     end
-  #     nil
-  #   }
-  #   universe << OPERATORS[token].(lhs, universe.pop, universe, stream, parser)
-  # end
+    def fix_lhs(token)
+      case token
+      when '**' then QT_Number::Math_E
+      when '*', '/' then QT_Number::ONE
+      when '+', '-' then QT_Number::ZERO
+      end
+    end
+
+    def handle_oper(token:, stream:, universe:, parser:)
+      lhs = universe.pop
+      rhs = universe.spawn_new_stack(new_stack: nil)
+      token_priority = priority(token, BinaryOperator)
+      parser.catch_EOF(universe) {
+        until stream.stack_empty?
+          ntoken = parser.next_token!(stream: stream.clone,
+                                      universe: rhs,
+                                      parser: parser)
+          if ntoken[0] =~ /[-+*\/]/ and ntoken[1] == BinaryOperator and rhs.stack_empty?  # this is dangerous
+            ntoken = parser.next_token!(stream: stream,
+                                        universe: rhs,  
+                                        parser: parser)
+            rhs << fix_lhs(ntoken[0])
+            ntoken[1].handle(token: ntoken[0],
+                             stream: stream,
+                             universe: rhs,
+                             parser: parser)
+          else
+            break if token_priority <= priority(*ntoken) 
+            ntoken = parser.next_token!(stream: stream,
+                                        universe: rhs,
+                                        parser: parser)
+            ntoken[1].handle(token: ntoken[0],
+                             stream: stream,
+                             universe: rhs,
+                             parser: parser) # pretty sure this will bite me...
+          end
+        end
+        nil
+      }
+      universe.stack.concat(rhs.stack)
+      lhs ||= fix_lhs(token)
+      universe << OPERATORS[token].call(lhs, universe.pop, universe, stream, parser)
+    end
+
 
 end
 
