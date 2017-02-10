@@ -52,7 +52,7 @@ class QT_Text < QT_Object
       def qt_get(pos:, type: )
         # ignores type
         text = @text_val[(pos.qt_to_num or return).num_val]
-        text and QT_Text.new(text_val: text) or QT_Boolean::NULL
+        text and QT_Text.new(text_val: text) or QT_Null::INSTANCE
       end
 
       private

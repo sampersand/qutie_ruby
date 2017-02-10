@@ -72,7 +72,7 @@ class UniverseOLD
         @globals[val]
       else
         # STDERR.puts("Neither Locals, Globals, nor Stack respond to `#{val.inspect}`")
-        QT_Boolean::NULL
+        QT_Null::INSTANCE
       end
     end
     def qt_get(pos:, type: :BOTH) #ignores type

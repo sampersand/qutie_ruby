@@ -53,6 +53,7 @@ class QT_Universe < QT_Object
     end
 
     def qt_call(args:, parser:, **_) # fix this
+      raise "Args have to be a universe, not `#{args.class}`" unless args.is_a?(QT_Universe)
       passed_args = args.clone
       passed_args.globals.update(passed_args.locals)
       passed_args.locals.clear
@@ -62,18 +63,16 @@ class QT_Universe < QT_Object
       parser.parse(stream: @universe, universe: passed_args)
       # func.program_stack.pop
     end
-    def qt_get(pos:, type: ) # fix this
-      if type == :BOTH
-        if @universe.locals.include?(pos)
-          type = :LOCALS
-        else
-          type = :STACK
-        end
+    def qt_get(pos:, type:)  # fix this
+      case type
+      when :BOTH then type = @universe.locals.include?(pos) ? :LOCALS : :STACK
+      when :NON_STACK then type = @universe.locals.include?(pos) ? :LOCALS : :GLOBALS
       end
+
       case type 
-      when :STACK then @universe.stack[(pos.qt_to_num or return QT_Boolean::NULL).num_val] or QT_Boolean::NULL
-      when :LOCALS then @universe.locals[pos] or QT_Boolean::NULL
-      when :GLOBALS then @universe.globals[pos] or QT_Boolean::NULL
+      when :STACK then @universe.stack[(pos.qt_to_num or return QT_Null::INSTANCE).num_val] or QT_Null::INSTANCE
+      when :LOCALS then @universe.locals[pos] or QT_Null::INSTANCE
+      when :GLOBALS then @universe.globals[pos] or QT_Null::INSTANCE
       else fail "Unknown qt_get type `#{type}`!"
       end
     end
@@ -86,12 +85,12 @@ class QT_Universe < QT_Object
         end
       end
       case type 
-      when :STACK then @universe.stack.delete((pos.qt_to_num or return QT_Boolean::NULL).num_val)
-      when :LOCALS then @universe.locals.delete(pos) or QT_Boolean::NULL
-      when :GLOBALS then @universe.globals.delete(pos) or QT_Boolean::NULL
+      when :STACK then @universe.stack.delete((pos.qt_to_num or return QT_Null::INSTANCE).num_val)
+      when :LOCALS then @universe.locals.delete(pos) or QT_Null::INSTANCE
+      when :GLOBALS then @universe.globals.delete(pos) or QT_Null::INSTANCE
       else fail "Unknown qt_get type `#{type}`!"
       end
-      QT_Boolean::NULL
+      QT_Null::INSTANCE
     end
 end
 

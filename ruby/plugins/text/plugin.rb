@@ -1,6 +1,7 @@
 require_relative 'text'
 module Text
   QUOTES = ["'", '"', '`']
+  
   REPLACEMENTS = {
     'n' => "\n",
     't' => "\t",
