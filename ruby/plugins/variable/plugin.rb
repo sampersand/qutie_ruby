@@ -8,7 +8,7 @@ module Variable
     return stream.next if stream.peek?(str: '$') # this is bad!
     return unless stream.peek =~ VARIABLE_START
     result = ''
-    parser.catch_EOF(universe) {
+    catch(:EOF) {
       result += stream.next while stream.peek =~ VARIABLE_CONT
       nil
     }

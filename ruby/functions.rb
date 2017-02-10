@@ -25,12 +25,12 @@
 
     QT_Variable::from(source: 'return') => QT_BuiltinFunciton.new{ |args, universe, stream|
 
-      value = args.locals.fetch(:__value){ args.stack.fetch(0, NoRet) }
-      levels = args.locals.fetch(:__levels){ args.stack.fetch(1, 1) }
-      if levels > 0
-        universe.program_stack.pop # to remove us
-        throw :EOF, [levels, value]
-      end
+      # value = args.locals.fetch(:__value){ args.stack.fetch(0, NoRet) }
+      # levels = args.locals.fetch(:__levels){ args.stack.fetch(1, 1) }
+      # if levels > 0
+      #   universe.program_stack.pop # to remove us
+      #   throw :EOF, [levels, value]
+      # end
     },
 
     QT_Variable::from(source: 'if') => QT_BuiltinFunciton.new{ |args, universe, stream, parser|

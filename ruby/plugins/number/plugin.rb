@@ -3,10 +3,10 @@ module Number
 
   module_function
 
-  def next_token!(stream:, universe:, parser:, **_)
+  def next_token!(stream:,  **_)
     return unless stream.peek =~ /\d/
     num = ''
-    parser.catch_EOF(universe) {
+    catch(:EOF) {
       num += stream.next while stream.peek =~ /\d/
       if stream.peek?(str: '.')
         num += stream.next

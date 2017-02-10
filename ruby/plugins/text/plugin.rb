@@ -11,12 +11,12 @@ module Text
   
   module_function
 
-  def next_token!(stream:, universe:, parser:, **_)
+  def next_token!(stream:, **_)
     return unless stream.peek_any?(vals: QUOTES)
     quote = stream.next
     body = quote
 
-    parser.catch_EOF(universe) {
+    catch(:EOF) {
       until stream.peek?(str: quote)
         if stream.peek?(str: '\\')
            stream.next # pop the \

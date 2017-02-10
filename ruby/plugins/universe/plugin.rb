@@ -6,12 +6,12 @@ module Universe
 
   module_function
   
-  def next_token!(stream:, universe:, parser:, **_)
+  def next_token!(stream:, **_)
     return unless stream.peek_any?(vals: L_PARENS)
     start_paren = stream.next
     new_container = start_paren
     parens = 1
-    parser.catch_EOF(universe) {
+    catch(:EOF){
       # this will break if there are uneven parens inside comments
       until parens == 0 do
         # this is very hacky right here
