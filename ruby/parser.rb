@@ -33,7 +33,6 @@ class Parser
 
   def catch_EOF(universe, &block)
     levels = catch(:EOF, &block) or return false
-
     if levels[0] > 0
       throw :EOF, [levels[0]-1, levels[1]]
     elsif levels[0] == 0
