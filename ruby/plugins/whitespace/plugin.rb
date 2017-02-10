@@ -1,9 +1,13 @@
 module Whitespace
+  require_relative '../regex/regex'
+  
+  WHITESPACE_REGEX = QT_Regex.new(/\s/)
+
   module_function
-  WHITESPACE_REGEX = /\s/
+
   def next_token!(stream:, **_)
-    if stream.qt_peek(amnt: QT_Number::ONE).qt_regex_match(WHITESPACE_REGEX)
-      stream.qt_next(amnt: QT_Number::ONE) # and ignore
+    if stream.qt_peek(QT_Number::ONE).qt_regex_match(WHITESPACE_REGEX).true?
+      stream.qt_next(QT_Number::ONE) # and ignore
       :retry
     end
   end

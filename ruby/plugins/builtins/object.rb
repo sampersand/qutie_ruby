@@ -1,6 +1,13 @@
+class QT_Object; end
+require_relative 'boolean'
+require_relative 'null'
 class QT_Object
-  def self.from(source:) #used when directly instatiating it, not copying, etc
+  def self.from(source) #used when directly instatiating it, not copying, etc
     new 
+  end
+
+  def true? # the reason this isn't a qt method is because it's just an alias that i'll be using over and over.
+    qt_to_bool == QT_True::INSTANCE
   end
 
   def inspect
@@ -42,8 +49,11 @@ class QT_Object
 
       # misc
         def qt_call(args:, universe:, stream:, parser:) end
-        def qt_regex_match(right:) end
-        def qt_regex_match_r(left:) end
+        def qt_regex_match(right)
+          QT_Boolean::get(qt_regex_match_l(right) || right.qt_regex_match_r(self))
+        end
+        def qt_regex_match_l(right) end
+        def qt_regex_match_r(left) end
       # math
         def qt_add(right:);  end
         def qt_sub(right:);  end
@@ -64,7 +74,7 @@ class QT_Object
         def qt_equals(other)
           res = qt_equals_r(right: other) || qt_equals_l(left: other) and return res
           res = qt_cmp(right: right)
-          res && res.qt_to_boolean
+          res && res.qt_to_bool
         end
         def qt_neq(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val != 0) end
         def qt_gth(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val == 1) end

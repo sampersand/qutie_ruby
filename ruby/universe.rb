@@ -125,10 +125,10 @@ class UniverseOLD
     end
   end
 
-  def qt_peek(amnt:)
+  def qt_peek(amnt)
     peek(amnt: amnt.num_val.to_i)
   end
-  def qt_next(amnt:)
+  def qt_next(amnt)
     self.next(amnt: amnt.num_val.to_i)
   end
 

@@ -1,11 +1,11 @@
 class QT_Regex < QT_Object
 
   attr_reader :regex_val
-  def self.from(source:)
-    new(regex_val: source[1...-1])
+  def self.from(source)
+    new(source[1...-1])
   end
 
-  def initialize(regex_val:)
+  def initialize(regex_val)
     @regex_val = regex_val
   end
 
@@ -21,10 +21,16 @@ class QT_Regex < QT_Object
     @regex_val.hash
   end
   
-  def qt_regex_match(left:)
-    fail
+  def qt_regex_match_l(right)
+    return unless left.is_a?(QT_Text)
+    res = @regex_val =~ right.text_val
+    res ? QT_Number.new(res) : nil
   end
-  def qt_regex_match_r(left:)
+
+  def qt_regex_match_r(left)
+    return unless left.is_a?(QT_Text)
+    res = left.text_val =~ @regex_val
+    res ? QT_Number.new(res) : nil
   end
 
 end

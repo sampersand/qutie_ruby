@@ -4,10 +4,10 @@ class QT_Number < QT_Object
 
   def self.from(source:)
     source = source[2..-1].to_i(Number::BASES[source[1]][1]) if source =~ Number::BASE_START_REGEX
-    new(num_val: source.to_f)
+    new(source.to_f)
   end
 
-  def initialize( num_val:)
+  def initialize(num_val)
     @num_val = num_val
   end
 
@@ -25,12 +25,12 @@ class QT_Number < QT_Object
   end
 
   # consts
-    E     = QT_Number.new(num_val: Math::E)
-    PI    = QT_Number.new(num_val: Math::PI)
-    ONE   = QT_Number.new(num_val: 1.0)
-    NaN   = QT_Number.new(num_val: Float::NAN)
-    ZERO  = QT_Number.new(num_val: 0)
-    NEG_1 = QT_Number.new(num_val: -1)
+    E     = QT_Number.new(Math::E)
+    PI    = QT_Number.new(Math::PI)
+    ONE   = QT_Number.new(1.0)
+    NaN   = QT_Number.new(Float::NAN)
+    ZERO  = QT_Number.new(0)
+    NEG_1 = QT_Number.new(-1)
 
   # qt methods
     # conversion
@@ -45,11 +45,11 @@ class QT_Number < QT_Object
         private
           def numer_func(right:, lmeth:)
             right = right.qt_to_num or return
-            QT_Number.new(num_val: @num_val.method(lmeth).call(right.num_val))
+            QT_Number.new(@num_val.method(lmeth).call(right.num_val))
           end
           def numer_func_r(left:, lmeth:)
             left = left.qt_to_num or return
-            QT_Number.new(num_val: left.num_val.method(lmeth).call(@num_val) )
+            QT_Number.new(left.num_val.method(lmeth).call(@num_val) )
           end
 
         public

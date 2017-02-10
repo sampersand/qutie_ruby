@@ -1,9 +1,9 @@
 class QT_Default < QT_Object
-  def self.from(source:)
-    new(source: source)
+  def self.from(source)
+    new(source)
   end
 
-  def initialize(source:)
+  def initialize(source)
     warn("Source for #{self.class} is not a String, but `#{source.class}`)") unless source.is_a?(String)
     @source = source
   end
