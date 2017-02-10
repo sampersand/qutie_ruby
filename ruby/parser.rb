@@ -26,9 +26,7 @@ class Parser
     universe = UniverseOLD.new
     universe.globals.update(@builtins)
     universe.globals.update(additional_builtins)
-    catch(:EOF){
-      parse!(stream: stream, universe: universe) #dont need to copy stream cause we just made it.
-    }
+    parse!(stream: stream, universe: universe) #dont need to copy stream cause we just made it.
   end
 
   def parse!(stream:, universe:)

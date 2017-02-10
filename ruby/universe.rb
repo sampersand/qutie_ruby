@@ -122,6 +122,14 @@ class UniverseOLD
     throw err, kw
   end
 
+  def qt_length(type:)
+    case type
+    when :STACK then @stack.length
+    when :LOCALS then @locals.length
+    when :GLOBALS then @globals.length
+    end
+  end
+
 end
 
 

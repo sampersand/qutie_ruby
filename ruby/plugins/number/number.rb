@@ -1,7 +1,9 @@
+# require_relative 'plugin'
 class QT_Number < QT_Object
   attr_reader :num_val
 
   def self.from(source:)
+    source = source[2..-1].to_i(Number::BASES[source[1]][1]) if source =~ Number::BASE_START_REGEX
     new(num_val: source.to_f)
   end
 
@@ -67,4 +69,3 @@ class QT_Number < QT_Object
           def qt_mod_r(left:) numer_func_r(left: left, lmeth: :%) end
           def qt_pow_r(left:) numer_func_r(left: left, lmeth: :**) end
 end
-
