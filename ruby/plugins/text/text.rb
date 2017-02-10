@@ -1,4 +1,3 @@
-require_relative 'object'
 class QT_Text < QT_Object
 
   attr_reader :text_val

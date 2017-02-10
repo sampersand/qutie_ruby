@@ -1,4 +1,5 @@
 require_relative 'universe'
+require_relative 'plugins/builtins/object'
 require_relative 'plugins/default/plugin'
 
 class Parser

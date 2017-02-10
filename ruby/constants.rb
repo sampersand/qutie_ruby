@@ -1,7 +1,7 @@
-require_relative 'classes/boolean_and_null'
-require_relative 'classes/variable'
-
-
+require_relative 'plugins/builtins/boolean'
+require_relative 'plugins/builtins/null'
+require_relative 'plugins/number/number'
+require_relative 'plugins/variable/variable'
 module Constants
 
   CONSTANTS = {

@@ -1,4 +1,4 @@
-require 'classes/text'
+require_relative 'text'
 module Text
   QUOTES = ["'", '"', '`']
   REPLACEMENTS = {

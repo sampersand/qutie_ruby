@@ -1,4 +1,4 @@
-require 'classes/default'
+require_relative 'default'
 
 module Default
 

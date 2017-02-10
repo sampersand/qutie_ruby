@@ -1,4 +1,4 @@
-require 'classes/variable'
+require_relative 'variable'
 module Variable
   module_function
   

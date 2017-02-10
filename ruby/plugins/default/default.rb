@@ -1,4 +1,3 @@
-require_relative 'object'
 class QT_Default < QT_Object
   def self.from(source:)
     new(source: source)

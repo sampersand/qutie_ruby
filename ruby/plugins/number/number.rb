@@ -1,5 +1,3 @@
-require_relative 'object'
-
 class QT_Number < QT_Object
   attr_reader :num_val
 

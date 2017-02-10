@@ -1,5 +1,4 @@
-require_relative 'default'
-require_relative 'text'
+require_relative 'object'
 class QT_Boolean < QT_Object
   def self.get(oper)
     (oper ? QT_True : QT_False)::INSTANCE
@@ -40,38 +39,6 @@ class QT_False < QT_Boolean
   VALUE = false
   INSTANCE = new
 end
-
-class QT_Null < QT_Object
-  def to_s
-    'null'
-  end
-
-  # qt methods
-    # methods
-      def qt_get(pos:, type:)
-        if pos == QT_Variable::from(source: 'not')
-          qt_not
-        end
-      end
-    # operators
-      # conversion
-        def qt_to_text; QT_Text.new(text_val: to_s) end
-        def qt_to_bool; QT_False::INSTANCE end
-
-      # operators 
-        def qt_eql(right:); right.class == self.class end
-      # logic
-        def qt_not; QT_True::INSTANCE end
-  INSTANCE = new
-end
-
-class QT_Boolean
-  TRUE = QT_True::INSTANCE
-  FALSE = QT_False::INSTANCE
-  NULL = QT_Null::INSTANCE
-end
-
-
 
 
 

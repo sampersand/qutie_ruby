@@ -1,4 +1,3 @@
-require_relative 'object'
 class QT_Universe < QT_Object
   def self.from(source:, current_universe:)
     # warn("QT_Universe::from doesnt conform to others!")

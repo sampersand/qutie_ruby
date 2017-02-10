@@ -1,4 +1,3 @@
-require 'classes/object'
 class QT_Variable < QT_Object
 
   attr_reader :var_val

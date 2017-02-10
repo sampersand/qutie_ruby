@@ -1,4 +1,3 @@
-$LOAD_PATH << '/Users/westerhack/code/ruby/qutie/ruby'
 require_relative 'pre_parser'
 require_relative 'parser'
 require_relative 'plugins/whitespace/plugin'

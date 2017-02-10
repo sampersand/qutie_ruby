@@ -1,4 +1,4 @@
-require 'classes/universe'
+require_relative 'universe'
 
 module Universe
   L_PARENS = ['[', '(', '{']

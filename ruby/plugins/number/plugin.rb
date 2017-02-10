@@ -1,4 +1,4 @@
-require 'classes/number'
+require_relative 'number'
 module Number
 
   module_function
