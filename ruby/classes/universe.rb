@@ -4,9 +4,8 @@ class QT_Universe < QT_Object
     # warn("QT_Universe::from doesnt conform to others!")
     new_universe = Universe.new
     new_universe.stack = source[1...-1].each_char.to_a
-    new_universe.locals = current_universe.locals
-    new_universe.globals = current_universe.globals
-
+    # new_universe.locals = current_universe.locals
+    # new_universe.globals = current_universe.globals
     new(body: source[1...-1],
         universe: new_universe,
         parens: [source[0], source[-1]])
@@ -24,7 +23,9 @@ class QT_Universe < QT_Object
     @universe.to_s
   end
   def clone
-    self.class.new(body: @body.clone, universe: @universe.clone, parens: @parens.clone)
+    self.class.new(body: @body.clone,
+                   universe: @universe.clone,
+                   parens: @parens.clone)
   end
 
   def method_missing(meth, *a)

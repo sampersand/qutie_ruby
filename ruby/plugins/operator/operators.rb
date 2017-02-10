@@ -26,7 +26,6 @@ module Operators
                                                          universe: universe,
                                                          stream: stream,
                                                          parser: parser) }
-      p rhs_vars
 
       result = oper.call(lhs_vars: lhs_vars,
                          rhs_vars: rhs_vars,

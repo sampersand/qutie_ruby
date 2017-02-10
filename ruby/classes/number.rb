@@ -12,7 +12,8 @@ class QT_Number < QT_Object
   end
 
   def to_s
-    @num_val == @num_val.to_i ? @num_val.to_i.to_s : @num_val.to_s
+    is_int = @num_val == @num_val.to_i rescue false
+    is_int ? @num_val.to_i.to_s : @num_val.to_s
   end
 
   def ==(other)
