@@ -1,5 +1,6 @@
 require_relative 'pre_parser'
 require_relative 'parser'
+require_relative 'exceptions/exception'
 require_relative 'plugins/whitespace/plugin'
 require_relative 'plugins/universe/plugin'
 require_relative 'plugins/number/plugin'

@@ -26,10 +26,12 @@ class Parser
     stream = UniverseOLD.new(stack: input.each_char.to_a)
     universe.globals.update(@builtins)
     universe.globals.update(additional_builtins)
-    catch(:EOF){
-      parse(stream: stream,
-            universe: universe)
-    }
+    catch(QT_NoMethodError){
+      catch(:EOF){
+        parse(stream: stream,
+              universe: universe)
+      }
+    } and fail
   end
 
   def parse(stream:, universe:)

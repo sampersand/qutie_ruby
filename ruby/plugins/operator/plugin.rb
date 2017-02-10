@@ -20,7 +20,10 @@ module Operators
                          universe: universe,
                          stream: stream,
                          parser: parser)
-      result or raise "Invalid operand types for `#{token}`: `#{lhs_vars}` and `#{rhs_vars}`"
+      result or universe.qt_throw(err: QT_NoMethodError,
+                                  operand: token,
+                                  lhs_vars: lhs_vars,
+                                  rhs_vars: rhs_vars)
       warn("`#{token}` returned non-QT_Object `#{result.class}`") unless result == true || result.is_a?(QT_Object)
       universe << result if result.is_a?(QT_Object)
     end

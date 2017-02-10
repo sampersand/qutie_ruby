@@ -86,13 +86,34 @@ class QT_Universe < QT_Object
       end
       case type 
       when :STACK then @universe.stack.delete((pos.qt_to_num or return QT_Null::INSTANCE).num_val)
-      when :LOCALS then @universe.locals.delete(pos) or QT_Null::INSTANCE
-      when :GLOBALS then @universe.globals.delete(pos) or QT_Null::INSTANCE
+      when :LOCALS then @universe.locals.delete(pos)
+      when :GLOBALS then @universe.globals.delete(pos)
       else fail "Unknown qt_get type `#{type}`!"
       end
       QT_Null::INSTANCE
     end
+
+
+    def qt_throw(err:, **kw)
+      throw err, **kw
+    end
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

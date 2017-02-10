@@ -116,6 +116,12 @@ class UniverseOLD
                      locals: @locals.clone,
                      globals: @globals.clone)
     end
+
+
+  def qt_throw(err:, **kw)
+    throw err, kw
+  end
+
 end
 
 
