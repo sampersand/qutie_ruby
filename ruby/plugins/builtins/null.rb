@@ -18,7 +18,7 @@ class QT_Null < QT_Object
         def qt_to_bool; QT_False::INSTANCE end
 
       # operators 
-        def qt_eql(right:); right.class == self.class end
+        def qt_equals(right); right.class == self.class end
       # logic
         def qt_not; QT_True::INSTANCE end
   INSTANCE = new

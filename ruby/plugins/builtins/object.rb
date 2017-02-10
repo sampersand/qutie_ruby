@@ -61,7 +61,11 @@ class QT_Object
 
       # comparison
         def qt_cmp(right:) end
-        def qt_eql(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val == 0) end
+        def qt_equals(other)
+          res = qt_equals_r(right: other) || qt_equals_l(left: other) and return res
+          res = qt_cmp(right: right)
+          res && res.qt_to_boolean
+        end
         def qt_neq(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val != 0) end
         def qt_gth(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val == 1) end
         def qt_lth(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val == -1) end
@@ -69,7 +73,7 @@ class QT_Object
         def qt_geq(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val >= 0) end
 
         def qt_cmp_r(left:); res = qt_cmp(right: left); res && QT_Number.new(num_val: -res.num_val) end
-        def qt_eql_r(left:); qt_eql(right: left) end
+        def qt_eql_r(left:); qt_equals(right: left) end
         def qt_lth_r(left:); qt_gth(right: left) end
         def qt_gth_r(left:); qt_lth(right: left) end
         def qt_neq_r(left:); qt_neq(right: left) end

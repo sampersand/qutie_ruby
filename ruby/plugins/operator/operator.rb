@@ -31,7 +31,7 @@ Operators::OPERATORS = {
     l = lhs_vars[0]; r = rhs_vars[0]; l.qt_pow(right: r) || r.qt_pow_r(left: l)
   },
   '==' => QT_Operator.new(priority: 20){ |lhs_vars:, rhs_vars:, **_|
-    l = lhs_vars[0]; r = rhs_vars[0]; l.qt_eql(right: r) || r.qt_eql_r(left: l) || QT_Boolean::FALSE
+    l = lhs_vars[0]; r = rhs_vars[0]; l.qt_equal(right: r) || r.qt_equal_r(left: l) || QT_Boolean::FALSE
   },
   '<>' => QT_Operator.new(priority: 20){ |lhs_vars:, rhs_vars:, **_|
     l = lhs_vars[0]; r = rhs_vars[0]; l.qt_neq(right: r) || r.qt_neq_r(left: l) || QT_Boolean::TRUE

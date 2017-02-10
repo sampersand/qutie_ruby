@@ -22,15 +22,10 @@ class UniverseOLD
     def peek(amnt: 1)
       warn("Asking for `#{amnt.inspect}` elements") unless amnt.is_a?(Integer) && amnt != 0
       throw :EOF if stack_empty?
-      @stack.first(amnt).join
-    end
+      return @stack.first if amnt == 1
+      res = @stack.first(amnt)
 
-    def peek?(str:)
-      peek(amnt: str.length ) == str
-    end
-
-    def peek_any?(vals:)
-      vals.any?{ |val| peek?(str: val) }
+      res
     end
 
   # stack

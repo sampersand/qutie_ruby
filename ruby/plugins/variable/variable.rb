@@ -23,7 +23,7 @@ class QT_Variable < QT_Object
 
   # qt methods
     # conversion
-      def qt_eql(right:)
+      def qt_equal(right:)
         self == right
       end
 
