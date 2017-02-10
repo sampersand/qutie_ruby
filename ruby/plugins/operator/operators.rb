@@ -22,23 +22,11 @@ module Operators
       end
     end
 
-    def handle_unary_postfix(token:, stream:, universe:, parser:)
-      lhs = universe.pop
-      result = OPERATORS[token].call(lhs, universe, stream, parser)
-      result or raise "Invalid operand types for `#{token}`: `#{lhs.class}`"
-      universe << result
+    def get_lhs(universe:, **_)
+      universe.pop
     end
 
-    def fix_lhs(token)
-      case token
-      when '**'     then QT_Number::Math_E
-      when '*', '/' then QT_Number::ONE
-      when '+', '-' then QT_Number::ZERO
-      end
-    end
-
-    def handle_binary(token:, stream:, universe:, parser:)
-      lhs = universe.pop
+    def get_rhs(token:, stream:, universe:, parser:)
       rhs = universe.spawn_new_stack(new_stack: nil)
       token_priority = OPERATORS[token].priority
       parser.catch_EOF(universe) {
@@ -56,7 +44,7 @@ module Operators
                              universe: rhs,
                              parser: parser)
           else
-            break if token_priority <= (OPERATORS.include?(ntoken[0]) && ntoken[1] == Operator ? OPERATORS[ntoken[0]].priority : 0)
+            break if token_priority <= (OPERATORS.include?(ntoken[0]) && ntoken[1] == Operators ? OPERATORS[ntoken[0]].priority : 0)
             ntoken = parser.next_token!(stream: stream,
                                         universe: rhs,
                                         parser: parser)
@@ -68,11 +56,44 @@ module Operators
         end
         nil
       }
-      universe.stack.concat(rhs.stack)
+      rhs.stack
+    end
+
+    def handle_unary_postfix(token:, stream:, universe:, parser:)
+      if token == ';'
+        get_lhs(universe: universe) # and ignore
+        return
+      end
+      lhs = get_lhs(token: token,
+                    stream: stream,
+                    universe: universe,
+                    parser: parser)
+      result = OPERATORS[token].call(lhs, universe, stream, parser)
+      result or raise "Invalid operand types for `#{token}`: `#{lhs.class}`"
+      universe << result
+    end
+
+    def fix_lhs(token)
+      case token
+      when '**'     then QT_Number::Math_E
+      when '*', '/' then QT_Number::ONE
+      when '+', '-' then QT_Number::ZERO
+      end
+    end
+
+    def handle_binary(token:, stream:, universe:, parser:)
+      lhs = get_lhs(token: token,
+                    stream: stream,
+                    universe: universe,
+                    parser: parser)
+      rhs = get_rhs(token: token,
+                    stream: stream,
+                    universe: universe,
+                    parser: parser)
+      universe.stack.concat(rhs)
       lhs ||= fix_lhs(token)
       rhs = universe.pop
-      result = OPERATORS[token].call(lhs, rhs, universe, stream, parser)
-      result or raise "Invalid operand types for `#{token}`: `#{lhs.class}` and `#{rhs.class}`"
+      result = OPERATORS[token].call(lhs, rhs, universe, stream, parser) or raise "Invalid operand types for `#{token}`: `#{lhs.class}` and `#{rhs.class}`"
       universe << result
     end
 

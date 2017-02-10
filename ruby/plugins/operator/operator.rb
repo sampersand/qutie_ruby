@@ -51,11 +51,14 @@ module Operators
       else
         arg.qt_get(pos: pos, type: :BOTH) || QT_Boolean::NULL
       end },
-    ';'  => Operator.new(name: ';', priority: 40, type: :UNARY_POSTFIX){ |lhs, rhs ,universe|
-      p lhs, rhs, universe
-      rhs.qt_del(pos: QT_Number.new(num_val: -1), type: :STACK) },
-    ','  => Operator.new(name: ',', priority: 40, type: :UNARY_POSTFIX){ QT_Boolean::NULL},
-    '?'  => Operator.new(name: '?', priority:  1, type: :UNARY_POSTFIX){ |args, universe| universe.qt_get(pos: args) },
+    ';'  => Operator.new(name: ';', priority: 40, type: :UNARY_POSTFIX){ |lhs, universe|
+      true
+      },
+    ','  => Operator.new(name: ',', priority: 40, type: :UNARY_POSTFIX){ |lhs| lhs},
+    '?'  => Operator.new(name: '?', priority:  1, type: :UNARY_POSTFIX){ |args, universe|
+      # universe.qt_get(pos: args)
+        universe[args]
+    },
   }
 end
 
