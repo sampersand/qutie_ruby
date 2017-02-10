@@ -16,6 +16,7 @@ class UniverseOLD
     def next(amnt: 1)
       warn("Asking for `#{amnt.inspect}` elements") unless amnt.is_a?(Integer) && amnt != 0
       throw :EOF if stack_empty?
+      return @stack.shift if amnt == 1
       @stack.shift(amnt).join
     end
 
@@ -23,9 +24,7 @@ class UniverseOLD
       warn("Asking for `#{amnt.inspect}` elements") unless amnt.is_a?(Integer) && amnt != 0
       throw :EOF if stack_empty?
       return @stack.first if amnt == 1
-      res = @stack.first(amnt)
-
-      res
+      QT_Text.new( @stack.first(amnt).collect(&:text_val).join ) # assumes all of them are QT_Texts
     end
 
   # stack

@@ -1,11 +1,11 @@
 class QT_Text < QT_Object
 
   attr_reader :text_val
-  def self.from(source:)
-    new(text_val: source[1...-1])
+  def self.from(source)
+    new(source[1...-1])
   end
 
-  def initialize(text_val:)
+  def initialize(text_val)
     @text_val = text_val
   end
 
@@ -36,7 +36,7 @@ class QT_Text < QT_Object
   # qt methods
     # methods
       def qt_length
-        QT_Number.new(num_val: @text_val.length)
+        QT_Number.new(@text_val.length)
       end
 
     # conversion
@@ -52,23 +52,23 @@ class QT_Text < QT_Object
       def qt_get(pos:, type: )
         # ignores type
         text = @text_val[(pos.qt_to_num or return).num_val]
-        text and QT_Text.new(text_val: text) or QT_Null::INSTANCE
+        text and QT_Text.new(text) or QT_Null::INSTANCE
       end
 
       private
       def text_func(right:, lmeth:, rmeth: :qt_to_text)
           right = right.method(rmeth).() or return
-          QT_Text.new(text_val: @text_val.method(lmeth).call(right.text_val))
+          QT_Text.new(@text_val.method(lmeth).call(right.text_val))
         end
         def text_func_r(left:, lmeth:, rmeth: :qt_to_text)
           left = left.method(rmeth).() or return
-          QT_Text.new(text_val: left.text_val.method(lmeth).call(@text_val) )
+          QT_Text.new(left.text_val.method(lmeth).call(@text_val) )
         end
       public
       # math
         def qt_cmp(right:)
           return unless right.is_a?(QT_Text)
-          QT_Number.new(num_val: @text_val <=> right.text_val)
+          QT_Number.new(@text_val <=> right.text_val)
         end
         def qt_add(right:) text_func(right: right, lmeth: :+) end
         def qt_mul(right:) text_func(right: right, lmeth: :*, rmeth: :qt_to_num) end

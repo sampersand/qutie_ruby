@@ -27,7 +27,8 @@ class QT_Number < QT_Object
   # consts
     E     = QT_Number.new(Math::E)
     PI    = QT_Number.new(Math::PI)
-    ONE   = QT_Number.new(1.0)
+    ONE   = QT_Number.new(1)
+    TWO   = QT_Number.new(2)
     NaN   = QT_Number.new(Float::NAN)
     ZERO  = QT_Number.new(0)
     NEG_1 = QT_Number.new(-1)

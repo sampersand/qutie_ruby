@@ -29,7 +29,7 @@ class QT_Object
       def qt_length; end
     # conversion
       def qt_to_num;  end
-      def qt_to_text; QT_Text.new(text_val: to_s) end
+      def qt_to_text; QT_Text.new(to_s) end
       def qt_to_bool; QT_Boolean::get(true) end
 
     # operators 
@@ -52,18 +52,36 @@ class QT_Object
 
         def qt_regex_match(right)
           l = qt_regex_match_l(right) 
-          return l unless l.nil? || l.nil?
-          right.qt_regex_match_r(self) || QT_Null
+          return l unless l.qt_nil?
+          right.qt_regex_match_r(self)
         end
-        def qt_regex_match_l(right) end
-        def qt_regex_match_r(left) end
+        def qt_regex_match_l(right) QT_Null::INSTANCE end
+        def qt_regex_match_r(left) QT_Null::INSTANCE end
       # math
-        def qt_add(right:);  end
-        def qt_sub(right:);  end
-        def qt_mul(right:);  end
-        def qt_div(right:);  end
-        def qt_mod(right:);  end
-        def qt_pow(right:);  end
+        def qt_add(right)
+          return res unless (res = qt_add_r(right)).qt_nil?
+          right.qt_add_l(self)
+        end
+        def qt_sub(right)
+          return res unless (res = qt_sub_r(right)).qt_nil?
+          right.qt_sub_l(self)
+        end
+        def qt_mul(right)
+          return res unless (res = qt_mul_r(right)).qt_nil?
+          right.qt_mul_l(self)
+        end
+        def qt_div(right)
+          return res unless (res = qt_div_r(right)).qt_nil?
+          right.qt_div_l(self)
+        end
+        def qt_mod(right)
+          return res unless (res = qt_mod_r(right)).qt_nil?
+          right.qt_mod_l(self)
+        end
+        def qt_pow(right)
+          return res unless (res = qt_pow_r(right)).qt_nil?
+          right.qt_pow_l(self)
+        end
 
         def qt_add_r(left:); end
         def qt_sub_r(left:); end
@@ -73,25 +91,34 @@ class QT_Object
         def qt_pow_r(left:); end
 
       # comparison
-        def qt_cmp(right:) end
-        def qt_equals(other)
-          res = qt_equals_r(right: other) || qt_equals_l(left: other) and return res
-          res = qt_cmp(right: right)
-          res && res.qt_to_bool
+        # def qt_cmp(right:) end
+        def qt_eql(right)
+          return res unless (res = qt_eql_r(right)).qt_nil?
+          return res unless (res = right.qt_eql_l(self)).qt_nil?
+          return res.qt_equal( QT_Number::ZERO ) unless (res = qt_cmp(right)).qt_nil?
+          QT_False::INSTANCE
         end
-        def qt_neq(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val != 0) end
-        def qt_gth(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val == 1) end
-        def qt_lth(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val == -1) end
-        def qt_leq(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val <= 0) end
-        def qt_geq(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val >= 0) end
+        # def qt_neq(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val != 0) end
+        # def qt_gth(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val == 1) end
+        # def qt_lth(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val == -1) end
+        # def qt_leq(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val <= 0) end
+        # def qt_geq(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val >= 0) end
 
-        def qt_cmp_r(left:); res = qt_cmp(right: left); res && QT_Number.new(num_val: -res.num_val) end
-        def qt_eql_r(left:); qt_equals(right: left) end
-        def qt_lth_r(left:); qt_gth(right: left) end
-        def qt_gth_r(left:); qt_lth(right: left) end
-        def qt_neq_r(left:); qt_neq(right: left) end
-        def qt_leq_r(left:); qt_geq(right: left) end
-        def qt_geq_r(left:); qt_leq(right: left) end
+        def qt_cmp_r(left:) QT_Null::INSTANCE end
+        def qt_eql_r(left:) QT_Null::INSTANCE end
+        def qt_lth_r(left:) QT_Null::INSTANCE end
+        def qt_gth_r(left:) QT_Null::INSTANCE end
+        def qt_neq_r(left:) QT_Null::INSTANCE end
+        def qt_leq_r(left:) QT_Null::INSTANCE end
+        def qt_geq_r(left:) QT_Null::INSTANCE end
+
+        def qt_cmp_l(left:) QT_Null::INSTANCE end
+        def qt_eql_l(left:) QT_Null::INSTANCE end
+        def qt_lth_l(left:) QT_Null::INSTANCE end
+        def qt_gth_l(left:) QT_Null::INSTANCE end
+        def qt_neq_l(left:) QT_Null::INSTANCE end
+        def qt_leq_l(left:) QT_Null::INSTANCE end
+        def qt_geq_l(left:) QT_Null::INSTANCE end
 
       # logic
         def qt_not; qt_to_bool.qt_not end

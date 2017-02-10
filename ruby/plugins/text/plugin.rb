@@ -45,6 +45,6 @@ module Text
   end
 
   def handle(token:, universe:, **_)
-    universe << QT_Text::from(source: token)
+    universe << QT_Text::from(token)
   end
 end

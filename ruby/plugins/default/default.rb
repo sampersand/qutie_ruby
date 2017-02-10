@@ -4,8 +4,8 @@ class QT_Default < QT_Object
   end
 
   def initialize(source)
-    warn("Source for #{self.class} is not a String, but `#{source.class}`)") unless source.is_a?(String)
-    @source = source
+    warn("Source for #{self.class} is not a String, but `#{source.class}`)") unless source.is_a?(QT_Text)
+    @source = source.text_val
   end
 
   def to_s
@@ -33,12 +33,12 @@ class QT_Default < QT_Object
       # math
         def qt_add(right:)
           right = right.qt_to_text or return
-          QT_Text.new(text_val: @text_val + right.text_val)
+          QT_Text.new(@text_val + right.text_val)
         end
 
         def qt_add_r(left:)
           left = left.qt_to_text or return
-          QT_Text.new(text_val: left.text_val + @text_val)
+          QT_Text.new(left.text_val + @text_val)
         end
 
 end

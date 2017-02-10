@@ -14,11 +14,11 @@ class QT_Null < QT_Object
       end
     # operators
       # conversion
-        def qt_to_text; QT_Text.new(text_val: to_s) end
+        def qt_to_text; QT_Text.new(to_s) end
         def qt_to_bool; QT_False::INSTANCE end
 
       # operators 
-        def qt_equals(right); right.class == self.class end
+        def qt_eql(right); right.class == self.class end
       # logic
         def qt_not; QT_True::INSTANCE end
   INSTANCE = new

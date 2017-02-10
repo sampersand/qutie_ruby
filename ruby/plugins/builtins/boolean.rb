@@ -21,11 +21,11 @@ class QT_Boolean < QT_Object
       end
     # operators
       # conversion
-        def qt_to_text; QT_Text.new(text_val: to_s) end
+        def qt_to_text; QT_Text.new(to_s) end
         def qt_to_bool; self end
 
       # operators 
-        def qt_equals(right); QT_Boolean::get right.is_a? self.class end
+        def qt_eql(right); QT_Boolean::get right.is_a? self.class end
       # logic
         def qt_not; QT_Boolean::get !self.class::VALUE end
 end
