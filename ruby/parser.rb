@@ -8,7 +8,7 @@ class Parser
   attr_accessor :builtins
 
   def initialize(plugins: nil, builtins: nil)
-    @plugins = plugins || []
+    @plugins  = plugins || []
     @builtins = builtins || {}
     @plugins.push Default
   end
@@ -22,16 +22,13 @@ class Parser
   end
 
   def process(input:, additional_builtins: {})
-    universe = UniverseOLD.new
     stream = UniverseOLD.new(stack: input.each_char.to_a)
+    universe = UniverseOLD.new
     universe.globals.update(@builtins)
     universe.globals.update(additional_builtins)
-    catch(QT_NoMethodError){
-      catch(:EOF){
-        parse(stream: stream,
-              universe: universe)
-      }
-    } and fail
+    catch(:EOF){
+      parse(stream: stream, universe: universe)
+    }
   end
 
   def parse(stream:, universe:)
