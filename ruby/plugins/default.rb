@@ -7,7 +7,7 @@ module Default
     stream.next
   end
   
-  def handle(token, universe, **_)
+  def handle(token:, universe:, **_)
     universe << QT_Default::from(source: token)
   end
 end

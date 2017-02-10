@@ -75,6 +75,9 @@ class Universe
         QT_Boolean::NULL
       end
     end
+    def qt_get(pos:, type: :BOTH) #ignores type
+      self[pos]
+    end
 
   # repr
     def inspect        
