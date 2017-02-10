@@ -51,9 +51,15 @@ Operators::OPERATORS = {
   '@0' => QT_Operator.new(priority:  7) { |**kw|
     Operators::OPERATORS['@'].call(**kw).qt_get(pos: QT_Number::NEG_1, type: :STACK) },
   # '.=' => QT_Operator.new(priority: 6){ |arg, pos| args.qt_set(pos, type: :STACK) }, # todo: fix this
-  # '.S'  => QT_Operator.new(priority: 5){ |arg, pos| arg.qt_get(pos: pos, type: :STACK) },
-  # '.L'  => QT_Operator.new(priority: 5){ |arg, pos| arg.qt_get(pos: pos, type: :LOCALS) },
-  # '.G'  => QT_Operator.new(priority: 5){ |arg, pos| arg.qt_get(pos: pos, type: :GLOBALS) },
+  '.S'  => QT_Operator.new(priority: 5){ |lhs_vars:, rhs_vars:, **_| 
+    lhs_vars[0].qt_get(pos: rhs_vars[0], type: :STACK) || QT_Null::INSTANCE
+  },
+  '.L'  => QT_Operator.new(priority: 5){ |lhs_vars:, rhs_vars:, **_| 
+    lhs_vars[0].qt_get(pos: rhs_vars[0], type: :LOCALS) || QT_Null::INSTANCE
+  },
+  '.G'  => QT_Operator.new(priority: 5){ |lhs_vars:, rhs_vars:, **_| 
+    lhs_vars[0].qt_get(pos: rhs_vars[0], type: :GLOBALS) || QT_Null::INSTANCE
+  },
 
   '*'  => QT_Operator.new(priority: 11){ |lhs_vars:, rhs_vars:, **_|
     l = lhs_vars[0]; r = rhs_vars[0]; l.qt_mul(right: r) || r.qt_mul_r(left: l)
@@ -80,12 +86,7 @@ Operators::OPERATORS = {
   '@'  => QT_Operator.new(priority:  7) { |lhs_vars:, rhs_vars:, **kw|
     func = lhs_vars[0]
     args = rhs_vars[0]
-    func.method(func.respond_to?(:call) ? :call : :qt_call).call(args: args, **kw)
-    if func.respond_to?(:call)
-      func.call(args: args, **kw)
-    else
-      func.qt_call(args: args, **kw)
-    end
+    func.qt_call(args: args, **kw)
   },
   '.'  => QT_Operator.new(priority: 5){ |lhs_vars:, rhs_vars:, **kw|
     arg = lhs_vars[0]
@@ -94,7 +95,8 @@ Operators::OPERATORS = {
       arg.qt_method(meth: pos.to_s[2..-1].to_sym) || QT_Null::INSTANCE
     else
       arg.qt_get(pos: pos, type: :BOTH) || QT_Null::INSTANCE
-    end },
+    end
+  },
   ';'  => QT_Operator.new(priority: 40, operands: [1, 0]){ true },
   ','  => QT_Operator.new(priority: 40, operands: [1, 0]){ |lhs_vars:, **_| lhs_vars[0] },
   '?'  => QT_Operator.new(priority:  1, operands: [1, 0]){ |lhs_vars:, universe:, **_| universe.qt_get(pos: lhs_vars[0], type: :NON_STACK) },

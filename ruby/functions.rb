@@ -1,9 +1,9 @@
  module Functions
-  class BuiltinFunciton
+  class QT_BuiltinFunciton < QT_Object
     def initialize(&block)
       @func = block
     end
-    def call(args, universe, stream, parser)
+    def qt_call(args:, universe:, stream:, parser:)
       @func.call(args, universe, stream, parser)
     end
     def to_s?
@@ -14,7 +14,7 @@
 
   NoRet = Class.new()
   FUNCTIONS = {
-    QT_Variable::from(source: 'switch') => BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable::from(source: 'switch') => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       switch_on = args.stack.fetch(0){ args.locals.fetch(:__switch_on) }
       if args.locals.include?(switch_on)
         args.locals[switch_on]
@@ -23,7 +23,7 @@
       end
     },
 
-    QT_Variable::from(source: 'return') => BuiltinFunciton.new{ |args, universe, stream|
+    QT_Variable::from(source: 'return') => QT_BuiltinFunciton.new{ |args, universe, stream|
 
       value = args.locals.fetch(:__value){ args.stack.fetch(0, NoRet) }
       levels = args.locals.fetch(:__levels){ args.stack.fetch(1, 1) }
@@ -33,24 +33,24 @@
       end
     },
 
-    QT_Variable::from(source: 'if') => BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable::from(source: 'if') => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       cond     = args.stack.fetch(0){ args.locals.fetch(:__cond) }
       if_true  = args.locals.fetch(true){ args.stack.fetch(1){ args.locals.fetch(:true) }   }
       if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false, QT_Boolean::NIL) } }
       cond.qt_to_bool.bool_val ? if_true : if_false
     },
-    QT_Variable::from(source: 'while') => BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable::from(source: 'while') => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       cond = args.stack.fetch(0){ args.locals.fetch(:__cond) }
       body = args.stack.fetch(1){ args.locals.fetch(:__body) }
       parser.parse(stream: body, universe: universe) while parser.parse(stream: cond, universe: universe).pop 
     },
-    QT_Variable::from(source: 'unless') => BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable::from(source: 'unless') => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       cond     = args.stack.fetch(0){ args.locals.fetch(:__cond) }
       if_true  = args.locals.fetch(true){ args.stack.fetch(1){ args.locals.fetch(:true) }   }
       if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false, nil) } }
       cond ? if_false : if_true
     },
-    QT_Variable::from(source: 'until') => BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable::from(source: 'until') => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       cond = args.stack.fetch(0){ args.locals.fetch(:__cond) }
       body = args.stack.fetch(1){ args.locals.fetch(:__body) }
       parser.parse(stream: body, universe: universe) until parser.parse(stream: cond, universe: universe).pop 
@@ -60,7 +60,7 @@
 
 
 
-    QT_Variable::from(source: 'del') => BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable::from(source: 'del') => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
         
       uni = args.stack.fetch(0){ args.locals.fetch(:__uni) }
       pos = args.stack.fetch(1){ args.locals.fetch(:__pos) }
@@ -78,7 +78,7 @@
       end
     },
 
-    QT_Variable::from(source: 'for') => BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable::from(source: 'for') => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       start = args.stack.fetch(0){ args.locals.fetch(:__start) }
       cond = args.stack.fetch(1){ args.locals.fetch(:__cond) }
       incr = args.stack.fetch(2){ args.locals.fetch(:__incr) }
@@ -92,24 +92,27 @@
 
     # i dont know how many of these work...
 
-    QT_Variable::from(source: 'clone') => BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable::from(source: 'clone') => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       case args
       when true, false, nil, Numeric, Fixnum then args
       else qutie_func(args, universe, parser, :__clone){ |a| a.clone }
       end
     },
-    QT_Variable::from(source: 'disp') => BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable::from(source: 'disp') => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       endl = args.qt_get(pos: QT_Variable::from(source: 'end'), type: :BOTH)
       sep  = args.qt_get(pos: QT_Variable::from(source: 'sep'), type: :BOTH) || ""
       endl = QT_Text.new(text_val: "\n") if endl == QT_Null::INSTANCE
       sep = QT_Text.new(text_val: '') if sep == QT_Null::INSTANCE
       args.locals[:sep] = sep # forces it to be '' if not specified, but doesnt override text's default
-      to_print=FUNCTIONS[QT_Variable::from(source: 'text')].call(args, universe, stream, parser) 
+      to_print=FUNCTIONS[QT_Variable::from(source: 'text')].qt_call(args: args,
+                                                                    universe: universe,
+                                                                    stream: stream,
+                                                                    parser: parser) 
       print(to_print.qt_add(right: endl).text_val)
       true
     },
 
-    QT_Variable::from(source: 'prompt') => BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable::from(source: 'prompt') => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       prompt = args.stack.fetch(0){ args.locals.fetch(:__prompt, '') }
       prefix = args.stack.fetch(2){ args.locals.fetch(:__prefix, "\n>") }
       endl = args.stack.fetch(1){ args.locals.fetch(:__endl, "\n") }
@@ -119,14 +122,17 @@
       STDIN.gets endl
     },
 
-    QT_Variable::from(source: 'syscall') => BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable::from(source: 'syscall') => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       sep  = args.get(:sep) || " "
       args.locals[:sep] = sep # forces it to be '' if not specified, but doesnt override text's default
-      to_call=FUNCTIONS[:text].call(args, universe, stream, parser) 
+      to_call=FUNCTIONS[:text].qt_call(args: args,
+                                       universe: universe,
+                                       stream: stream,
+                                       parser: parser) 
       `#{to_call}`
     },
 
-    QT_Variable::from(source: 'import') => BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable::from(source: 'import') => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       file = args.stack.fetch(0){ args.locals.fetch(:__file) }
       passed_args = args.stack.fetch(1){ args.locals.fetch(:__args, universe.class.new) }
       pre_process = args.stack.fetch(2){ args.locals.fetch(:__preprocess, true) }
@@ -138,11 +144,11 @@
 
     },
 
-    QT_Variable::from(source: 'stop') => BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable::from(source: 'stop') => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       exit_code = args.stack.last
       exit(exit_code || 0)
     },
-    QT_Variable::from(source: 'text') => BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable::from(source: 'text') => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       if args.respond_to?(:qt_get)
         sep  = args.qt_get(pos: QT_Variable::from(source: 'sep'), type: :BOTH)
         sep = QT_Text::new(text_val: ' ') if sep == QT_Null::INSTANCE;
@@ -154,15 +160,15 @@
       end
     },
 
-    QT_Variable::from(source: 'num') => BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable::from(source: 'num') => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       qutie_func(args, universe, parser, :__num){ |a| a.qt_to_num }
     },
 
-    QT_Variable::from(source: 'bool') => BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable::from(source: 'bool') => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       qutie_func(args.pop, universe, parser, :__bool){ |a| a.qt_to_bool }
     },
 
-    QT_Variable::from(source: 'len') => BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable::from(source: 'len') => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       arg = args.stack.fetch(0){ args.locals.fetch(:__arg) }
       type = args.stack.fetch(1){ args.locals.fetch(:__type, nil) }
       u = universe.clone

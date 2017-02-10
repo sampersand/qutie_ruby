@@ -1,7 +1,7 @@
-LinkedList = class {
-  head ||= nil?;
+LinkedList = {
+  head = head || nil?;
 
-  __text = function(){
+  __text = {
     current = __self?.head;
     res = '[';
     if( current? == nil? [return(res? + ']')] {}),!
@@ -23,7 +23,7 @@ LinkedList = class {
   };
 };
 
-Node = class {
+Node = {
   data = __args?.0;
   next = __args?.1 || nil?;
 
