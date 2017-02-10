@@ -1,25 +1,26 @@
 require_relative 'object'
 require_relative 'boolean'
-class QT_Null < QT_Object
+class QT_Missing < QT_Object
   def to_s
-    'null'
+    'missing'
   end
 
   # qt methods
-    def qt_nil?
+    def qt_missing?
       true
     end
     # operators
       # conversion
         def qt_to_bool; QT_False::INSTANCE end
 
-      # operators 
+      # operators
         def qt_eql_l(r)
           QT_Boolean::get( r.class == self.class )
         end
         def qt_eql_r(l)
           QT_Boolean::get( self.class == l.class )# same thing as qt_eql_l
         end
+
   INSTANCE = new
 end
 

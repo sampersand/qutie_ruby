@@ -1,7 +1,7 @@
 require_relative 'object'
 class QT_Boolean < QT_Object
-  def self.get(oper)
-    (oper.nil? ? QT_Null : oper ? QT_True : QT_False)::INSTANCE
+  def self.get(val)
+    (val.nil? ? QT_Null : val ? QT_True : QT_False)::INSTANCE
   end
 
   def to_s
@@ -21,7 +21,6 @@ class QT_Boolean < QT_Object
       end
     # operators
       # conversion
-        def qt_to_text; QT_Text.new(to_s) end
         def qt_to_bool; self end
 
       # operators 

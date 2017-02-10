@@ -7,7 +7,7 @@ module Variable
   VARIABLE_CONT  = QT_Regex.new(regex_val: /[a-z_0-9]/i)
 
   def next_token!(stream:, universe:, parser:, **_)
-    return unless stream.qt_peek(amnt: QT_Number::ONE).qt_regex_match(right: VARIABLE_START)
+    return unless stream.qt_peek(amnt: QT_Number::ONE).qt_rgx(right: VARIABLE_START)
     result = ''
     catch(:EOF) {
       result += stream.next while stream.peek =~ VARIABLE_CONT

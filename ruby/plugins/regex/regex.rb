@@ -21,13 +21,14 @@ class QT_Regex < QT_Object
     @regex_val.hash
   end
   
-  def qt_regex_match_l(right)
+  def qt_rgx_l(right)
+    fail
     return unless left.is_a?(QT_Text)
     res = @regex_val =~ right.text_val
     res ? QT_Number.new(res) : QT_Null::INSTANCE
   end
 
-  def qt_regex_match_r(left)
+  def qt_rgx_r(left)
     return unless left.is_a?(QT_Text)
     res = left.text_val =~ @regex_val
     res ? QT_Number.new(res) : QT_Null::INSTANCE

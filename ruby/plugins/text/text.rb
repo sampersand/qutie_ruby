@@ -55,6 +55,10 @@ class QT_Text < QT_Object
         text and QT_Text.new(text) or QT_Null::INSTANCE
       end
 
+      def qt_eql_l(r) QT_Boolean::get( self == r ) end
+      def qt_eql_r(l) QT_Boolean::get( self == l ) end
+
+
       private
       def text_func(right:, lmeth:, rmeth: :qt_to_text)
           right = right.method(rmeth).() or return
