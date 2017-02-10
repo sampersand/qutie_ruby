@@ -18,7 +18,7 @@ class QT_Object
   # qt methods
 
     # methods
-      def qt_method(meth:); end
+      def qt_method(meth:) end
       def qt_length; end
     # conversion
       def qt_to_num;  end
@@ -29,7 +29,21 @@ class QT_Object
       # access
         def qt_get(pos:, type:) end
         def qt_set(pos:, val:, type:) end
-        def qt_del(pos:, type:)end
+        def qt_del(pos:, type:) end
+        def qt_peek(amnt:)
+          qt_get(pos: amnt, type: :STACK)
+        end
+
+        def qt_next(amnt:)
+          res = qt_peek(amnt: amnt)
+          qt_del(pos: amnt, type: :STACK)
+          res
+        end
+
+      # misc
+        def qt_call(args:, universe:, stream:, parser:) end
+        def qt_regex_match(right:) end
+        def qt_regex_match_r(left:) end
       # math
         def qt_add(right:);  end
         def qt_sub(right:);  end

@@ -1,12 +1,13 @@
 require_relative 'variable'
+require_relative '../regex/regex'
 module Variable
   module_function
   
-  VARIABLE_START = /[a-z_]/i
-  VARIABLE_CONT  = /[a-z_0-9]/i
+  VARIABLE_START = QT_Regex.new(regex_val: /[a-z_]/i)
+  VARIABLE_CONT  = QT_Regex.new(regex_val: /[a-z_0-9]/i)
+
   def next_token!(stream:, universe:, parser:, **_)
-    return stream.next if stream.peek?(str: '$') # this is bad!
-    return unless stream.peek =~ VARIABLE_START
+    return unless stream.qt_peek(amnt: QT_Number::ONE).qt_regex_match(right: VARIABLE_START)
     result = ''
     catch(:EOF) {
       result += stream.next while stream.peek =~ VARIABLE_CONT
