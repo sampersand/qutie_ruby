@@ -1,5 +1,5 @@
 require_relative 'universe'
-require_relative 'plugins/default'
+require_relative 'plugins/default/plugin'
 
 class Parser
 
@@ -21,8 +21,8 @@ class Parser
   end
 
   def process(input:, additional_builtins: {})
-    universe = Universe.new
-    stream = Universe.new(stack: input.each_char.to_a)
+    universe = UniverseOLD.new
+    stream = UniverseOLD.new(stack: input.each_char.to_a)
     universe.globals.update(@builtins)
     universe.globals.update(additional_builtins)
     catch(:EOF){

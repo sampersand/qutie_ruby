@@ -1,4 +1,4 @@
-class Universe
+class UniverseOLD
 
   attr_accessor :stack
   attr_accessor :locals

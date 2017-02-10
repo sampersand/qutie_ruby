@@ -1,6 +1,6 @@
 require 'classes/universe'
 
-module Parenthesis
+module Universe
   L_PARENS = ['[', '(', '{']
   R_PARENS = [']', ')', '}']
 

@@ -62,6 +62,9 @@ module Operators
     ';'  => Operator.new(priority: 40, operands: [1, 0]){ true },
     ','  => Operator.new(priority: 40, operands: [1, 0]){ |lhs_vars:, **_| lhs_vars[0] },
     '?'  => Operator.new(priority:  1, operands: [1, 0]){ |lhs_vars:, universe:, **_| universe.qt_get(pos: lhs_vars[0]) },
+    '!'  => Operator.new(priority:  1, operands: [1, 0]){ |lhs_vars:, **kw|
+      lhs_vars[0].qt_eval(**kw)
+    },
   }
 end
 

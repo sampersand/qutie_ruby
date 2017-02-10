@@ -2,7 +2,7 @@ require_relative 'object'
 class QT_Universe < QT_Object
   def self.from(source:, current_universe:)
     # warn("QT_Universe::from doesnt conform to others!")
-    new_universe = Universe.new
+    new_universe = UniverseOLD.new
     new_universe.stack = source[1...-1].each_char.to_a
     # new_universe.locals = current_universe.locals
     # new_universe.globals = current_universe.globals
@@ -48,6 +48,7 @@ class QT_Universe < QT_Object
 
 
     def qt_eval(universe:, parser:, **_) # fix this
+      universe = universe.spawn_new_stack(new_stack: nil).clone
       res = parser.parse(stream: @universe, universe: universe)
       QT_Universe.new(body: '', universe: res, parens: ['<', '>']) # this is where it gets hacky
     end
