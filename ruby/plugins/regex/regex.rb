@@ -24,13 +24,13 @@ class QT_Regex < QT_Object
   def qt_regex_match_l(right)
     return unless left.is_a?(QT_Text)
     res = @regex_val =~ right.text_val
-    res ? QT_Number.new(res) : nil
+    res ? QT_Number.new(res) : QT_Null::INSTANCE
   end
 
   def qt_regex_match_r(left)
     return unless left.is_a?(QT_Text)
     res = left.text_val =~ @regex_val
-    res ? QT_Number.new(res) : nil
+    res ? QT_Number.new(res) : QT_Null::INSTANCE
   end
 
 end
