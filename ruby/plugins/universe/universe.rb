@@ -48,7 +48,7 @@ class QT_Universe < QT_Object
 
     def qt_eval(universe:, parser:, **_) # fix this
       universe = universe.spawn_new_stack(new_stack: nil).clone
-      res = parser.parse(stream: @universe, universe: universe)
+      res = parser.parse!(stream: @universe.clone, universe: universe)
       QT_Universe.new(body: '', universe: res, parens: ['<', '>']) # this is where it gets hacky
     end
 
@@ -60,7 +60,7 @@ class QT_Universe < QT_Object
       # passed_args.stack.clear
       passed_args.locals[QT_Variable::from(source: '__args')] = args #somethign here with spawn off
       # func.program_stack.push args
-      parser.parse(stream: @universe, universe: passed_args)
+      parser.parse!(stream: @universe.clone, universe: passed_args)
       # func.program_stack.pop
     end
     def qt_get(pos:, type:)  # fix this

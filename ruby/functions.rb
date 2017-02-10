@@ -42,7 +42,7 @@
     QT_Variable::from(source: 'while') => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       cond = args.stack.fetch(0){ args.locals.fetch(:__cond) }
       body = args.stack.fetch(1){ args.locals.fetch(:__body) }
-      parser.parse(stream: body, universe: universe) while parser.parse(stream: cond, universe: universe).pop 
+      parser.parse!(stream: body.clone, universe: universe) while parser.parse!(stream: cond.clone, universe: universe).pop 
     },
     QT_Variable::from(source: 'unless') => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       cond     = args.stack.fetch(0){ args.locals.fetch(:__cond) }
@@ -53,7 +53,7 @@
     QT_Variable::from(source: 'until') => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       cond = args.stack.fetch(0){ args.locals.fetch(:__cond) }
       body = args.stack.fetch(1){ args.locals.fetch(:__body) }
-      parser.parse(stream: body, universe: universe) until parser.parse(stream: cond, universe: universe).pop 
+      parser.parse!(stream: body.clone, universe: universe) until parser.parse!(stream: cond.clone, universe: universe).pop 
     },
 
 
@@ -83,10 +83,10 @@
       cond = args.stack.fetch(1){ args.locals.fetch(:__cond) }
       incr = args.stack.fetch(2){ args.locals.fetch(:__incr) }
       body = args.stack.fetch(3){ args.locals.fetch(:__body) }
-      parser.parse(stream: start, universe: universe)
-      while parser.parse(stream: cond, universe: universe).pop
-        parser.parse(stream: body, universe: universe)
-        parser.parse(stream: incr, universe: universe)
+      parser.parse!(stream: start.clone, universe: universe)
+      while parser.parse!(stream: cond.clone, universe: universe).pop
+        parser.parse!(stream: body.clone, universe: universe)
+        parser.parse!(stream: incr.clone, universe: universe)
       end
     },
 
@@ -199,7 +199,7 @@
     uni.locals[:__self] ||= arg
     if arg.respond_to?(:locals) && arg.locals.include?(name)
       func = arg.locals[name] or fail "no #{name}` function for #{arg}"
-      parser.parse(stream: func, universe: uni).stack.last
+      parser.parse!(stream: func.clone, universe: uni).stack.last
     else
       raise unless block_given?
       yield(arg, universe, parser)
