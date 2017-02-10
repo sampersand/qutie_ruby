@@ -4,7 +4,6 @@ dict = { age        = 19;
          fav_colour = RED; 
        }!;
 both = (49, 12.3, 17, 13, 2='a';)!;
-
 disp?@( list? .    0 )!; #=> 39
 disp?@( dict? . name )!; #=> 'fred'
 
@@ -14,6 +13,7 @@ disp?@( both? .S   2 )!; #=> 17
 disp?@( both? .L   2 )!; #=> 'a'
 
 func = { a? + b? }; # notice no ending `!`
+
 
 
 

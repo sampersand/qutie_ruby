@@ -10,6 +10,8 @@ module Number
 
   BASE_START_REGEX = /0(?:#{BASES.keys.join('|')})/i
   DECIMAL_POINT = /\./
+  EXPONENT_START = /e/i
+  EXPONENT_SIGN_MODIFIER = /[+-]/
   DECIMAL_REGEX = BASES['d'][0]
   DECIMAL_POINT_REGEX = /#{DECIMAL_POINT}#{DECIMAL_REGEX}/
   module_function
@@ -20,6 +22,11 @@ module Number
       res += stream.next while stream.peek =~ DECIMAL_REGEX
       if stream.qt_length(type: :STACK) >= 2 && stream.peek(amnt: 2) =~ DECIMAL_POINT_REGEX
         res += stream.next
+        res += stream.next while stream.peek =~ DECIMAL_REGEX
+      end
+      if stream.qt_length(type: :STACK) >= 1 && stream.peek =~ EXPONENT_START
+        res += stream.next
+        res += stream.next if stream.peek =~ EXPONENT_SIGN_MODIFIER
         res += stream.next while stream.peek =~ DECIMAL_REGEX
       end
     end

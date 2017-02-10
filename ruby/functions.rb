@@ -1,10 +1,10 @@
- module Functions
+module Functions
   class QT_BuiltinFunciton < QT_Object
     def initialize(&block)
       @func = block
     end
     def qt_call(args:, universe:, stream:, parser:)
-      @func.call(args, universe, stream, parser)
+      @func.call(args, universe, stream, parser) || universe << QT_Null::INSTANCE
     end
     def to_s?
       false
