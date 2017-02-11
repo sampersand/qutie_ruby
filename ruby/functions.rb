@@ -14,7 +14,7 @@ module Functions
 
   NoRet = Class.new()
   FUNCTIONS = {
-    QT_Variable.new(var_val: :switch) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable.new( :switch ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       switch_on = args.stack.fetch(0){ args.locals.fetch(:__switch_on) }
       if args.locals.include?(switch_on)
         args.locals[switch_on]
@@ -23,7 +23,7 @@ module Functions
       end
     },
 
-    QT_Variable.new(var_val: :return) => QT_BuiltinFunciton.new{ |args, universe, stream|
+    QT_Variable.new( :return ) => QT_BuiltinFunciton.new{ |args, universe, stream|
 
       # value = args.locals.fetch(:__value){ args.stack.fetch(0, NoRet) }
       # levels = args.locals.fetch(:__levels){ args.stack.fetch(1, 1) }
@@ -33,24 +33,24 @@ module Functions
       # end
     },
 
-    QT_Variable.new(var_val: :if) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable.new( :if ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       cond     = args.stack.fetch(0){ args.locals.fetch(:__cond) }
       if_true  = args.locals.fetch(true){ args.stack.fetch(1){ args.locals.fetch(:true) }   }
       if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false, QT_Boolean::NIL) } }
       cond.qt_to_bool.bool_val ? if_true : if_false
     },
-    QT_Variable.new(var_val: :while) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable.new( :while ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       cond = args.stack.fetch(0){ args.locals.fetch(:__cond) }
       body = args.stack.fetch(1){ args.locals.fetch(:__body) }
       parser.parse!(stream: body.clone, universe: universe) while parser.parse!(stream: cond.clone, universe: universe).pop 
     },
-    QT_Variable.new(var_val: :unless) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable.new( :unless ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       cond     = args.stack.fetch(0){ args.locals.fetch(:__cond) }
       if_true  = args.locals.fetch(true){ args.stack.fetch(1){ args.locals.fetch(:true) }   }
       if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false, nil) } }
       cond ? if_false : if_true
     },
-    QT_Variable.new(var_val: :until) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable.new( :until ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       cond = args.stack.fetch(0){ args.locals.fetch(:__cond) }
       body = args.stack.fetch(1){ args.locals.fetch(:__body) }
       parser.parse!(stream: body.clone, universe: universe) until parser.parse!(stream: cond.clone, universe: universe).pop 
@@ -60,7 +60,7 @@ module Functions
 
 
 
-    QT_Variable.new(var_val: :del) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable.new( :del ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
         
       uni = args.stack.fetch(0){ args.locals.fetch(:__uni) }
       pos = args.stack.fetch(1){ args.locals.fetch(:__pos) }
@@ -78,7 +78,7 @@ module Functions
       end
     },
 
-    QT_Variable.new(var_val: :for) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable.new( :for ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       start = args.stack.fetch(0){ args.locals.fetch(:__start) }
       cond = args.stack.fetch(1){ args.locals.fetch(:__cond) }
       incr = args.stack.fetch(2){ args.locals.fetch(:__incr) }
@@ -92,19 +92,19 @@ module Functions
 
     # i dont know how many of these work...
 
-    QT_Variable.new(var_val: :clone) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable.new( :clone ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       case args
       when true, false, nil, Numeric, Fixnum then args
       else qutie_func(args, universe, parser, :__clone){ |a| a.clone }
       end
     },
-    QT_Variable.new(var_val: :disp) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
-      endl = args.qt_get(pos: QT_Variable.new(var_val: :end), type: :BOTH)
-      sep  = args.qt_get(pos: QT_Variable.new(var_val: :sep), type: :BOTH) || ""
+    QT_Variable.new( :disp ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
+      endl = args.qt_get(pos: QT_Variable.new( :end ), type: :BOTH)
+      sep  = args.qt_get(pos: QT_Variable.new( :sep ), type: :BOTH) || ""
       endl = QT_Text.new("\n") if endl == QT_Null::INSTANCE
       sep = QT_Text.new('') if sep == QT_Null::INSTANCE
       args.locals[:sep] = sep # forces it to be '' if not specified, but doesnt override text's default
-      to_print=FUNCTIONS[QT_Variable.new(var_val: :text)].qt_call(args: args,
+      to_print=FUNCTIONS[QT_Variable.new( :text )].qt_call(args: args,
                                                                     universe: universe,
                                                                     stream: stream,
                                                                     parser: parser) 
@@ -112,7 +112,7 @@ module Functions
       true
     },
 
-    QT_Variable.new(var_val: :prompt) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable.new( :prompt ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       prompt = args.stack.fetch(0){ args.locals.fetch(:__prompt, '') }
       prefix = args.stack.fetch(2){ args.locals.fetch(:__prefix, "\n>") }
       endl = args.stack.fetch(1){ args.locals.fetch(:__endl, "\n") }
@@ -122,7 +122,7 @@ module Functions
       STDIN.gets endl
     },
 
-    QT_Variable.new(var_val: :syscall) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable.new( :syscall ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       sep  = args.get(:sep) || " "
       args.locals[:sep] = sep # forces it to be '' if not specified, but doesnt override text's default
       to_call=FUNCTIONS[:text].qt_call(args: args,
@@ -132,7 +132,7 @@ module Functions
       `#{to_call}`
     },
 
-    QT_Variable.new(var_val: :import) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable.new( :import ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       file = args.stack.fetch(0){ args.locals.fetch(:__file) }
       passed_args = args.stack.fetch(1){ args.locals.fetch(:__args, universe.class.new) }
       pre_process = args.stack.fetch(2){ args.locals.fetch(:__preprocess, true) }
@@ -144,13 +144,13 @@ module Functions
 
     },
 
-    QT_Variable.new(var_val: :stop) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable.new( :stop ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       exit_code = args.stack.last
       exit(exit_code || 0)
     },
-    QT_Variable.new(var_val: :text) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable.new( :text ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       if args.respond_to?(:qt_get)
-        sep  = args.qt_get(pos: QT_Variable.new(var_val: :sep), type: :BOTH)
+        sep  = args.qt_get(pos: QT_Variable.new( :sep ), type: :BOTH)
         sep = QT_Text::new(' ') if sep == QT_Null::INSTANCE;
         QT_Text::new(args.stack.collect{ |arg|
             qutie_func(arg, universe, parser, :__text){ |a| a.nil? ? a.inspect : a.qt_to_text.text_val }
@@ -160,15 +160,15 @@ module Functions
       end
     },
 
-    QT_Variable.new(var_val: :num) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable.new( :num ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       qutie_func(args, universe, parser, :__num){ |a| a.qt_to_num }
     },
 
-    QT_Variable.new(var_val: :bool) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable.new( :bool ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       qutie_func(args.pop, universe, parser, :__bool){ |a| a.qt_to_bool }
     },
 
-    QT_Variable.new(var_val: :len) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
+    QT_Variable.new( :len ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       arg = args.stack.fetch(0){ args.locals.fetch(:__arg) }
       type = args.stack.fetch(1){ args.locals.fetch(:__type, nil) }
       u = universe.clone

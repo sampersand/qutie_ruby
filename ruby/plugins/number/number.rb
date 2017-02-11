@@ -2,8 +2,14 @@
 class QT_Number < QT_Object
   attr_reader :num_val
 
-  def self.from(source:)
-    source = source[2..-1].to_i(Number::BASES[source[1]][1]) if source =~ Number::BASE_START_REGEX
+  def self.from(source)
+    fail "Bad source type `#{source.class}`" unless source.is_a?(QT_Default)
+    if Number::BASE_START_REGEX =~ source
+      source = source.source_val.to_s
+      source = source[2..-1].to_i( Number::BASES[source[1]][1] )
+    else
+      source = source.source_val.to_s
+    end
     new(source.to_f)
   end
 
@@ -25,13 +31,14 @@ class QT_Number < QT_Object
   end
 
   # consts
-    E     = QT_Number.new(Math::E)
-    PI    = QT_Number.new(Math::PI)
-    ONE   = QT_Number.new(1)
-    TWO   = QT_Number.new(2)
-    NaN   = QT_Number.new(Float::NAN)
-    ZERO  = QT_Number.new(0)
-    NEG_1 = QT_Number.new(-1)
+    NEG_1 = QT_Number.new( -1         )
+    ZERO  = QT_Number.new(  0         )
+    ONE   = QT_Number.new(  1         )
+    TWO   = QT_Number.new(  2         )
+
+    E     = QT_Number.new( Math::E    )
+    PI    = QT_Number.new( Math::PI   )
+    NaN   = QT_Number.new( Float::NAN )
 
   # qt methods
     # conversion

@@ -2,7 +2,8 @@ class QT_Text < QT_Object
 
   attr_reader :text_val
   def self.from(source)
-    new(source[1...-1])
+    fail "Bad source type `#{source.class}`" unless source.is_a?(QT_Default)
+    new( source.source_val[1...-1] )
   end
 
   def initialize(text_val)
