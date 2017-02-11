@@ -3,14 +3,15 @@ require_relative '../regex/regex'
 module Variable
   module_function
   
-  VARIABLE_START = QT_Regex.new(regex_val: /[a-z_]/i)
-  VARIABLE_CONT  = QT_Regex.new(regex_val: /[a-z_0-9]/i)
+  VARIABLE_START = QT_Regex.new( /[a-z_]/i )
+  VARIABLE_CONT  = QT_Regex.new( /[a-z_0-9]/i )
 
   def next_token!(stream:, universe:, parser:, **_)
-    return unless stream.qt_peek(amnt: QT_Number::ONE).qt_rgx(right: VARIABLE_START)
-    result = ''
+    return if stream.qt_peek(QT_Number::ONE).qt_rgx(VARIABLE_START) == QT_Null::INSTANCE
+
+    result = stream.qt_next(QT_Number::ONE).text_val
     catch(:EOF) {
-      result += stream.next while stream.peek =~ VARIABLE_CONT
+      result += stream.qt_next(QT_Number::ONE).text_val until stream.qt_peek(QT_Number::ONE).qt_rgx( VARIABLE_CONT ) == QT_Null::INSTANCE
       nil
     }
     result
