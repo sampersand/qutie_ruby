@@ -6,7 +6,7 @@ class QT_Null < QT_Object
   end
 
   # qt methods
-    def qt_nil?
+    def _nil?
       true
     end
     # operators

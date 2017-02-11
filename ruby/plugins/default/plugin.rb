@@ -8,6 +8,6 @@ module Default
   end
   
   def handle(token:, universe:, **_)
-    universe << QT_Default::from(token)
+    universe << token
   end
 end

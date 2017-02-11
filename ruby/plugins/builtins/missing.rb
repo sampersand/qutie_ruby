@@ -6,7 +6,7 @@ class QT_Missing < QT_Object
   end
 
   # qt methods
-    def qt_missing?
+    def _missing?
       true
     end
     # operators

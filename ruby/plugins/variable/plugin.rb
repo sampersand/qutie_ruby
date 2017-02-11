@@ -7,13 +7,13 @@ module Variable
   VARIABLE_CONT  = QT_Regex.new( /[a-z_0-9]/i )
 
   def next_token!(stream:, universe:, parser:, **_)
-    return if stream._peek.qt_rgx(VARIABLE_START) == QT_Null::INSTANCE
+    return if stream._peek.qt_rgx(VARIABLE_START)._nil?
 
     result = stream._next
-    catch(:EOF) {
-      result += stream._next until stream._peek.qt_rgx( VARIABLE_CONT ) == QT_Null::INSTANCE
+    catch(:EOF) do
+      result = result.qt_add( stream._next ) until stream._peek.qt_rgx( VARIABLE_CONT )._nil?
       nil
-    }
+    end
     QT_Variable::from(source: result)
   end
 

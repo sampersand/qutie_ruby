@@ -21,11 +21,22 @@ class QT_Object
     self == other
   end
 
+  def to_i; qt_to_num end
+  def +(other)   qt_add(other) end
+  def -(other)   qt_sub(other) end
+  def *(other)   qt_mul(other) end
+  def /(other)   qt_div(other) end
+  def %(other)   qt_mod(other) end
+  def **(other)  qt_pow(other) end
+  def =~(other)res=qt_rgx other;res._nil??nil:res.to_i end
+  def <=>(other)res=qt_cmp other;res._nil??nil:res.to_i end
+  def ==(other)qt_eql(other).bool_val end
+
   # qt methods
-    def qt_missing? # the reason this isn't a qt method is because it's just an alias that i'll be using over and over.
+    def _missing? # the reason this isn't a qt method is because it's just an alias that i'll be using over and over.
       false
     end
-    def qt_nil?
+    def _nil?
       false
     end
 
@@ -42,25 +53,23 @@ class QT_Object
         def qt_get(pos, type:) end
         def qt_set(pos, val, type:) end
         def qt_del(pos, type:) end
-        def _peek(amnt=QT_Number::ONE)
-          qt_get(amnt, type: :STACK)
+        def _peek(amnt=1)
+          qt_get(QT_Number.new(num_val: amnt), type: :STACK)
         end
-
-        def _next(amnt=QT_Number::ONE)
+        def _next(amnt=1)
           res = _peek(amnt)
-          qt_del(amnt, type: :STACK)
+          qt_del(QT_Number.new(num_val: amnt), type: :STACK)
           res
         end
-
       # misc
         def qt_call(args:, universe:, stream:, parser:) end
 
 
         # def qt_cmp(right:) end
         def qt_eql(right)
-          res = qt_eql_r(right); return res unless res.qt_missing?
-          res = right.qt_eql_l(self); return res unless res.qt_missing?
-          # return res.qt_equal( QT_Number::ZERO ) unless (res = qt_cmp(right)).qt_missing?
+          res = qt_eql_r(right); return res unless res._missing?
+          res = right.qt_eql_l(self); return res unless res._missing?
+          # return res.qt_equal( QT_Number::ZERO ) unless (res = qt_cmp(right))._missing?
           QT_False::INSTANCE
         end
         # def qt_neq(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val != 0) end
@@ -68,16 +77,16 @@ class QT_Object
         # def qt_lth(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val == -1) end
         # def qt_leq(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val <= 0) end
         # def qt_geq(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val >= 0) end
-        def qt_rgx(right) res = qt_rgx_l(right); return res unless res.qt_missing?; right.qt_rgx_r(self) end
+        def qt_rgx(right) res = qt_rgx_l(right); return res unless res._missing?; right.qt_rgx_r(self) end
 
       # math
-        def qt_cmp(right) res = qt_cmp_r(right); return res unless res.qt_missing?; right.qt_cmp_l(self) end
-        def qt_add(right) res = qt_add_r(right); return res unless res.qt_missing?; right.qt_add_l(self) end
-        def qt_sub(right) res = qt_sub_r(right); return res unless res.qt_missing?; right.qt_sub_l(self) end
-        def qt_mul(right) res = qt_mul_r(right); return res unless res.qt_missing?; right.qt_mul_l(self) end
-        def qt_div(right) res = qt_div_r(right); return res unless res.qt_missing?; right.qt_div_l(self) end
-        def qt_mod(right) res = qt_mod_r(right); return res unless res.qt_missing?; right.qt_mod_l(self) end
-        def qt_pow(right) res = qt_pow_r(right); return res unless res.qt_missing?; right.qt_pow_l(self) end
+        def qt_cmp(right) res = qt_cmp_r(right); return res unless res._missing?; right.qt_cmp_l(self) end
+        def qt_add(right) res = qt_add_r(right); return res unless res._missing?; right.qt_add_l(self) end
+        def qt_sub(right) res = qt_sub_r(right); return res unless res._missing?; right.qt_sub_l(self) end
+        def qt_mul(right) res = qt_mul_r(right); return res unless res._missing?; right.qt_mul_l(self) end
+        def qt_div(right) res = qt_div_r(right); return res unless res._missing?; right.qt_div_l(self) end
+        def qt_mod(right) res = qt_mod_r(right); return res unless res._missing?; right.qt_mod_l(self) end
+        def qt_pow(right) res = qt_pow_r(right); return res unless res._missing?; right.qt_pow_l(self) end
 
         def qt_add_r(_) QT_Missing::INSTANCE end
         def qt_sub_r(_) QT_Missing::INSTANCE end

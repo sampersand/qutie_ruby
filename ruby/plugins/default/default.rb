@@ -1,23 +1,29 @@
 class QT_Default < QT_Object
-  def self.from(source)
-    new(source)
+  attr_accessor :source_val
+  def self.from(source_val)
+    new(source_val.to_sym)
   end
 
-  def initialize(source)
-    warn("Source for #{self.class} is not a String, but `#{source.class}`)") unless source.is_a?(QT_Text)
-    @source = source.text_val
+  def initialize(source_val)
+    fail("Source for #{self.class} is not a Symbol, but `#{source_val.class}`") unless source_val.is_a?(Symbol)
+    @source_val = source_val
   end
 
   def to_s
-    @source.to_s
+    @source_val.to_s
   end
 
   def ==(other)
-    other.is_a?(QT_Default) && @source == other.source
+    other.is_a?(QT_Default) && @source_val == other.source_val
+  end
+
+  def +(other)
+    raise unless other.is_a?(QT_Default)
+    self.class::from( @source_val.to_s + other.source_val.to_s )
   end
 
   def hash
-    @source.hash
+    @source_val.hash
   end
 
  # qt methods
@@ -26,19 +32,21 @@ class QT_Default < QT_Object
         self
       end
       def qt_to_bool
-        QT_Boolean::get(@text_val.length != 0)
+        QT_Boolean::get(@source_val.length != 0)
       end
 
     # operators
       # math
-        def qt_add(right:)
+        def qt_eql_l(right) QT_Boolean::get( self == right ) end
+        def qt_eql_r(left) QT_Boolean::get( self == left ) end
+        def qt_add(right)
           right = right.qt_to_text or return
-          QT_Text.new(@text_val + right.text_val)
+          QT_Text.new(@source_val.to_s + right.text_val.to_s)
         end
 
-        def qt_add_r(left:)
+        def qt_add_r(left)
           left = left.qt_to_text or return
-          QT_Text.new(left.text_val + @text_val)
+          QT_Text.new(left.text_val.to_s + @source_val.to_s)
         end
 
 end

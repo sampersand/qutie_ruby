@@ -17,14 +17,14 @@ class UniverseOLD
       warn("Asking for `#{amnt.inspect}` elements") unless amnt.is_a?(Integer) && amnt != 0
       throw :EOF if stack_empty?
       return @stack.shift if amnt == 1
-      @stack.shift(amnt).join
+      @stack.shift(amnt).reduce(&:+)
     end
 
     def peek(amnt: 1)
       warn("Asking for `#{amnt.inspect}` elements") unless amnt.is_a?(Integer) && amnt != 0
       throw :EOF if stack_empty?
       return @stack.first if amnt == 1
-      QT_Text.new( @stack.first(amnt).collect(&:text_val).join ) # assumes all of them are QT_Texts
+      @stack.first(amnt).reduce(&:+)
     end
 
   # stack
@@ -124,11 +124,11 @@ class UniverseOLD
     end
   end
 
-  def _peek(amnt=QT_Number::ONE)
-    peek(amnt: amnt.num_val.to_i)
+  def _peek(amnt=1)
+    peek(amnt: amnt)
   end
-  def _next(amnt=QT_Number::ONE)
-    self.next(amnt: amnt.num_val.to_i)
+  def _next(amnt=1)
+    self.next(amnt: amnt)
   end
 
 end

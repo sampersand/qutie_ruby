@@ -2,25 +2,24 @@ require_relative '../text/text'
 module Comment
   module_function
 
-  SINGLE_START_HASH = QT_Text.new '#'
-  SINGLE_START_SLASH = QT_Text.new '//'
-  SINGLE_END = QT_Text.new "\n"
+  SINGLE_START_HASH = QT_Default.new :'#'
+  SINGLE_START_SLASH = QT_Default.new :'//'
+  SINGLE_END = QT_Default.new :"\n"
 
   def next_single!(stream:, **_) # this will break if somehow SINGLE_STARTS includes single_end
-    return unless stream._peek.qt_eql(SINGLE_START_HASH).bool_val ||
-                  stream._peek(QT_Number::TWO).qt_eql(SINGLE_START_SLASH).bool_val
-    stream._next until stream._peek.qt_eql(SINGLE_END).bool_val
+    return unless SINGLE_START_HASH == stream._peek || SINGLE_START_SLASH == stream._peek(2)
+    stream._next until SINGLE_END == stream._peek
     stream._next # and ignore
     :retry
   end
   
-  MULTI_LINE_START = QT_Text.new '/*'
-  MULTI_LINE_END = QT_Text.new '*/'
+  MULTI_LINE_START = QT_Default.new :'/*'
+  MULTI_LINE_END = QT_Default.new :'*/'
   
   def next_multi!(stream:, **_)
-    return unless stream._peek(QT_Number::TWO).qt_eql(MULTI_LINE_START).bool_val
-    stream._next until stream._peek(QT_Number::TWO).qt_eql(MULTI_LINE_END).bool_val
-    stream._next(QT_Number::TWO) # and ignore
+    return unless MULTI_LINE_START == stream._peek(2)
+    stream._next until MULTI_LINE_END == stream._peek(2)
+    stream._next(2) # and ignore
     :retry
   end
 

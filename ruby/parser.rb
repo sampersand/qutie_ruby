@@ -22,7 +22,7 @@ class Parser
   end
 
   def process(input:, additional_builtins: {})
-    stream = UniverseOLD.new(stack: input.each_char.to_a.collect{ |a| QT_Text.new(a) })
+    stream = UniverseOLD.new(stack: input.each_char.to_a.collect(&QT_Default::method(:from)))
     universe = UniverseOLD.new
     universe.globals.update(@builtins)
     universe.globals.update(additional_builtins)
