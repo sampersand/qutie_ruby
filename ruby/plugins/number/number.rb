@@ -1,16 +1,13 @@
-# require_relative 'plugin'
 class QT_Number < QT_Object
   attr_reader :num_val
 
-  def self.from(source)
+  def self.from(source, base: nil)
     fail "Bad source type `#{source.class}`" unless source.is_a?(QT_Default)
-    if Number::BASE_START_REGEX =~ source
-      source = source.source_val.to_s
-      source = source[2..-1].to_i( Number::BASES[source[1]][1] )
+    if base
+      new(source.source_val.to_s.to_i(base.num_val).to_f )
     else
-      source = source.source_val.to_s
+      new(source.source_val.to_s.to_f)
     end
-    new(source.to_f)
   end
 
   def initialize(num_val)
