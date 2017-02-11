@@ -6,7 +6,6 @@ module Whitespace
   module_function
 
   def next_token!(stream:, **_)
-  
     unless stream._peek.qt_rgx(WHITESPACE_REGEX).qt_nil?
       stream._next # and ignore
       :retry

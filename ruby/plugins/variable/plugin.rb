@@ -9,15 +9,15 @@ module Variable
   def next_token!(stream:, universe:, parser:, **_)
     return if stream._peek.qt_rgx(VARIABLE_START) == QT_Null::INSTANCE
 
-    result = stream._next.text_val
+    result = stream._next
     catch(:EOF) {
-      result += stream._next.text_val until stream._peek.qt_rgx( VARIABLE_CONT ) == QT_Null::INSTANCE
+      result += stream._next until stream._peek.qt_rgx( VARIABLE_CONT ) == QT_Null::INSTANCE
       nil
     }
-    result
+    QT_Variable::from(source: result)
   end
 
   def handle(token:, universe:, **_)
-    universe << QT_Variable::from(source: token)
+    universe << token
   end
 end
