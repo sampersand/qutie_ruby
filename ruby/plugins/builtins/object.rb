@@ -42,12 +42,12 @@ class QT_Object
         def qt_get(pos, type:) end
         def qt_set(pos, val, type:) end
         def qt_del(pos, type:) end
-        def qt_peek(amnt)
+        def _peek(amnt=QT_Number::ONE)
           qt_get(amnt, type: :STACK)
         end
 
-        def qt_next(amnt)
-          res = qt_peek(amnt)
+        def _next(amnt=QT_Number::ONE)
+          res = _peek(amnt)
           qt_del(amnt, type: :STACK)
           res
         end

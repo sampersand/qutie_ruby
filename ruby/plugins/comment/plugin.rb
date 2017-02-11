@@ -7,10 +7,10 @@ module Comment
   SINGLE_END = QT_Text.new "\n"
 
   def next_single!(stream:, **_) # this will break if somehow SINGLE_STARTS includes single_end
-    return unless stream.qt_peek(QT_Number::ONE).qt_eql(SINGLE_START_HASH).bool_val ||
-                  stream.qt_peek(QT_Number::TWO).qt_eql(SINGLE_START_SLASH).bool_val
-    stream.qt_next(QT_Number::ONE) until stream.qt_peek(QT_Number::ONE).qt_eql(SINGLE_END).bool_val
-    stream.qt_next(QT_Number::ONE) # and ignore
+    return unless stream._peek.qt_eql(SINGLE_START_HASH).bool_val ||
+                  stream._peek(QT_Number::TWO).qt_eql(SINGLE_START_SLASH).bool_val
+    stream._next until stream._peek.qt_eql(SINGLE_END).bool_val
+    stream._next # and ignore
     :retry
   end
   
@@ -18,9 +18,9 @@ module Comment
   MULTI_LINE_END = QT_Text.new '*/'
   
   def next_multi!(stream:, **_)
-    return unless stream.qt_peek(QT_Number::TWO).qt_eql(MULTI_LINE_START).bool_val
-    stream.qt_next(QT_Number::ONE) until stream.qt_peek(QT_Number::TWO).qt_eql(MULTI_LINE_END).bool_val
-    stream.qt_next(QT_Number::TWO) # and ignore
+    return unless stream._peek(QT_Number::TWO).qt_eql(MULTI_LINE_START).bool_val
+    stream._next until stream._peek(QT_Number::TWO).qt_eql(MULTI_LINE_END).bool_val
+    stream._next(QT_Number::TWO) # and ignore
     :retry
   end
 

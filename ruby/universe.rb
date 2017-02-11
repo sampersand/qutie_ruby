@@ -124,14 +124,27 @@ class UniverseOLD
     end
   end
 
-  def qt_peek(amnt)
+  def _peek(amnt=QT_Number::ONE)
     peek(amnt: amnt.num_val.to_i)
   end
-  def qt_next(amnt)
+  def _next(amnt=QT_Number::ONE)
     self.next(amnt: amnt.num_val.to_i)
   end
 
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
