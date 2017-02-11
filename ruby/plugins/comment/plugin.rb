@@ -14,8 +14,7 @@ module Comment
   end
   
   MULTI_LINE_START = QT_Default.new :'/*'
-  MULTI_LINE_END = QT_Default.new :'*/'
-  
+  MULTI_LINE_END = QT_Default.new :'*/' 
   def next_multi!(stream:, **_)
     return unless MULTI_LINE_START == stream._peek(2)
     stream._next until MULTI_LINE_END == stream._peek(2)

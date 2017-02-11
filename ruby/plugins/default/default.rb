@@ -1,5 +1,6 @@
 class QT_Default < QT_Object
   attr_accessor :source_val
+  def text_val; @source_val.to_s end
   def self.from(source_val)
     new(source_val.to_sym)
   end
@@ -41,12 +42,12 @@ class QT_Default < QT_Object
         def qt_eql_r(left) QT_Boolean::get( self == left ) end
         def qt_add(right)
           right = right.qt_to_text or return
-          QT_Text.new(@source_val.to_s + right.text_val.to_s)
+          QT_Default::from( @source_val.to_s + right.text_val.to_s )
         end
 
         def qt_add_r(left)
           left = left.qt_to_text or return
-          QT_Text.new(left.text_val.to_s + @source_val.to_s)
+          QT_Default::from( left.text_val.to_s + @source_val.to_s )
         end
 
 end

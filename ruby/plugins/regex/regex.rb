@@ -22,25 +22,15 @@ class QT_Regex < QT_Object
   end
   
   def qt_rgx_l(right)
-    case right
-    when QT_Text
-      fail "TODO"
-    when QT_Default
-      res = @regex_val =~ right.source_val
-      res ? QT_Number.new( res ) : QT_Null::INSTANCE
-    else QT_Missing::INSTANCE
-    end
+    return QT_Missing unless right.respond_to?(:text_val)
+    res = @regex_val =~ right.text_val
+    res ? QT_Number.new( res ) : QT_Null::INSTANCE
   end
 
   def qt_rgx_r(left)
-    case left
-    when QT_Text
-      fail "TODO"
-    when QT_Default
-      res = @regex_val =~ left.source_val
-      res ? QT_Number.new( res ) : QT_Null::INSTANCE
-    else QT_Missing::INSTANCE
-    end
+    return QT_Missing unless left.respond_to?(:text_val)
+    res = left.text_val =~ @regex_val
+    res ? QT_Number.new( res ) : QT_Null::INSTANCE
   end
 
 end
