@@ -60,11 +60,11 @@ class QT_Text < QT_Object
 
 
       private
-      def text_func(right:, lmeth:, rmeth: :qt_to_text)
+        def text_func_r(right, lmeth, rmeth=:qt_to_text)
           right = right.method(rmeth).() or return
           QT_Text.new(@text_val.method(lmeth).call(right.text_val))
         end
-        def text_func_r(left:, lmeth:, rmeth: :qt_to_text)
+        def text_func_l(left, lmeth, rmeth=:qt_to_text)
           left = left.method(rmeth).() or return
           QT_Text.new(left.text_val.method(lmeth).call(@text_val) )
         end
@@ -74,9 +74,9 @@ class QT_Text < QT_Object
           return unless right.is_a?(QT_Text)
           QT_Number.new(@text_val <=> right.text_val)
         end
-        def qt_add(right:) text_func(right: right, lmeth: :+) end
-        def qt_mul(right:) text_func(right: right, lmeth: :*, rmeth: :qt_to_num) end
-        def qt_add_r(right:) text_func_r(right: right, lmeth: :+) end
+        def qt_add_r(left) text_func_r(left, :+) end
+        def qt_mul(right) text_func_r(right, :*, :qt_to_num) end
+        def qt_add_l(right) text_func_l(right, :+) end
 end
 
 
