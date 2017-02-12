@@ -3,11 +3,12 @@ class QT_Text < QT_Object
   attr_reader :text_val
   def self.from(source, quotes:)
     fail "Bad source type `#{source.class}`" unless source.is_a?(QT_Default)
-    new( source.source_val, quotes: quotes )
+    new( source.text_val, quotes: quotes )
   end
 
   def initialize(text_val, quotes: nil)
     @text_val = text_val
+    raise unless text_val.is_a?(String)
     @quotes = quotes || gen_quotes
   end
 

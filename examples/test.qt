@@ -1,10 +1,54 @@
-# a;
+# # a;
 
-# foo = {bar={A?+b? }; bar?@(A=3); };
-# bar={};
-# foo?@(A=3;)!
-a=3;
-Current Speed = 65;
-Speed Limit = 50;
-Is Speeding = Current Speed? > Speed Limit?;
-disp?@(Is Speeding? && "Slow down speed devil!" || "Speed up slow poke!")!;
+# # foo = {bar={A?+b? }; bar?@(A=3); };
+# # bar={};
+# # foo?@(A=3;)!
+# a=3;
+# Current Speed = 65;
+# Speed Limit = 50;
+# Is Speeding = Current Speed? > Speed Limit?;
+# disp?@(Is Speeding? && "Slow down speed devil!" || "Speed up slow poke!")!;
+
+# toText = {
+#   array = __args?.0;
+#   result = '[';
+#   if( len(array?) == 0 ){
+#     return result? + ']';
+#   };
+#   result += array?.0;
+#   for(i = 1; i < len(array?); i++){
+#     result += ', ' + array?.i?;
+#   }
+#   return result? + ']';
+# }
+
+
+# buggy = {
+#   #]
+#   5;
+# }
+
+
+
+
+
+
+
+
+# a = MyFraction(1, 2);
+
+# a + 3 #=> MyFraction(7, 2)
+# 3 + a #=> CRASH
+
+
+
+
+
+'a' +  3,
+[}  + 'a',
+
+
+
+
+
+
