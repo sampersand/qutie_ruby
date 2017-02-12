@@ -5,6 +5,6 @@
 # foo?@(A=3;)!
 a=3;
 Current Speed = 65;
-Speed Limit = 0;
-Am I Speeding = Current Speed? > Speed Limit?;
-disp?@(Am I Speeding?)!;
+Speed Limit = 50;
+Is Speeding = Current Speed? > Speed Limit?;
+disp?@(Is Speeding? && "Slow down speed devil!" || "Speed up slow poke!")!;
