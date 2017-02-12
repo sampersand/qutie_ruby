@@ -4,7 +4,7 @@ module Operators
     module_function
 
     def next_token!(stream:, **_)
-      OPERATORS.each{ |oper, _| return stream.next(amnt: oper.length) if stream.peek?(str: oper) }
+      OPERATORS.each{ |oper, _| return stream._next(oper._length) if stream.peek?(str: oper) }
       nil
     end
 

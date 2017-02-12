@@ -1,29 +1,31 @@
 class QT_Text < QT_Object
 
   attr_reader :text_val
-  def self.from(source)
+  def self.from(source, quotes:)
     fail "Bad source type `#{source.class}`" unless source.is_a?(QT_Default)
-    new( source.source_val[1...-1] )
+    new( source.source_val, quotes: quotes )
   end
 
-  def initialize(text_val)
+  def initialize(text_val, quotes: nil)
     @text_val = text_val
+    @quotes = quotes || gen_quotes
+  end
+
+  def gen_quotes
+    ['' ,'']
+    # if @text_val =~ /(?<!\\)'/
+    #   if @text_val =~ /(?<!\\)"/
+
+    #   else 
+    #     "\"#{@text_val}\""
+    #   end
+    # else 
+    #   "'#{@text_val}'"
+    # end
   end
 
   def to_s
-    if @text_val =~ /(?<!\\)'/
-      if @text_val =~ /(?<!\\)"/
-        if @text_val =~ /(?<!\\)`/
-          "`#{@text_val.gsub(/(?<!\\)`/, '\\\\`')}`"
-        else
-          "`#{@text_val}`"
-        end
-      else 
-        "\"#{@text_val}\""
-      end
-    else 
-      "'#{@text_val}'"
-    end
+    "#{@quotes[0]}#{@text_val}#{@quotes[1]}"
   end
 
   def ==(other)
@@ -63,11 +65,11 @@ class QT_Text < QT_Object
       private
         def text_func_r(right, lmeth, rmeth=:qt_to_text)
           right = right.method(rmeth).() or return
-          QT_Text.new(@text_val.method(lmeth).call(right.text_val))
+          QT_Text.new(@text_val.method(lmeth).call(right.text_val), quotes: @quotes)
         end
         def text_func_l(left, lmeth, rmeth=:qt_to_text)
           left = left.method(rmeth).() or return
-          QT_Text.new(left.text_val.method(lmeth).call(@text_val) )
+          QT_Text.new(left.text_val.method(lmeth).call(@text_val), quotes: @quotes)
         end
       public
       # math

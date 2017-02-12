@@ -27,6 +27,10 @@ class QT_Default < QT_Object
     @source_val.hash
   end
 
+  def _length
+    @source_val.length
+  end
+
  # qt methods
     # conversion
       def qt_to_text

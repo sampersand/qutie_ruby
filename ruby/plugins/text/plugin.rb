@@ -1,10 +1,12 @@
-p '`'.chr.ord.to_s(16)
 require_relative 'text'
+
 module Text
   QUOTES = [ QT_Default.new( :"'" ),
              QT_Default.new( :'"' ),
              QT_Default.new( :'`' ) ]
-  ESCAPE_CHAR = QT_Default.new( :'\\')
+
+  ESCAPE_CHAR = QT_Default.new( :'\\' )
+
   module_function
 
   def escape(stream:)
@@ -20,26 +22,26 @@ module Text
     end
   end
   def next_token!(stream:, **_)
-    # this iwll need to be changed if any of the quotes or escape chars change to longer than 1 char
 
-    return unless QUOTES.any?{ |q| q == stream._peek }
-    quote = stream._next # if quotes change length this will break
-    body = quote
+    return unless QUOTES.any?{ |q| q == stream._peek( q._length ) }
+    start_quote = stream._next # if quotes change length this will break
+    end_quote = nil
+    body = QT_Default.new( :'' )
 
     catch(:EOF) {
-      until quote == stream._peek
-        if ESCAPE_CHAR == stream._peek
-          stream._next
+      until start_quote == stream._peek( start_quote._length )
+        if ESCAPE_CHAR == stream._peek(ESCAPE_CHAR._length )
+          stream._next( ESCAPE_CHAR._length )
           body += escape(stream: stream)
         else
           body += stream._next
         end
       end
-      fail unless quote == stream._peek
-      body += stream._next
+      end_quote = stream._next( start_quote._length )
+      fail unless start_quote == end_quote
       true
-    } or fail "Reach EOF before finishing string starting with: #{quote}"
-    QT_Text::from( body )
+    } or fail "Reach EOF before finishing string starting with: #{start_quote}"
+    QT_Text::from( body, quotes: [start_quote, end_quote] )
   end
 
   def handle(token:, universe:, **_)
