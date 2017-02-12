@@ -13,7 +13,9 @@ class QT_Default < QT_Object
   EMPTY = from( '' )
 
   def to_s
-    @source_val.to_s
+    res=@source_val.to_s
+    return '\_' if res == '_'
+    res == ' ' ? '_' : res
   end
 
   def inspect_inside; to_s.dump end
