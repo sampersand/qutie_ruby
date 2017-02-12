@@ -28,24 +28,25 @@ class QT_Universe < QT_Object
   def method_missing(meth, *a)
     @universe.method(meth).call(*a)
   end
+
   # qt methods
-
-    def qt_method(meth:)
-      # this method is deprecated for now
-      case meth
-      when :append then proc{|args|
-        @universe.stack << args.stack[0]
-      }
-      else qt_get(QT_Variable::from(source: '__' + meth.to_s), type: :LOCALS)#fail "Unknown method `#{meth}`"
+    # methods
+      # def qt_method(meth:)
+      #   # this method is deprecated for now
+      #   case meth
+      #   when :append then proc{|args|
+      #     @universe.stack << args.stack[0]
+      #   }
+      #   else qt_get(QT_Variable::from(source: '__' + meth.to_s), type: :LOCALS)#fail "Unknown method `#{meth}`"
+      #   end
+      # end
+    # conversion
+      def qt_to_bool
+        QT_Boolean::get(@universe.stack_empty? && @universe.shortened_locals_empty?)
       end
-    end
-
-    def qt_to_bool
-      QT_Boolean::get(@universe.stack_empty? && @universe.shortened_locals_empty?)
-    end
 
 
-    def qt_eval(universe:, parser:, **_) # fix this
+    def qt_eval(universe, _, parser)
       universe = universe.spawn_new_stack(new_stack: nil).clone
       res = parser.parse!(stream: @universe.clone, universe: universe)
       QT_Universe.new(body: '', universe: res, parens: ['<', '>']) # this is where it gets hacky

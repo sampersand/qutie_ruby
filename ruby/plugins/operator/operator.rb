@@ -68,7 +68,7 @@ Operators::OPERATORS = [
   QT_Operator.new(name: :';' , priority: 40, operands: [1, 0]){ true },
   QT_Operator.new(name: :',' , priority: 40, operands: [1, 0]){ |l| l },
   QT_Operator.new(name: :'?' , priority:  1, operands: [1, 0]){ |l,  u| u.qt_get(l, type: :NON_STACK) },
-  QT_Operator.new(name: :'!' , priority:  1, operands: [1, 0]){ |l, *a| l.qt_eval(*a) },
+  QT_Operator.new(name: :'!' , priority:  1, operands: [1, 0]){ |l, u, s, p| l.qt_eval(u, s, p) }, #universe, stream, parser
 ]
 
 EQL_OPER  = Operators::OPERATORS.find{ |e| e.name == :'=' }
