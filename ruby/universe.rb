@@ -8,7 +8,17 @@ class UniverseOLD
     @stack = stack || []
     @locals = locals || {}
     @globals = globals || {}
+    @__newlines_start = __newlines_left # FIXME
   end
+
+  def __newlines_left # FIXME
+    @stack.select{ |e| e == QT_Default.new(:"\n") }.length
+  end
+
+  def __line_no # FIXME
+    @__newlines_start - __newlines_left + 1
+  end
+
 
 
   #stream methods

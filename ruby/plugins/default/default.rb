@@ -18,7 +18,7 @@ class QT_Default < QT_Object
     res == ' ' ? '_' : res
   end
 
-  def inspect_inside; to_s.dump end
+  def inspect_to_s; to_s.dump end
 
   def ==(other)
     other.is_a?(QT_Default) && @source_val == other.source_val
