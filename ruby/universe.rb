@@ -70,6 +70,7 @@ class UniverseOLD
       end
     end
     def qt_get(pos, type: :BOTH) #ignores type
+      return QT_Universe.new(body: '', universe: self, parens: ['<', '>']) if pos == QT_Variable.new( :'$' )
       self[pos]
     end
 
@@ -79,7 +80,8 @@ class UniverseOLD
     end
 
     def stack_s
-      "[#{@stack.collect(&:to_s).join(', ')}]"
+      stck = @stack.collect{|e| self.eql?(e.respond_to?(:universe) ? e.universe : e) ? QT_Variable.new( :'$' ) : e }
+      "[#{stck.collect(&:to_s).join(', ')}]"
     end
 
     def locals_s

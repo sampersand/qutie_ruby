@@ -3,7 +3,7 @@ require_relative '../regex/regex'
 module Variable
   module_function
   
-  VARIABLE_START = QT_Regex.new( /[a-z_]/i )
+  VARIABLE_START = QT_Regex.new( /[a-z_$]/i )
   VARIABLE_CONT  = QT_Regex.new( /[a-z_0-9]/i )
 
   def next_token!(stream:, universe:, parser:, **_)

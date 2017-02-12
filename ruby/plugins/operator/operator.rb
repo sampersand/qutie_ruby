@@ -63,7 +63,7 @@ Operators::OPERATORS = [
 
   QT_Operator.new(name: :'=' , priority: 30){ |l, r,  u|      u.locals[l] = r          }, # this is akin to `.=`
   QT_Operator.new(name: :'@' , priority:  7){ |l, r, u, s, p| l.qt_call(r, u, s, p)    },
-  QT_Operator.new(name: :'.' , priority:  5){ |r, l,  u|      l.qt_get(r, type: :BOTH) },
+  QT_Operator.new(name: :'.' , priority:  5){ |l, r,  u|      l.qt_get(r, type: :BOTH) },
 
   QT_Operator.new(name: :';' , priority: 40, operands: [1, 0]){ true },
   QT_Operator.new(name: :',' , priority: 40, operands: [1, 0]){ |l| l },

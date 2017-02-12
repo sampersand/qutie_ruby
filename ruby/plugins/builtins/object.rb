@@ -42,17 +42,17 @@ class QT_Object
 
     # methods
       def qt_method(meth:) end
-      def qt_length; end
+      def qt_length; QT_Missing::INSTANCE end
     # conversion
-      def qt_to_num;  end
+      def qt_to_num; QT_Missing::INSTANCE end
       def qt_to_text; QT_Text.new(to_s) end
       def qt_to_bool; QT_Boolean::get(true) end
 
     # operators 
       # access
-        def qt_get(pos, type:) end
-        def qt_set(pos, val, type:) end
-        def qt_del(pos, type:) end
+        def qt_get(pos, type:) QT_Missing::INSTANCE end
+        def qt_set(pos, val, type:) QT_Missing::INSTANCE end
+        def qt_del(pos, type:) QT_Missing::INSTANCE end
         def _peek(amnt=1)
           qt_get(QT_Number.new(num_val: amnt), type: :STACK)
         end

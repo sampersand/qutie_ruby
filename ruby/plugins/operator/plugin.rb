@@ -4,7 +4,7 @@ module Operators
     module_function
 
     def next_token!(stream:, **_)
-      OPERATORS.find do |oper, _|
+      OPERATORS.find do |oper|
         if oper.name == stream._peek( oper.name.length ).source_val
           stream._next( oper.name.length )
           true
@@ -29,7 +29,7 @@ module Operators
       #                             operand: token,
       #                             lhs_vars: lhs_vars,
       #                             rhs_vars: rhs_vars)
-      warn("`#{token}` returned non-QT_Object `#{result.class}`") unless true == result || result.is_a?(QT_Object)
+      warn("`#{oper}` returned non-QT_Object `#{result.class}`") unless true == result || result.is_a?(QT_Object)
       universe << result if result.is_a?(QT_Object)
     end
 
@@ -67,7 +67,7 @@ module Operators
         end
         nil
       }
-      raise "Ambiguous rhs for operator `#{token}`: #{rhs.stack}" unless rhs.stack.length == 1
+      raise "Ambiguous rhs for operator `#{oper}`: #{rhs.stack}" unless rhs.stack.length == 1
       rhs.stack[0]
     end
 

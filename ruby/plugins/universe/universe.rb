@@ -1,4 +1,9 @@
 class QT_Universe < QT_Object
+
+  attr_reader :universe
+  attr_reader :body
+  attr_reader :parens
+
   def self.from(source:, current_universe:, parens:)
     # warn("QT_Universe::from doesnt conform to others!")
     new_universe = UniverseOLD.new
@@ -64,6 +69,7 @@ class QT_Universe < QT_Object
       # func.program_stack.pop
     end
     def qt_get(pos, type:)  # fix this
+      return self if pos == QT_Variable.new( :'$' )
       case type
       when :BOTH then type = @universe.locals.include?(pos) ? :LOCALS : :STACK
       when :NON_STACK then type = @universe.locals.include?(pos) ? :LOCALS : :GLOBALS
