@@ -21,9 +21,9 @@ class QT_Universe < QT_Object
   end
 
   def to_s
-    # "#{@parens[0]} ... #{@parens[1]}"
+    "#{@parens[0]} ... #{@parens[1]}"
     # @body
-    @universe.to_s 
+    @universe.to_s(@parens.collect(&:to_s))
   end
   def inspect_to_s
     "line: #{@__start_line_no}, #{@universe}"
@@ -59,7 +59,7 @@ class QT_Universe < QT_Object
     def qt_eval(universe, _stream, parser)
       universe = universe.spawn_new_stack(new_stack: nil).clone
       res = parser.parse!(stream: @universe.clone, universe: universe)
-      QT_Universe.new(body: '', universe: res, parens: ['<', '>']) # this is where it gets hacky
+      QT_Universe.new(body: '', universe: res, parens: @parens) # this is where it gets hacky
     end
 
     def qt_call(args, universe, _stream, parser) # fix this

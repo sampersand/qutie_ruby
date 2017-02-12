@@ -85,23 +85,21 @@ class UniverseOLD
 
     def stack_s
       stck = @stack.collect{|e| self.eql?(e.respond_to?(:universe) ? e.universe : e) ? QT_Variable.new( :'$' ) : e }
-      "[#{stck.collect(&:to_s).join(', ').dump[1...-1]}]"
+      stck.collect(&:to_s).join(', ').dump[1...-1]
     end
 
     def locals_s
-      "{ " + shortened_locals.collect{|k,v| "#{k}: #{v}"}.join(', ') + " }"
+      shortened_locals.collect{|k,v| "#{k}: #{v}"}.join(', ')
     end
 
-    def to_s
-      if shortened_locals_empty?
-        stack_s
-      elsif stack_empty?
-        locals_s
-      # elsif shortened_locals_empty? && !stack_empty?
-      else
-        "< #{stack_s} | #{locals_s} >"
-      #   '()'
-      end
+    def to_s(parens=['<', '>'])
+      parens[0] +(if shortened_locals_empty?
+                    stack_s
+                  elsif stack_empty?
+                    locals_s
+                  else
+                    "[#{stack_s}] | {#{locals_s}}"
+                  end) + parens[1]
     end
 
   # cloning
