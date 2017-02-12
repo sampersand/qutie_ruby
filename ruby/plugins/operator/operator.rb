@@ -38,7 +38,8 @@ Operators::OPERATORS = [
   QT_Operator.new(name: :<=>,  priority: 19, bin_meth: :qt_cmp), 
   QT_Operator.new(name: :**,   priority: 10, bin_meth: :qt_pow), 
   QT_Operator.new(name: :==,   priority: 20, bin_meth: :qt_eql), 
-  QT_Operator.new(name: :'<>', priority: 20, bin_meth: :qt_neq), 
+  QT_Operator.new(name: :'<>', priority: 20, bin_meth: :qt_neq), # this and the next are equivalent
+  QT_Operator.new(name: :'!=', priority: 20, bin_meth: :qt_neq), # equivalent
   QT_Operator.new(name: :<=,   priority: 20, bin_meth: :qt_leq), 
   QT_Operator.new(name: :>=,   priority: 20, bin_meth: :qt_geq), 
   QT_Operator.new(name: :'.=', priority:  6, bin_meth: :qt_set),
