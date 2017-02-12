@@ -4,14 +4,18 @@ module Operators
     module_function
 
     def next_token!(stream:, **_)
-      OPERATORS.each{ |oper, _| return stream._next(oper._length) if stream.peek?(str: oper) }
-      nil
+      OPERATORS.find do |oper, _|
+        if oper.name == stream._peek( oper.name.length ).source_val
+          stream._next( oper.name.length )
+          true
+        end
+      end
     end
 
     def handle(token:, stream:, universe:, parser:, **_)
-      oper = OPERATORS[token] or fail "Unknown operator `#{token}`, but it somehow got passed to handle!"
+      oper = token
       lhs_vars = oper.operands[0].times.collect{ get_lhs(universe: universe) }
-      rhs_vars = oper.operands[1].times.collect{ get_rhs(token: token,
+      rhs_vars = oper.operands[1].times.collect{ get_rhs(oper: oper,
                                                          universe: universe,
                                                          stream: stream,
                                                          parser: parser) }
@@ -33,9 +37,9 @@ module Operators
       universe.pop
     end
 
-    def get_rhs(token:, stream:, universe:, parser:)
+    def get_rhs(oper:, stream:, universe:, parser:)
       rhs = universe.spawn_new_stack(new_stack: nil)
-      token_priority = OPERATORS[token].priority
+      token_priority = oper.priority
       catch(:EOF){
         until stream.stack_empty?
           ntoken = parser.next_token!(stream: stream.clone,
@@ -51,9 +55,7 @@ module Operators
           #                    universe: rhs,
           #                    parser: parser)
           # else
-            break if token_priority <= (OPERATORS.include?(ntoken[0]) && ntoken[1] == Operators ?
-                                          OPERATORS[ntoken[0]].priority :
-                                          0)
+            break if token_priority <= ( ntoken[0].is_a?(QT_Operator) ? ntoken[0].priority : 0 )
             ntoken = parser.next_token!(stream: stream,
                                         universe: rhs,
                                         parser: parser)

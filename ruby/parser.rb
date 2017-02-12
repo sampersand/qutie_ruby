@@ -57,7 +57,7 @@ class Parser
                              universe: universe,
                              parser: parser)
       next unless token
-      return token != :retry ? [token, pl] : next_token!(stream: stream,
+      return :retry != token  ? [token, pl] : next_token!(stream: stream,
                                                          universe: universe,
                                                          parser: parser)
     } or fail "Nothing found!"
