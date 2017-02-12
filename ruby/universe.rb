@@ -81,7 +81,7 @@ class UniverseOLD
 
     def stack_s
       stck = @stack.collect{|e| self.eql?(e.respond_to?(:universe) ? e.universe : e) ? QT_Variable.new( :'$' ) : e }
-      "[#{stck.collect(&:to_s).join(', ')}]"
+      "[#{stck.collect(&:to_s).collect{|e|e=='_'? '\_':e==' '? '_':e}.join(', ').dump[1...-1]}]"
     end
 
     def locals_s

@@ -10,7 +10,11 @@ class QT_Object
   end
 
   def inspect
-    "#{self.class}(#{to_s})"
+    "#{self.class}(#{inspect_inside})"
+  end
+
+  def inspect_inside
+    to_s
   end
 
   def to_s
