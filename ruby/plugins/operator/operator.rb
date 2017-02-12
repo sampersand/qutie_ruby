@@ -26,72 +26,59 @@ class QT_Operator < QT_Object
     end
   end
 
+
 end
 
-module Operators; end
+module Operators
+  module_function
+  def __expand(l,r,u,s,p)
+    {lhs_vars: [l], rhs_vars: [r], universe: u, stream: s, parser: p}
+  end
+  OPERATORS = [
+    QT_Operator.new(name: :':' , priority: 36){ |      *a| EQL_OPER.call(**__expand(      *a))   },
+    QT_Operator.new(name: :'<-', priority: 30){ |l, r, *a| EQL_OPER.call(**__expand(l, r, *a));l },
+    QT_Operator.new(name: :'->', priority: 30){ |l, r, *a| EQL_OPER.call(**__expand(r, l, *a));r },
 
-Operators::OPERATORS = [
-  QT_Operator.new(name: :':' , priority: 36){ |l, r, u, s, p| EQL_OPER.call(lhs_vars: [l],
-                                                                            rhs_vars: [r],
-                                                                            universe: u,
-                                                                            stream: s,
-                                                                            parser: p) },
-  QT_Operator.new(name: :'<-', priority: 30){ |l, r, u, s, p| EQL_OPER.call(lhs_vars: [l],
-                                                                            rhs_vars: [r],
-                                                                            universe: u,
-                                                                            stream: s,
-                                                                            parser: p) },
-  QT_Operator.new(name: :'->', priority: 30){ |l, r, u, s, p| EQL_OPER.call(lhs_vars: [r],
-                                                                            rhs_vars: [l],
-                                                                            universe: u,
-                                                                            stream: s,
-                                                                            parser: p);r },
+    QT_Operator.new(name: :<=>,  priority: 19, bin_meth: :qt_cmp), 
+    QT_Operator.new(name: :**,   priority: 10, bin_meth: :qt_pow), 
+    QT_Operator.new(name: :==,   priority: 20, bin_meth: :qt_eql), 
+    QT_Operator.new(name: :'<>', priority: 20, bin_meth: :qt_neq), # this and the next are equivalent
+    QT_Operator.new(name: :'!=', priority: 20, bin_meth: :qt_neq), # equivalent
+    QT_Operator.new(name: :<=,   priority: 20, bin_meth: :qt_leq), 
+    QT_Operator.new(name: :>=,   priority: 20, bin_meth: :qt_geq), 
+    QT_Operator.new(name: :'.=', priority:  6, bin_meth: :qt_set),
 
-  QT_Operator.new(name: :<=>,  priority: 19, bin_meth: :qt_cmp), 
-  QT_Operator.new(name: :**,   priority: 10, bin_meth: :qt_pow), 
-  QT_Operator.new(name: :==,   priority: 20, bin_meth: :qt_eql), 
-  QT_Operator.new(name: :'<>', priority: 20, bin_meth: :qt_neq), # this and the next are equivalent
-  QT_Operator.new(name: :'!=', priority: 20, bin_meth: :qt_neq), # equivalent
-  QT_Operator.new(name: :<=,   priority: 20, bin_meth: :qt_leq), 
-  QT_Operator.new(name: :>=,   priority: 20, bin_meth: :qt_geq), 
-  QT_Operator.new(name: :'.=', priority:  6, bin_meth: :qt_set),
+    QT_Operator.new(name: :'@0', priority:  7){ |*a| CALL_OPER.call(**__expand(*a)).qt_get(QT_Number::NEG_1, type: :STACK) },
 
-  QT_Operator.new(name: :'@0', priority:  7){ |l,r,u,s,p| CALL_OPER.call(lhs_vars: [l],
-                                                                         rhs_vars: [r],
-                                                                         universe: u,
-                                                                         stream: s,
-                                                                         parser: p).qt_get(QT_Number::NEG_1,
-                                                                                           type: :STACK) },
+    QT_Operator.new(name: :'&&', priority: 24){ |l, r| l.qt_to_bool.bool_val ? r : l },
+    QT_Operator.new(name: :'||', priority: 25){ |l, r| l.qt_to_bool.bool_val ? l : r },
 
-  QT_Operator.new(name: :'&&', priority: 24){ |l, r| l.qt_to_bool.bool_val ? r : l },
-  QT_Operator.new(name: :'||', priority: 25){ |l, r| l.qt_to_bool.bool_val ? l : r },
+    QT_Operator.new(name: :'.S' , priority: 5){ |l, r| l.qt_get(r, type: :STACK)   },
+    QT_Operator.new(name: :'.L' , priority: 5){ |l, r| l.qt_get(r, type: :LOCALS)  },
+    QT_Operator.new(name: :'.G' , priority: 5){ |l, r| l.qt_get(r, type: :GLOBALS) },
 
-  QT_Operator.new(name: :'.S' , priority: 5){ |l, r| l.qt_get(r, type: :STACK)   },
-  QT_Operator.new(name: :'.L' , priority: 5){ |l, r| l.qt_get(r, type: :LOCALS)  },
-  QT_Operator.new(name: :'.G' , priority: 5){ |l, r| l.qt_get(r, type: :GLOBALS) },
+    QT_Operator.new(name: :* , priority: 11, bin_meth: :qt_mul),
+    QT_Operator.new(name: :/ , priority: 11, bin_meth: :qt_div),
+    QT_Operator.new(name: :% , priority: 11, bin_meth: :qt_mod),
+    QT_Operator.new(name: :+ , priority: 12, bin_meth: :qt_add),
+    QT_Operator.new(name: :- , priority: 12, bin_meth: :qt_sub),
+    QT_Operator.new(name: :< , priority: 20, bin_meth: :qt_lth),
+    QT_Operator.new(name: :> , priority: 20, bin_meth: :qt_gth),
 
-  QT_Operator.new(name: :* , priority: 11, bin_meth: :qt_mul),
-  QT_Operator.new(name: :/ , priority: 11, bin_meth: :qt_div),
-  QT_Operator.new(name: :% , priority: 11, bin_meth: :qt_mod),
-  QT_Operator.new(name: :+ , priority: 12, bin_meth: :qt_add),
-  QT_Operator.new(name: :- , priority: 12, bin_meth: :qt_sub),
-  QT_Operator.new(name: :< , priority: 20, bin_meth: :qt_lth),
-  QT_Operator.new(name: :> , priority: 20, bin_meth: :qt_gth),
+    QT_Operator.new(name: :'=' , priority: 35){ |l, r,  u|      u.locals[l] = r; r       }, # this is akin to `.=`
+    QT_Operator.new(name: :'@' , priority:  7){ |l, r, u, s, p| l.qt_call(r, u, s, p)    },
+    QT_Operator.new(name: :'.' , priority:  5){ |l, r,  u|      l.qt_get(r, type: :BOTH) },
 
-  QT_Operator.new(name: :'=' , priority: 35){ |l, r,  u|      u.locals[l] = r; r       }, # this is akin to `.=`
-  QT_Operator.new(name: :'@' , priority:  7){ |l, r, u, s, p| l.qt_call(r, u, s, p)    },
-  QT_Operator.new(name: :'.' , priority:  5){ |l, r,  u|      l.qt_get(r, type: :BOTH) },
+    QT_Operator.new(name: :';' , priority: 40, operands: [1, 0]){ true },
+    QT_Operator.new(name: :',' , priority: 40, operands: [1, 0]){ |l| l },
+    QT_Operator.new(name: :'?' , priority:  1, operands: [1, 0]){ |l, u|       u.qt_get(l, type: :NON_STACK) }, # akin to `.`
+    QT_Operator.new(name: :'!' , priority:  1, operands: [1, 0]){ |l, u, s, p| l.qt_eval(u, s, p) }, #universe, stream, parser
+  ]
 
-  QT_Operator.new(name: :';' , priority: 40, operands: [1, 0]){ true },
-  QT_Operator.new(name: :',' , priority: 40, operands: [1, 0]){ |l| l },
-  QT_Operator.new(name: :'?' , priority:  1, operands: [1, 0]){ |l, u|       u.qt_get(l, type: :NON_STACK) }, # akin to `.`
-  QT_Operator.new(name: :'!' , priority:  1, operands: [1, 0]){ |l, u, s, p| l.qt_eval(u, s, p) }, #universe, stream, parser
-]
+  EQL_OPER  = Operators::OPERATORS.find{ |e| e.name == :'=' }
+  CALL_OPER = Operators::OPERATORS.find{ |e| e.name == :'@' }
 
-EQL_OPER  = Operators::OPERATORS.find{ |e| e.name == :'=' }
-CALL_OPER = Operators::OPERATORS.find{ |e| e.name == :'@' }
-
-
+end
 
 
 

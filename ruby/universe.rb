@@ -71,7 +71,7 @@ class UniverseOLD
     end
     def qt_get(pos, type: :BOTH) #ignores type
       return QT_Universe.new(body: '', universe: self, parens: ['<', '>']) if pos == QT_Variable.new( :'$' )
-      self[pos]
+      self[pos] || QT_Null::INSTANCE
     end
 
   # repr
