@@ -69,7 +69,7 @@ class UniverseOLD
         QT_Null::INSTANCE
       end
     end
-    def qt_get(pos:, type: :BOTH) #ignores type
+    def qt_get(pos, type: :BOTH) #ignores type
       self[pos]
     end
 

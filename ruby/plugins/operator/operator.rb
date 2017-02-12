@@ -43,12 +43,14 @@ Operators::OPERATORS = [
   QT_Operator.new(name: :>=,   priority: 20, bin_meth: :qt_geq), 
   QT_Operator.new(name: :'.=', priority:  6, bin_meth: :qt_set),
 
-  QT_Operator.new(name: :'@0', priority:  7){ |*a| CALL_OPER.call(*a).qt_get(pos: QT_Number::NEG_1, type: :STACK) },
+  QT_Operator.new(name: :'@0', priority:  7){ |*a| CALL_OPER.call(*a).qt_get(QT_Number::NEG_1, type: :STACK) },
+
   QT_Operator.new(name: :'&&', priority: 24){ |l, r| l.qt_to_bool.bool_val ? r : l },
   QT_Operator.new(name: :'||', priority: 25){ |l, r| l.qt_to_bool.bool_val ? l : r },
-  QT_Operator.new(name: :'.S' , priority: 5){ |l, r| l.qt_get(pos: R, type: :STACK) },
-  QT_Operator.new(name: :'.L' , priority: 5){ |l, r| l.qt_get(pos: R, type: :LOCALS) },
-  QT_Operator.new(name: :'.G' , priority: 5){ |l, r| l.qt_get(pos: R, type: :GLOBALS) },
+
+  QT_Operator.new(name: :'.S' , priority: 5){ |l, r| l.qt_get(r, type: :STACK)   },
+  QT_Operator.new(name: :'.L' , priority: 5){ |l, r| l.qt_get(r, type: :LOCALS)  },
+  QT_Operator.new(name: :'.G' , priority: 5){ |l, r| l.qt_get(r, type: :GLOBALS) },
 
   QT_Operator.new(name: :* , priority: 11, bin_meth: :qt_mul),
   QT_Operator.new(name: :/ , priority: 11, bin_meth: :qt_div),
@@ -58,13 +60,13 @@ Operators::OPERATORS = [
   QT_Operator.new(name: :< , priority: 20, bin_meth: :qt_lth),
   QT_Operator.new(name: :> , priority: 20, bin_meth: :qt_gth),
 
-  QT_Operator.new(name: :'=' , priority: 30){ |l, r, u| u.locals[l] = r },
-  QT_Operator.new(name: :'@' , priority:  7){ |l, r, *a| l.qt_call(r, *a) },
-  QT_Operator.new(name: :'.' , priority:  5){ |r, l, u| l.qt_get(pos: r, type: :BOTH) },
+  QT_Operator.new(name: :'=' , priority: 30){ |l, r,  u| u.locals[l] = r               },
+  QT_Operator.new(name: :'@' , priority:  7){ |l, r, *a| l.qt_call(r, *a)              },
+  QT_Operator.new(name: :'.' , priority:  5){ |r, l,  u| l.qt_get(r, type: :BOTH) },
 
   QT_Operator.new(name: :';' , priority: 40, operands: [1, 0]){ true },
   QT_Operator.new(name: :',' , priority: 40, operands: [1, 0]){ |l| l },
-  QT_Operator.new(name: :'?' , priority:  1, operands: [1, 0]){ |l,  u| u.qt_get(pos: l, type: :NON_STACK) },
+  QT_Operator.new(name: :'?' , priority:  1, operands: [1, 0]){ |l,  u| u.qt_get(l, type: :NON_STACK) },
   QT_Operator.new(name: :'!' , priority:  1, operands: [1, 0]){ |l, *a| l.qt_eval(*a) },
 ]
 

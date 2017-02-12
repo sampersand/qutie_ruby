@@ -33,11 +33,12 @@ class QT_Universe < QT_Object
   # qt methods
 
     def qt_method(meth:)
+      # this method is deprecated for now
       case meth
       when :append then proc{|args|
         @universe.stack << args.stack[0]
       }
-      else qt_get(pos: QT_Variable::from(source: '__' + meth.to_s), type: :LOCALS)#fail "Unknown method `#{meth}`"
+      else qt_get(QT_Variable::from(source: '__' + meth.to_s), type: :LOCALS)#fail "Unknown method `#{meth}`"
       end
     end
 

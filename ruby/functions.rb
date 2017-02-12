@@ -99,8 +99,8 @@ module Functions
       end
     },
     QT_Variable.new( :disp ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
-      endl = args.qt_get(pos: QT_Variable.new( :end ), type: :BOTH)
-      sep  = args.qt_get(pos: QT_Variable.new( :sep ), type: :BOTH) || ""
+      endl = args.qt_get(QT_Variable.new( :end ), type: :BOTH)
+      sep  = args.qt_get(QT_Variable.new( :sep ), type: :BOTH) || ""
       endl = QT_Text.new("\n") if endl == QT_Null::INSTANCE
       sep = QT_Text.new('') if sep == QT_Null::INSTANCE
       args.locals[:sep] = sep # forces it to be '' if not specified, but doesnt override text's default
@@ -150,7 +150,7 @@ module Functions
     },
     QT_Variable.new( :text ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       if args.respond_to?(:qt_get)
-        sep  = args.qt_get(pos: QT_Variable.new( :sep ), type: :BOTH)
+        sep  = args.qt_get(QT_Variable.new( :sep ), type: :BOTH)
         sep = QT_Text::new(' ') if sep == QT_Null::INSTANCE;
         QT_Text::new(args.stack.collect{ |arg|
             qutie_func(arg, universe, parser, :__text){ |a| a.nil? ? a.inspect : a.qt_to_text.text_val }
