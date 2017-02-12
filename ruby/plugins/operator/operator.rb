@@ -31,13 +31,14 @@ class QT_Operator < QT_Object
   end
 
 end
+
 module Operators; end
+
 Operators::OPERATORS = [
-  QT_Operator.new(name: :':' , priority: 30){ |**kw| Operators::OPERATORS['='].call(**kw) },
-  QT_Operator.new(name: :'->', priority: 30){ |**kw| Operators::OPERATORS['='].call(**kw) },
-  QT_Operator.new(name: :'<-', priority: 30){ |lhs_vars:, rhs_vars:, **kw|
-    Operators::OPERATORS['='].call(lhs_vars: rhs_vars, rhs_vars: lhs_vars, **kw)
-  },
+  QT_Operator.new(name: :':' , priority: 30){ |**kw| EQL_OPER.call(**kw) },
+  QT_Operator.new(name: :'->', priority: 30){ |**kw| EQL_OPER.call(**kw) },
+  QT_Operator.new(name: :'<-', priority: 30){ |lhs_vars:, rhs_vars:, **kw| EQL_OPER.call(lhs_vars: rhs_vars, rhs_vars: lhs_vars, **kw) },
+
   QT_Operator.new(name: :<=>,  priority: 19, bin_meth: :qt_cmp), 
   QT_Operator.new(name: :**,   priority: 10, bin_meth: :qt_pow), 
   QT_Operator.new(name: :==,   priority: 20, bin_meth: :qt_eql), 
@@ -51,10 +52,8 @@ Operators::OPERATORS = [
   QT_Operator.new(name: :'||', priority: 25){ |lhs_vars:, rhs_vars:, **_|
     l = lhs_vars[0]; r = rhs_vars[0]; l.qt_to_bool.bool_val ? l : r 
   },
-  QT_Operator.new(name: :'@0', priority:  7) { |**kw|
-    Operators::OPERATORS['@'].call(**kw).qt_get(pos: QT_Number::NEG_1, type: :STACK)
-  },
-  # QT_Operator.new(name: :'.=', priority: 6){ |arg, pos| args.qt_set(pos, type: :STACK) }, # todo: fix this
+  QT_Operator.new(name: :'@0', priority:  7) { |**kw| CALL_OPER.call(**kw).qt_get(pos: QT_Number::NEG_1, type: :STACK) },
+  QT_Operator.new(name: :'.=', priority:  6, bin_meth: :qt_set),
   QT_Operator.new(name: :'.S' , priority: 5){ |lhs_vars:, rhs_vars:, **_| 
     lhs_vars[0].qt_get(pos: rhs_vars[0], type: :STACK) || QT_Null::INSTANCE
   },
@@ -95,7 +94,8 @@ Operators::OPERATORS = [
   },
 ]
 
-
+EQL_OPER  = Operators::OPERATORS.find{ |e| e.name == :'=' }
+CALL_OPER = Operators::OPERATORS.find{ |e| e.name == :'@' }
 
 
 
