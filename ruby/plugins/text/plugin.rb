@@ -1,50 +1,48 @@
+p '`'.chr.ord.to_s(16)
 require_relative 'text'
 module Text
-  QUOTES = ["'", '"', '`']
-  EXCAPE_CHAR = '\\'
-  REPLACEMENTS = {
-    'n' => "\n",
-    't' => "\t",
-    'r' => "\r",
-    'f' => "\f",
-  }
-  
+  QUOTES = [ QT_Default.new( :"'" ),
+             QT_Default.new( :'"' ),
+             QT_Default.new( :'`' ) ]
+  ESCAPE_CHAR = QT_Default.new( :'\\')
   module_function
 
   def escape(stream:)
-    case (chr=stream.next)
-    when 'n' then "\n"
-    when 't' then "\t"
-    when 'r' then "\r"
-    when 'f' then "\f"
-    when 'u' then stream.next(amnt: 4).to_i(16).chr(Encoding::UTF_8)
-    when 'U' then stream.next(amnt: 8).to_i(16).chr(Encoding::UTF_16)
+    case (chr=stream._next)
+    when QT_Default.new( :'0' ) then QT_Default.new( :"\u0000" )
+    when QT_Default.new( :n )   then QT_Default.new( :"\n"     )
+    when QT_Default.new( :t )   then QT_Default.new( :"\t"     )
+    when QT_Default.new( :r )   then QT_Default.new( :"\r"     )
+    when QT_Default.new( :f )   then QT_Default.new( :"\f"     )
+    when QT_Default.new( :u )   then QT_Default.new( stream._next( 4 ).text_val.to_i(16).chr(Encoding::UTF_8 ).to_sym )
+    when QT_Default.new( :U )   then QT_Default.new( stream._next( 8 ).text_val.to_i(16).chr(Encoding::UTF_16).to_sym )
     else chr
     end
   end
   def next_token!(stream:, **_)
-    return unless stream.peek_any?(vals: QUOTES) # if quotes change length this will break
-    quote = stream.next # if quotes change length this will break
+    # this iwll need to be changed if any of the quotes or escape chars change to longer than 1 char
+
+    return unless QUOTES.any?{ |q| q == stream._peek }
+    quote = stream._next # if quotes change length this will break
     body = quote
 
     catch(:EOF) {
-      until stream.peek?(str: quote)
-        if stream.peek?(str: EXCAPE_CHAR)
-          stream.next(amnt: EXCAPE_CHAR.length) # pop the \
+      until quote == stream._peek
+        if ESCAPE_CHAR == stream._peek
+          stream._next
           body += escape(stream: stream)
         else
-          body += stream.next
+          body += stream._next
         end
       end
-      fail unless stream.peek?(str: quote)
-      body += stream.next(amnt: quote.length)
+      fail unless quote == stream._peek
+      body += stream._next
       true
     } or fail "Reach EOF before finishing string starting with: #{quote}"
-    body
-
+    QT_Text::from( body )
   end
 
   def handle(token:, universe:, **_)
-    universe << QT_Text::from(token)
+    universe << token
   end
 end
