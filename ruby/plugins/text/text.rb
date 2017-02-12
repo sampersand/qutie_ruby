@@ -63,13 +63,13 @@ class QT_Text < QT_Object
 
 
       private
-        def text_func_r(right, lmeth, rmeth=:qt_to_text)
+        def text_func_r(left, rmeth, lmeth=:qt_to_text)
+          left = left.method(lmeth).() or return
+          QT_Text.new(left.text_val.method(rmeth).call(@text_val), quotes: @quotes)
+        end
+        def text_func_l(right, lmeth, rmeth=:qt_to_text)
           right = right.method(rmeth).() or return
           QT_Text.new(@text_val.method(lmeth).call(right.text_val), quotes: @quotes)
-        end
-        def text_func_l(left, lmeth, rmeth=:qt_to_text)
-          left = left.method(rmeth).() or return
-          QT_Text.new(left.text_val.method(lmeth).call(@text_val), quotes: @quotes)
         end
       public
       # math

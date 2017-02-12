@@ -4,7 +4,7 @@ module Variable
   module_function
   
   VARIABLE_START = QT_Regex.new( /[a-z_$]/i )
-  VARIABLE_CONT  = QT_Regex.new( /[a-z_0-9]/i )
+  VARIABLE_CONT  = QT_Regex.new( /[a-z_0-9 ]/i )
 
   def next_token!(stream:, universe:, parser:, **_)
     return if stream._peek.qt_rgx(VARIABLE_START)._nil?
@@ -14,7 +14,8 @@ module Variable
       result = result.qt_add( stream._next ) until stream._peek.qt_rgx( VARIABLE_CONT )._nil?
       nil
     end
-    QT_Variable::from(source: result)
+    # QT_Variable::from(source: result)
+    QT_Variable.new(result.text_val.strip.to_sym)
   end
 
   def handle(token:, universe:, **_)

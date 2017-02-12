@@ -1,10 +1,10 @@
-a;
+# a;
 
-foo = {
-  bar={
-    A?+b?
-  };
-  bar?@(A=3);
-};
-bar={};
-foo?@(A=3;)!
+# foo = {bar={A?+b? }; bar?@(A=3); };
+# bar={};
+# foo?@(A=3;)!
+a=3;
+Current Speed = 65;
+Speed Limit = 0;
+Am I Speeding = Current Speed? > Speed Limit?;
+disp?@(Am I Speeding?)!;

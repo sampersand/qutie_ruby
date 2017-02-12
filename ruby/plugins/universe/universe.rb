@@ -3,22 +3,20 @@ class QT_Universe < QT_Object
   attr_reader :universe
   attr_reader :body
   attr_reader :parens
-  attr_reader :context
   attr_accessor :__start_line_no 
-  def self.from(source:, current_universe:, parens:, context: )
+  def self.from(source:, current_universe:, parens:)
     # warn("QT_Universe::from doesnt conform to others!")
     new_universe = UniverseOLD.new
     new_universe.stack = source.source_val.to_s.each_char.collect{ |c| QT_Default::from(c) }
     # new_universe.locals = current_universe.locals
     # new_universe.globals = current_universe.globals
-    new(body: source, universe: new_universe, parens: parens, context: context)
+    new(body: source, universe: new_universe, parens: parens)
   end
 
-  def initialize(body:, universe:, parens:, context: nil)
+  def initialize(body:, universe:, parens:)
     @body = body
     @parens = parens
     @universe = universe
-    @context = context
     @__start_line_no = 0
   end
 
@@ -28,7 +26,7 @@ class QT_Universe < QT_Object
     @universe.to_s 
   end
   def inspect_to_s
-    "line: #{@context ? @context.line_no : nil}, #{@universe}"
+    "line: #{@__start_line_no}, #{@universe}"
   end
 
   def clone
@@ -86,7 +84,10 @@ class QT_Universe < QT_Object
       end
 
       case type 
-      when :STACK then @universe.stack[(pos.qt_to_num or return QT_Null::INSTANCE).num_val] or QT_Null::INSTANCE
+      when :STACK
+        stack_val = pos.qt_to_num
+        return QT_Null::INSTANCE unless stack_val.respond_to?(:num_val)
+        @universe.stack[stack_val.num_val] or QT_Null::INSTANCE
       when :LOCALS then @universe.locals[pos] or QT_Null::INSTANCE
       when :GLOBALS then @universe.globals[pos] or QT_Null::INSTANCE
       else fail "Unknown qt_get type `#{type}`!"

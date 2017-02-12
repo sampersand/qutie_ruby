@@ -99,16 +99,14 @@ module Functions
       end
     },
     QT_Variable.new( :disp ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
-      endl = args.qt_get(QT_Variable.new( :end ), type: :BOTH)
-      sep  = args.qt_get(QT_Variable.new( :sep ), type: :BOTH) || ""
+
+      endl = args.qt_get( QT_Variable.new( :end ), type: :NON_STACK)
+      sep  = args.qt_get( QT_Variable.new( :sep ), type: :NON_STACK)
       endl = QT_Text.new("\n") if endl == QT_Null::INSTANCE
       sep = QT_Text.new('') if sep == QT_Null::INSTANCE
       args.locals[:sep] = sep # forces it to be '' if not specified, but doesnt override text's default
-      to_print=FUNCTIONS[QT_Variable.new( :text )].qt_call(args: args,
-                                                                    universe: universe,
-                                                                    stream: stream,
-                                                                    parser: parser) 
-      print(to_print.qt_add(right: endl).text_val)
+      to_print=FUNCTIONS[QT_Variable.new( :text )].qt_call(args, universe, stream, parser) 
+      print(to_print.qt_add( endl ).text_val)
       true
     },
 

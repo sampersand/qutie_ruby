@@ -16,8 +16,7 @@ module Universe
     return unless L_PARENS.any?{ |lp| lp == stream._peek( lp._length ) }
     start_paren = stream._next
     body = QT_Default::EMPTY
-    current_context = $QT_CONTEXT.current
-    start_line_no = current_context.line_no
+    start_line_no = $QT_CONTEXT.current.line_no
     parens = 1
     catch(:EOF) do
       loop do
@@ -63,9 +62,8 @@ module Universe
     end_paren = stream._next
     res=QT_Universe::from(source: body,
                       current_universe: universe, 
-                      parens: [start_paren, end_paren],
-                      context: current_context)
-    res.__start_line_no=start_line_no
+                      parens: [start_paren, end_paren])
+    res.__start_line_no = start_line_no
     res
   end
 

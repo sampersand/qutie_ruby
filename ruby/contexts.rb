@@ -18,7 +18,7 @@ class Context
   end
 
   def file_line
-    @start_line_no + line_no
+    @start_line_no +  line_no
   end
 
   def line_no
@@ -50,7 +50,7 @@ class Context
   end
 
   def clone
-    self.class.new(@stream.clone, @file.clone, @context_manager.clone, @univ)
+    self.class.new(@stream.clone, @file.clone, @context_manager.clone, @univ.clone)
   end
 
 end
