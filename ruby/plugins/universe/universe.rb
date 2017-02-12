@@ -46,24 +46,24 @@ class QT_Universe < QT_Object
       end
 
 
-    def qt_eval(universe, _, parser)
+    def qt_eval(universe, _stream, parser)
       universe = universe.spawn_new_stack(new_stack: nil).clone
       res = parser.parse!(stream: @universe.clone, universe: universe)
       QT_Universe.new(body: '', universe: res, parens: ['<', '>']) # this is where it gets hacky
     end
 
-    def qt_call(args:, parser:, **_) # fix this
+    def qt_call(args, universe, _stream, parser) # fix this
       raise "Args have to be a universe, not `#{args.class}`" unless args.is_a?(QT_Universe)
       passed_args = args.clone
       passed_args.globals.update(passed_args.locals)
       passed_args.locals.clear
       # passed_args.stack.clear
-      passed_args.locals[QT_Variable::from(source: '__args')] = args #somethign here with spawn off
+      passed_args.locals[QT_Variable.new :__args ] = args
       # func.program_stack.push args
       parser.parse!(stream: @universe.clone, universe: passed_args)
       # func.program_stack.pop
     end
-    def qt_get(pos:, type:)  # fix this
+    def qt_get(pos, type:)  # fix this
       case type
       when :BOTH then type = @universe.locals.include?(pos) ? :LOCALS : :STACK
       when :NON_STACK then type = @universe.locals.include?(pos) ? :LOCALS : :GLOBALS
