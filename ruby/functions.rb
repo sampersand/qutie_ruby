@@ -3,7 +3,7 @@ module Functions
     def initialize(&block)
       @func = block
     end
-    def qt_call(args:, universe:, stream:, parser:)
+    def qt_call(args, universe, stream, parser)
       @func.call(args, universe, stream, parser) || universe << QT_Null::INSTANCE
     end
     def to_s?
@@ -145,8 +145,8 @@ module Functions
     },
 
     QT_Variable.new( :stop ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
-      exit_code = args.stack.last
-      exit(exit_code || 0)
+      exit_code = args.stack.last || fail
+      exit(exit_code.qt_to_num.num_val || 0)
     },
     QT_Variable.new( :text ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       if args.respond_to?(:qt_get)

@@ -67,8 +67,8 @@ class QT_Object
 
         # def qt_cmp(right:) end
         def qt_eql(right)
-          res = qt_eql_r(right); return res unless res._missing?
-          res = right.qt_eql_l(self); return res unless res._missing?
+          res = qt_eql_l(right); return res unless res._missing?
+          res = right.qt_eql_r(self); return res unless res._missing?
           # return res.qt_equal( QT_Number::ZERO ) unless (res = qt_cmp(right))._missing?
           QT_False::INSTANCE
         end
@@ -94,13 +94,13 @@ class QT_Object
         def qt_rgx(right) res = qt_rgx_l(right); return res unless res._missing?; right.qt_rgx_r(self) end
 
       # math
-        def qt_cmp(right) res = qt_cmp_r(right); return res unless res._missing?; right.qt_cmp_l(self) end
-        def qt_add(right) res = qt_add_r(right); return res unless res._missing?; right.qt_add_l(self) end
-        def qt_sub(right) res = qt_sub_r(right); return res unless res._missing?; right.qt_sub_l(self) end
-        def qt_mul(right) res = qt_mul_r(right); return res unless res._missing?; right.qt_mul_l(self) end
-        def qt_div(right) res = qt_div_r(right); return res unless res._missing?; right.qt_div_l(self) end
-        def qt_mod(right) res = qt_mod_r(right); return res unless res._missing?; right.qt_mod_l(self) end
-        def qt_pow(right) res = qt_pow_r(right); return res unless res._missing?; right.qt_pow_l(self) end
+        def qt_cmp(right) res = qt_cmp_l(right); return res unless res._missing?; right.qt_cmp_r(self) end
+        def qt_add(right) res = qt_add_l(right); return res unless res._missing?; right.qt_add_r(self) end
+        def qt_sub(right) res = qt_sub_l(right); return res unless res._missing?; right.qt_sub_r(self) end
+        def qt_mul(right) res = qt_mul_l(right); return res unless res._missing?; right.qt_mul_r(self) end
+        def qt_div(right) res = qt_div_l(right); return res unless res._missing?; right.qt_div_r(self) end
+        def qt_mod(right) res = qt_mod_l(right); return res unless res._missing?; right.qt_mod_r(self) end
+        def qt_pow(right) res = qt_pow_l(right); return res unless res._missing?; right.qt_pow_r(self) end
 
         def qt_add_r(_) QT_Missing::INSTANCE end
         def qt_sub_r(_) QT_Missing::INSTANCE end
