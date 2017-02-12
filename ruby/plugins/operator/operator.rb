@@ -31,9 +31,21 @@ end
 module Operators; end
 
 Operators::OPERATORS = [
-  QT_Operator.new(name: :':' , priority: 30){ |*a|       EQL_OPER.call(*a)       },
-  QT_Operator.new(name: :'->', priority: 30){ |*a|       EQL_OPER.call(*a)       },
-  QT_Operator.new(name: :'<-', priority: 30){ |l, r, *a| EQL_OPER.call(r, l, *a) },
+  QT_Operator.new(name: :':' , priority: 36){ |l, r, u, s, p| EQL_OPER.call(lhs_vars: [l],
+                                                                            rhs_vars: [r],
+                                                                            universe: u,
+                                                                            stream: s,
+                                                                            parser: p) },
+  QT_Operator.new(name: :'<-', priority: 30){ |l, r, u, s, p| EQL_OPER.call(lhs_vars: [l],
+                                                                            rhs_vars: [r],
+                                                                            universe: u,
+                                                                            stream: s,
+                                                                            parser: p) },
+  QT_Operator.new(name: :'->', priority: 30){ |l, r, u, s, p| EQL_OPER.call(lhs_vars: [r],
+                                                                            rhs_vars: [l],
+                                                                            universe: u,
+                                                                            stream: s,
+                                                                            parser: p);r },
 
   QT_Operator.new(name: :<=>,  priority: 19, bin_meth: :qt_cmp), 
   QT_Operator.new(name: :**,   priority: 10, bin_meth: :qt_pow), 
@@ -61,7 +73,7 @@ Operators::OPERATORS = [
   QT_Operator.new(name: :< , priority: 20, bin_meth: :qt_lth),
   QT_Operator.new(name: :> , priority: 20, bin_meth: :qt_gth),
 
-  QT_Operator.new(name: :'=' , priority: 30){ |l, r,  u|      u.locals[l] = r          }, # this is akin to `.=`
+  QT_Operator.new(name: :'=' , priority: 35){ |l, r,  u|      u.locals[l] = r; r       }, # this is akin to `.=`
   QT_Operator.new(name: :'@' , priority:  7){ |l, r, u, s, p| l.qt_call(r, u, s, p)    },
   QT_Operator.new(name: :'.' , priority:  5){ |l, r,  u|      l.qt_get(r, type: :BOTH) },
 
