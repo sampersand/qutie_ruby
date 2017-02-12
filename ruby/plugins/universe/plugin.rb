@@ -16,7 +16,7 @@ module Universe
     return unless L_PARENS.any?{ |lp| lp == stream._peek( lp._length ) }
     start_paren = stream._next
     body = QT_Default::EMPTY
-    __starting_line_no = stream.__line_no
+    current_context = $QT_CONTEXT.current.clone
     parens = 1
     catch(:EOF) do
       loop do
@@ -56,13 +56,15 @@ module Universe
         end
         body += stream._next
       end
-    end
+      true
+    end or throw(:ERROR, QTError_Syntax_EOF.new($QT_CONTEXT.current,
+                                                "Reached EOF before finishing universe starting with: #{start_paren}"))
 
     end_paren = stream._next
     QT_Universe::from(source: body,
                       current_universe: universe, 
                       parens: [start_paren, end_paren],
-                      __starting_line_no: __starting_line_no)
+                      context: current_context)
   end
 
   def handle(token:, universe:, **_)

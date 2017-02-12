@@ -2,7 +2,7 @@ class QT_Variable < QT_Object
 
   attr_reader :var_val
   def self.from(source:)
-    fail "Bad source type `#{source.class}`" unless source.is_a?(QT_Default)
+    fail "INTERNAL: Bad source type `#{source.class}`" unless source.is_a?(QT_Default)
     new( source.source_val.to_sym )
   end
   

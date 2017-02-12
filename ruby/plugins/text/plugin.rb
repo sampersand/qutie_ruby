@@ -28,7 +28,7 @@ module Text
     end_quote = nil
     body = QT_Default::EMPTY
 
-    catch(:EOF) {
+    catch(:EOF) do
       until start_quote == stream._peek( start_quote._length )
         if ESCAPE == stream._peek(ESCAPE._length )
           stream._next( ESCAPE._length )
@@ -40,7 +40,8 @@ module Text
       end_quote = stream._next( start_quote._length )
       fail unless start_quote == end_quote
       true
-    } or fail "Reach EOF before finishing string starting with: #{start_quote}"
+    end or throw(:ERROR, QTError_Syntax_EOF.new($QT_CONTEXT.current,
+                                                "Reached EOF before finishing string starting with: #{start_quote}"))
     QT_Text::from( body, quotes: [start_quote, end_quote] )
   end
 

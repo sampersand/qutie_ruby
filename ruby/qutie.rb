@@ -1,4 +1,5 @@
 require_relative 'pre_parser'
+require_relative 'contexts'
 require_relative 'parser'
 require_relative 'exceptions/exception'
 require_relative 'plugins/whitespace/plugin'
@@ -28,13 +29,15 @@ text = open(file, 'r').read
 
 # puts text
 # exit
+$QT_CONTEXT = Contexts.new
+res=nil
 err = catch(:ERROR) do 
   res = parser.process(input: text)
   nil
 end
 
 if err
-  puts "ERROR: #{err}"
+  puts "--ERROR--\n#{err.to_s.gsub(/\n/, "\n\t")}\n\n"
   exit(1)
 end
 

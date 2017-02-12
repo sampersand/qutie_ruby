@@ -65,7 +65,7 @@ class QT_Object
           qt_del(QT_Number.new(num_val: amnt), type: :STACK)
           res
         end
-      # misc
+      # comp
         def qt_call(args:, universe:, stream:, parser:) end
 
 
@@ -95,22 +95,25 @@ class QT_Object
           cmp._missing? ? QT_Missing::INSTANCE : QT_Boolean::get( cmp.num_val <= 0 )
         end
 
-        def qt_rgx(right) res = qt_rgx_l(right); return res unless res._missing?; right.qt_rgx_r(self) end
+      #3##
 
-      # math
-        def qt_cmp(right) res = qt_cmp_l(right); return res unless res._missing?; right.qt_cmp_r(self) end
-        def qt_add(right)
-          res = qt_add_l(right)
+        def __bi_method(right)
+          callername = caller_locations(1,1)[0].label
+          res = method(callername + '_l').(right)
           return res unless res._missing?
-          res = right.qt_add_r(self)
+          res = right.method(callername + '_r').(self)
           return res unless res._missing?
-          throw :ERROR, [ QT_MethodMissingError, :qt_add, self, right ]
+          throw(:ERROR, QTError_MethodMissing.new($QT_CONTEXT.current, callername, self, right))
         end
-        def qt_sub(right) res = qt_sub_l(right); return res unless res._missing?; right.qt_sub_r(self) end
-        def qt_mul(right) res = qt_mul_l(right); return res unless res._missing?; right.qt_mul_r(self) end
-        def qt_div(right) res = qt_div_l(right); return res unless res._missing?; right.qt_div_r(self) end
-        def qt_mod(right) res = qt_mod_l(right); return res unless res._missing?; right.qt_mod_r(self) end
-        def qt_pow(right) res = qt_pow_l(right); return res unless res._missing?; right.qt_pow_r(self) end
+
+        def qt_rgx(right) __bi_method(right) end
+        def qt_add(right) __bi_method(right) end
+        def qt_cmp(right) __bi_method(right) end
+        def qt_sub(right) __bi_method(right) end
+        def qt_mul(right) __bi_method(right) end
+        def qt_div(right) __bi_method(right) end
+        def qt_mod(right) __bi_method(right) end
+        def qt_pow(right) __bi_method(right) end
 
         def qt_add_r(_) QT_Missing::INSTANCE end
         def qt_sub_r(_) QT_Missing::INSTANCE end

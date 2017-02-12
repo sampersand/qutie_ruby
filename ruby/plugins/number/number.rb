@@ -49,11 +49,13 @@ class QT_Number < QT_Object
     # operators
         private
           def numer_func_l(right, lmeth)
-            right = right.qt_to_num or return QT_Missing::INSTANCE
+            right = right.qt_to_num 
+            return right if right == QT_Missing::INSTANCE 
             QT_Number.new(@num_val.method(lmeth).call(right.num_val))
           end
           def numer_func_r(left, lmeth)
-            left = left.qt_to_num or return QT_Missing::INSTANCE
+            left = left.qt_to_num 
+            return left if left == QT_Missing::INSTANCE 
             QT_Number.new(left.num_val.method(lmeth).call(@num_val) )
           end
 

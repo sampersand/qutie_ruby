@@ -26,7 +26,10 @@ class Parser
     universe = UniverseOLD.new
     universe.globals.update(@builtins)
     universe.globals.update(additional_builtins)
-    parse!(stream: stream, universe: universe) #dont need to copy stream cause we just made it.
+    $QT_CONTEXT.start(stream)
+    res = parse!(stream: stream, universe: universe) #dont need to copy stream cause we just made it.
+    $QT_CONTEXT.stop(stream)
+    res
   end
 
   def parse!(stream:, universe:)

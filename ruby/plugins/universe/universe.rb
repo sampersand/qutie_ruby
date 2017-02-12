@@ -4,20 +4,20 @@ class QT_Universe < QT_Object
   attr_reader :body
   attr_reader :parens
 
-  def self.from(source:, current_universe:, parens:, __starting_line_no: )
+  def self.from(source:, current_universe:, parens:, context: )
     # warn("QT_Universe::from doesnt conform to others!")
     new_universe = UniverseOLD.new
     new_universe.stack = source.source_val.to_s.each_char.collect{ |c| QT_Default::from(c) }
     # new_universe.locals = current_universe.locals
     # new_universe.globals = current_universe.globals
-    new(body: source, universe: new_universe, parens: parens, __starting_line_no: __starting_line_no)
+    new(body: source, universe: new_universe, parens: parens, context: context)
   end
 
-  def initialize(body:, universe:, parens:, __starting_line_no: -1)
+  def initialize(body:, universe:, parens:, context: nil)
     @body = body
     @parens = parens
     @universe = universe
-    @__starting_line_no = __starting_line_no
+    @context = context
   end
 
   def to_s
@@ -26,7 +26,7 @@ class QT_Universe < QT_Object
     @universe.to_s 
   end
   def inspect_to_s
-    "line: #{@__starting_line_no}, #{@universe}"
+    "line: #{@context ? @context.line_no : nil}, #{@universe}"
   end
 
   def clone
@@ -105,9 +105,6 @@ class QT_Universe < QT_Object
     end
 
 
-    def qt_throw(err:, **kw)
-      throw err, **kw
-    end
 end
 
 
