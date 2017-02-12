@@ -72,11 +72,25 @@ class QT_Object
           # return res.qt_equal( QT_Number::ZERO ) unless (res = qt_cmp(right))._missing?
           QT_False::INSTANCE
         end
-        # def qt_neq(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val != 0) end
-        # def qt_gth(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val == 1) end
-        # def qt_lth(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val == -1) end
-        # def qt_leq(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val <= 0) end
-        # def qt_geq(right:) ret = qt_cmp(right: right); ret && QT_Boolean::get(ret.num_val >= 0) end
+        def qt_neq(right) qt_eql(right).qt_not  end
+        def qt_gth(right)
+          cmp = qt_cmp(right)
+          cmp._missing? ? QT_Missing::INSTANCE : QT_Boolean::get( cmp.num_val < 0 )
+        end
+
+        def qt_lth(right)
+          cmp = qt_cmp(right)
+          cmp._missing? ? QT_Missing::INSTANCE : QT_Boolean::get( cmp.num_val > 0 )
+        end
+        def qt_leq(right)
+          cmp = qt_cmp(right)
+          cmp._missing? ? QT_Missing::INSTANCE : QT_Boolean::get( cmp.num_val >= 0 )
+        end
+        def qt_geq(right)
+          cmp = qt_cmp(right)
+          cmp._missing? ? QT_Missing::INSTANCE : QT_Boolean::get( cmp.num_val <= 0 )
+        end
+
         def qt_rgx(right) res = qt_rgx_l(right); return res unless res._missing?; right.qt_rgx_r(self) end
 
       # math
@@ -94,7 +108,7 @@ class QT_Object
         def qt_div_r(_) QT_Missing::INSTANCE end
         def qt_mod_r(_) QT_Missing::INSTANCE end
         def qt_pow_r(_) QT_Missing::INSTANCE end
-        def qt_rgx_l(_) QT_Missing::INSTANCE end
+        def qt_rgx_r(_) QT_Missing::INSTANCE end
         def qt_cmp_r(_) QT_Missing::INSTANCE end
         def qt_eql_r(_) QT_Missing::INSTANCE end
         def qt_lth_r(_) QT_Missing::INSTANCE end
@@ -104,13 +118,13 @@ class QT_Object
         def qt_geq_r(_) QT_Missing::INSTANCE end
 
 
-        def qt_add_r(_) QT_Missing::INSTANCE end
-        def qt_sub_r(_) QT_Missing::INSTANCE end
-        def qt_mul_r(_) QT_Missing::INSTANCE end
-        def qt_div_r(_) QT_Missing::INSTANCE end
-        def qt_mod_r(_) QT_Missing::INSTANCE end
-        def qt_pow_r(_) QT_Missing::INSTANCE end
-        def qt_rgx_r(_) QT_Missing::INSTANCE end
+        def qt_add_l(_) QT_Missing::INSTANCE end
+        def qt_sub_l(_) QT_Missing::INSTANCE end
+        def qt_mul_l(_) QT_Missing::INSTANCE end
+        def qt_div_l(_) QT_Missing::INSTANCE end
+        def qt_mod_l(_) QT_Missing::INSTANCE end
+        def qt_pow_l(_) QT_Missing::INSTANCE end
+        def qt_rgx_l(_) QT_Missing::INSTANCE end
         def qt_cmp_l(_) QT_Missing::INSTANCE end
         def qt_eql_l(_) QT_Missing::INSTANCE end
         def qt_lth_l(_) QT_Missing::INSTANCE end
