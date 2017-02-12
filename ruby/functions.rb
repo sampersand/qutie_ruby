@@ -144,10 +144,6 @@ module Functions
 
     },
 
-    QT_Variable.new( :stop ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
-      exit_code = args.stack.last || fail
-      exit(exit_code.qt_to_num.num_val || 0)
-    },
     QT_Variable.new( :text ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       if args.respond_to?(:qt_get)
         sep  = args.qt_get(QT_Variable.new( :sep ), type: :BOTH)
