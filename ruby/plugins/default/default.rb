@@ -1,14 +1,16 @@
 class QT_Default < QT_Object
-  attr_accessor :source_val
+  attr_reader :source_val
+
   def text_val; @source_val.to_s end
   def self.from(source_val)
     new(source_val.to_sym)
   end
-
   def initialize(source_val)
     fail("Source for #{self.class} is not a Symbol, but `#{source_val.class}`") unless source_val.is_a?(Symbol)
-    @source_val = source_val
+    @source_val = source_val # if this is updated, it'll break EMPTY
   end
+  
+  EMPTY = from( '' )
 
   def to_s
     @source_val.to_s

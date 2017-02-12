@@ -1,13 +1,11 @@
 class QT_Universe < QT_Object
-  def self.from(source:, current_universe:)
+  def self.from(source:, current_universe:, parens:)
     # warn("QT_Universe::from doesnt conform to others!")
     new_universe = UniverseOLD.new
-    new_universe.stack = source[1...-1].each_char.to_a
+    new_universe.stack = source.source_val.to_s.each_char.collect{ |c| QT_Default::from(c) }
     # new_universe.locals = current_universe.locals
     # new_universe.globals = current_universe.globals
-    new(body: source[1...-1],
-        universe: new_universe,
-        parens: [source[0], source[-1]])
+    new(body: source, universe: new_universe, parens: parens)
   end
 
   def initialize(body:, universe:, parens:)

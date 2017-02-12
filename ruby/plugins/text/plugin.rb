@@ -5,7 +5,7 @@ module Text
              QT_Default.new( :'"' ),
              QT_Default.new( :'`' ) ]
 
-  ESCAPE_CHAR = QT_Default.new( :'\\' )
+  ESCAPE = QT_Default.new( :'\\' )
 
   module_function
 
@@ -26,12 +26,12 @@ module Text
     return unless QUOTES.any?{ |q| q == stream._peek( q._length ) }
     start_quote = stream._next # if quotes change length this will break
     end_quote = nil
-    body = QT_Default.new( :'' )
+    body = QT_Default::EMPTY
 
     catch(:EOF) {
       until start_quote == stream._peek( start_quote._length )
-        if ESCAPE_CHAR == stream._peek(ESCAPE_CHAR._length )
-          stream._next( ESCAPE_CHAR._length )
+        if ESCAPE == stream._peek(ESCAPE._length )
+          stream._next( ESCAPE._length )
           body += escape(stream: stream)
         else
           body += stream._next
