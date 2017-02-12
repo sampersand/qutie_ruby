@@ -37,7 +37,7 @@ err = catch(:ERROR) do
 end
 
 if err
-  puts "--ERROR--\n#{err.to_s.gsub(/\n/, "\n\t")}\n\n"
+  puts "--ERROR--\n#{err}\n\n"
   exit(1)
 end
 

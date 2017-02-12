@@ -70,7 +70,10 @@ class QT_Universe < QT_Object
       # passed_args.stack.clear
       passed_args.locals[QT_Variable.new :__args ] = args
       # func.program_stack.push args
-      parser.parse!(stream: @universe.clone, universe: passed_args)
+      stream = @universe.clone
+      $QT_CONTEXT.start(stream)
+      parser.parse!(stream: stream, universe: passed_args)
+      $QT_CONTEXT.stop(stream)
       # func.program_stack.pop
     end
     def qt_get(pos, type:)  # fix this

@@ -9,13 +9,10 @@ class QTError# < QT_Object
 
   def to_s
     context = @context.to_s.gsub(/\n/, "\n\t")
-    cls = self.class.to_s.gsub(/\n/, "\n\t")
+    cls = self.class.to_s.split("_")[-1]
     msg = message.to_s.gsub(/\n/, "\n\t")
-# "#{@context.file}: #{@context.current_line}\n#{cls}: #{msg}\n#{@context.current_line}:\t\t#{@context.line( @context.current_line )}"
-# "#{cls}:\n#{msg}\nAt #{@context.file}:#{@context.current_line}:  #{@context.line( @context.current_line )}"
-"#{cls}:\nAt #{@context.file}:#{@context.current_line}:  #{@context.line( @context.current_line )}\n#{msg}"
+"#{$QT_CONTEXT.stacks.collect(&:to_s).join("\n")}\n\t#{cls}: #{msg}"
 end
-
 end
 require_relative 'method_missing'
 require_relative 'syntax_error'

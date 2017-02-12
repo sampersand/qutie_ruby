@@ -1,27 +1,39 @@
 class Context
   NEWL = "\n"
-  attr_reader :stream, :file
-  def initialize(stream, file)
+  attr_reader :stream, :file, :orig_line_count
+  def initialize(stream, file, context_manager)
     @stream = stream
     @orig_stream = @stream.clone
-    @start_line_no = newlines_left
+    @tot_lines = lines_left
     @file = file
+    @context_manager = context_manager
+    if @context_manager.files.include?(@file)
+      @start_line = @context_manager.files[@file].func_current_line
+    else
+      @start_line = func_current_line
+    end
   end
 
-  def newlines_left
+  def lines_left
     @stream.stack.select{ |e| e.text_val == NEWL }.length
   end
 
-  def current_line
-    @start_line_no - newlines_left + 1
+  def orig_line_count
+    @orig_stream.stack.select{ |e| e.text_val == NEWL }.length
   end
 
-  # def to_s
-  #   file = @file.gsub(/\n/, "\n\t")
-  #   line_no = current_line.to_s.gsub(/\n/, "\n\t")
-  #   # "File    - #{file}\nLine No - #{line_no}: #{line(current_line)}"
-  #   "#{file}: #{line_no}\n\t#{line(current_line)}"
-  # end
+  def file_current_line
+    @context_manager.files[@file]
+  end
+  def func_current_line
+    @tot_lines - lines_left + 1
+  end
+
+  def to_s
+    file = @file.gsub(/\n/, "\n\t")
+    line_no = func_current_line
+    "#{file}:#{file_current_line}: #{line(line_no)}"
+  end
 
   def line(line_no)
     stream = @orig_stream.clone
@@ -34,19 +46,24 @@ class Context
       end
       line += stream._next.text_val until NEWL == stream._peek.text_val
       true
-    end or fail "Error with finding line for `#{line_no}`"
+    end or fail "Couldn't with finding line ##{line_no}"
     line
   end
 
 end
 
 class Contexts
+  attr_reader :stacks
+  attr_reader :files
   def initialize()
     @stacks = []
+    @files = {}
   end
 
   def start(stream)
-    @stacks << Context.new(stream, `pwd`.chomp)
+    file = `pwd`.chomp
+    @stacks << Context.new(stream, file, self)
+    @files[file] = @stacks.last.orig_line_count unless @files.include? file
   end
 
   def stop(expected)
@@ -62,3 +79,11 @@ class Contexts
   end
 
 end
+
+
+
+
+
+
+
+
