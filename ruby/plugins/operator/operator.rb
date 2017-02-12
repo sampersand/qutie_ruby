@@ -56,7 +56,12 @@ Operators::OPERATORS = [
   QT_Operator.new(name: :>=,   priority: 20, bin_meth: :qt_geq), 
   QT_Operator.new(name: :'.=', priority:  6, bin_meth: :qt_set),
 
-  QT_Operator.new(name: :'@0', priority:  7){ |*a| CALL_OPER.call(*a).qt_get(QT_Number::NEG_1, type: :STACK) },
+  QT_Operator.new(name: :'@0', priority:  7){ |l,r,u,s,p| CALL_OPER.call(lhs_vars: [l],
+                                                                         rhs_vars: [r],
+                                                                         universe: u,
+                                                                         stream: s,
+                                                                         parser: p).qt_get(QT_Number::NEG_1,
+                                                                                           type: :STACK) },
 
   QT_Operator.new(name: :'&&', priority: 24){ |l, r| l.qt_to_bool.bool_val ? r : l },
   QT_Operator.new(name: :'||', priority: 25){ |l, r| l.qt_to_bool.bool_val ? l : r },
