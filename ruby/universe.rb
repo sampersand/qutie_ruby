@@ -3,11 +3,15 @@ class UniverseOLD
   attr_accessor :stack
   attr_accessor :locals
   attr_accessor :globals
+  attr_accessor :context
+  attr_accessor :__start_line_no
   
-  def initialize(stack: nil, locals: nil, globals: nil)
+  def initialize(stack: nil, locals: nil, globals: nil, context: nil)
     @stack = stack || []
     @locals = locals || {}
     @globals = globals || {}
+    @context = context
+    @__start_line_no = context && context.start_line_no || 0
   end
 
 

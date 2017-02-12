@@ -3,7 +3,8 @@ class QT_Universe < QT_Object
   attr_reader :universe
   attr_reader :body
   attr_reader :parens
-
+  attr_reader :context
+  attr_accessor :__start_line_no 
   def self.from(source:, current_universe:, parens:, context: )
     # warn("QT_Universe::from doesnt conform to others!")
     new_universe = UniverseOLD.new
@@ -18,6 +19,7 @@ class QT_Universe < QT_Object
     @parens = parens
     @universe = universe
     @context = context
+    @__start_line_no = 0
   end
 
   def to_s
@@ -71,7 +73,7 @@ class QT_Universe < QT_Object
       passed_args.locals[QT_Variable.new :__args ] = args
       # func.program_stack.push args
       stream = @universe.clone
-      $QT_CONTEXT.start(stream)
+      $QT_CONTEXT.start(stream, self)
       parser.parse!(stream: stream, universe: passed_args)
       $QT_CONTEXT.stop(stream)
       # func.program_stack.pop

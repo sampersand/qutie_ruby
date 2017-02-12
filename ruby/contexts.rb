@@ -1,44 +1,43 @@
 class Context
   NEWL = "\n"
-  attr_reader :stream, :file, :orig_line_count
-  def initialize(stream, file, context_manager)
-    @stream = stream
-    @orig_stream = @stream.clone
-    @tot_lines = lines_left
-    @file = file
+  attr_accessor :stream, :file, :tot_lines, :start_line_no
+
+  def initialize(stream, file, context_manager, univ, start_line_no=nil)
     @context_manager = context_manager
-    if @context_manager.files.include?(@file)
-      @start_line = @context_manager.files[@file].func_current_line
-    else
-      @start_line = func_current_line
-    end
+    @stream = stream
+    @file = file
+    @tot_lines = lines_left
+    @orig_stream = @stream.clone
+    @univ = univ
+    @start_line_no = univ.__start_line_no
+
   end
 
   def lines_left
     @stream.stack.select{ |e| e.text_val == NEWL }.length
   end
 
-  def orig_line_count
-    @orig_stream.stack.select{ |e| e.text_val == NEWL }.length
+  def file_line
+    @start_line_no + line_no
   end
 
-  def file_current_line
-    @context_manager.files[@file]
-  end
-  def func_current_line
-    @tot_lines - lines_left + 1
+  def line_no
+    @tot_lines - lines_left
   end
 
   def to_s
     file = @file.gsub(/\n/, "\n\t")
-    line_no = func_current_line
-    "#{file}:#{file_current_line}: #{line(line_no)}"
+    "#{file}:#{file_line+1}: #{current_line}"
   end
 
-  def line(line_no)
+  def current_line
+    get_line( line_no )
+  end
+
+  def get_line(line_no)
     stream = @orig_stream.clone
     stream << QT_Default.new( :"\n" )
-    lines = 1
+    lines = 0
     line = ''
     catch(:EOF) do
       until lines == line_no
@@ -48,6 +47,10 @@ class Context
       true
     end or fail "Couldn't with finding line ##{line_no}"
     line
+  end
+
+  def clone
+    self.class.new(@stream.clone, @file.clone, @context_manager.clone, @univ)
   end
 
 end
@@ -60,10 +63,9 @@ class Contexts
     @files = {}
   end
 
-  def start(stream)
+  def start(stream, univ)
     file = `pwd`.chomp
-    @stacks << Context.new(stream, file, self)
-    @files[file] = @stacks.last.orig_line_count unless @files.include? file
+    @stacks << Context.new(stream, file, self, univ)
   end
 
   def stop(expected)
@@ -71,7 +73,7 @@ class Contexts
   end
 
   def current
-    @stacks.last.clone
+    @stacks.last
   end
 
   def to_s
@@ -79,6 +81,8 @@ class Contexts
   end
 
 end
+
+
 
 
 
