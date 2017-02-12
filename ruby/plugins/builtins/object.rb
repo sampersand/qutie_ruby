@@ -99,7 +99,13 @@ class QT_Object
 
       # math
         def qt_cmp(right) res = qt_cmp_l(right); return res unless res._missing?; right.qt_cmp_r(self) end
-        def qt_add(right) res = qt_add_l(right); return res unless res._missing?; right.qt_add_r(self) end
+        def qt_add(right)
+          res = qt_add_l(right)
+          return res unless res._missing?
+          res = right.qt_add_r(self)
+          return res unless res._missing?
+          throw :ERROR, [ QT_MethodMissingError, :qt_add, self, right ]
+        end
         def qt_sub(right) res = qt_sub_l(right); return res unless res._missing?; right.qt_sub_r(self) end
         def qt_mul(right) res = qt_mul_l(right); return res unless res._missing?; right.qt_mul_r(self) end
         def qt_div(right) res = qt_div_l(right); return res unless res._missing?; right.qt_div_r(self) end

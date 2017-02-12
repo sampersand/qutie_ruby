@@ -28,7 +28,15 @@ text = open(file, 'r').read
 
 # puts text
 # exit
-res = parser.process(input: text)
+err = catch(:ERROR) do 
+  res = parser.process(input: text)
+  nil
+end
+
+if err
+  puts "ERROR: #{err}"
+  exit(1)
+end
 
 require 'pp'
 puts '----[end]----'

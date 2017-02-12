@@ -4,4 +4,4 @@ class QT_Exception < QT_Object
     QT_False::INSTANCE
   end
 end
-require_relative 'no_method'
+require_relative 'method_missing'
