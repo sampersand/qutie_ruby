@@ -96,7 +96,7 @@ class QT_Object
           # return res.qt_equal( QT_Number::ZERO ) unless (res = qt_cmp(right))._missing?
           QT_False::INSTANCE
         end
-        def qt_neq(right, env) qt_eql(right, env).qt_not  end
+        def qt_neq(right, env) qt_eql(right, env).qt_not(env)  end
         def qt_gth(right, env)
           cmp = qt_cmp(right, env)
           cmp._missing? ? QT_Missing::INSTANCE : QT_Boolean::get( cmp.num_val > 0 )
@@ -168,7 +168,7 @@ class QT_Object
 
 
       # logic
-        def qt_not(_env); qt_to_bool(env).qt_not(env) end
+        def qt_not(env); qt_to_bool(env).qt_not(env) end
 
 end
 

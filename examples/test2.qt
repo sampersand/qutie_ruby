@@ -1,28 +1,17 @@
-Car <- {
-  maker = maker? || 'honda';
-  wheels = wheels? || 4;
-
-  __text = {
-    `I'm a ` + __self?.maker + ' with ' + __self?.wheels + ' wheels!'
-  };
-
-  drive = {dist=dist?||__args?.0;
-    disp? @ ( if? @ (dist?, 'I drove ' + dist? + ' miles!', 'vroom vroom!')! )!;
-  };
-  __num = {
-    __self?.wheels
-  };
-  __bool = { missing? }
+Fraction <- {
+  numer = numer? || __args?.0;
+  denom = denom? || __args?.1;
+  disp?@(numer?==0)!;
+  __text = { __self?.numer + '/' + __self?.denom };
+  __num =  { __self?.numer    /    __self?.denom };
+  __bool = { __self?.numer == 0 };
+  # __num = {
+  #   __self?.wheels
+  # };
+  # __bool = { missing? }
 };
 
-
-
-car = Car? @ (maker: 'toyoya';)!;
+car = Fraction? @ (0, 3)!;
 text? @ (car?)!,
 num? @ (car?)!,
 bool? @ (car?)!
-# disp? @ (car?.__text @ (__self=car?;)!,.0 )!;
-# car?.drive @ ( 5 )!;
-# car?.drive @ ( dist=9.3 )!;
-# car?.drive @ ()!;
-# disp? @ (car?)!;

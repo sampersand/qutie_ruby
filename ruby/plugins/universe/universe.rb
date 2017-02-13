@@ -59,7 +59,6 @@ class QT_Universe < QT_Object
         throw(:ERROR, QTE_Type.new(env, " `__text` returned a non-QT_Text value! `#{res}`")) unless res.is_a?(QT_Text)
         res
       end
-
       def qt_to_num(env)
         res = qt_method(:__num, env)
         return super if res._missing?
@@ -95,6 +94,7 @@ class QT_Universe < QT_Object
       res.u
       # func.program_stack.pop
     end
+
     def qt_get(pos, env, type:)  # fix this
       return self if pos == QT_Variable.new( :'$' )
       case type
@@ -112,6 +112,7 @@ class QT_Universe < QT_Object
       else fail "Unknown qt_get type `#{type}`!"
       end
     end
+
     def qt_del(pos, env, type:)
       if type == :BOTH
         if @universe.locals.include?(pos)

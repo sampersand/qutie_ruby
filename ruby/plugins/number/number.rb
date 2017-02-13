@@ -64,6 +64,7 @@ class QT_Number < QT_Object
 
         public
         # math
+          def qt_eql_l(r, e) res=qt_cmp_l(r, e);return QT_Missing::INSTANCE if res._missing?;QT_Boolean::get(res.num_val==0) end
           def qt_cmp_l(r, e) numer_func_l(r, e, :<=>)end
           def qt_add_l(r, e) numer_func_l(r, e, :+) end
           def qt_sub_l(r, e) numer_func_l(r, e, :-) end
@@ -72,6 +73,7 @@ class QT_Number < QT_Object
           def qt_mod_l(r, e) numer_func_l(r, e, :%) end
           def qt_pow_l(r, e) numer_func_l(r, e, :**) end
 
+          def qt_eql_r(l, e) res=r.qt_cmp_r(self, e);return QT_Missing::INSTANCE if res._missing?;QT_Boolean::get(res.num_val==0) end
           def qt_cmp_r(l, e) numer_func_r(l, e, :<=>)end
           def qt_add_r(l, e) numer_func_r(l, e, :+) end
           def qt_sub_r(l, e) numer_func_r(l, e, :-) end

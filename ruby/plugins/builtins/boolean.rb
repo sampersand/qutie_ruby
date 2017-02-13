@@ -14,9 +14,9 @@ class QT_Boolean < QT_Object
 
   # qt methods
     # methods
-      def qt_get(pos, _env, type:)
+      def qt_get(pos, env, type:)
         if pos == QT_Variable.new( :not )
-          qt_not
+          qt_not(env)
         end
       end
     # operators

@@ -50,6 +50,7 @@ class QT_Text < QT_Object
         clone
       end
       def qt_to_num(env)
+        return QT_Missing::INSTANCE unless @text_val =~ /(\d+)|(\d+\.\d+)|(\d+(\.\d+)?[eE][+-]?\d+)/
         QT_Number::from( self, env )
       end
 
