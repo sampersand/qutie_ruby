@@ -1,10 +1,9 @@
 # disp?@(if?@(false?, "foo", "bar")!, 1, 2, sep='A';end='$';)!
-My Speed = 66;
-Speed Limit = 65;
-Neg1 = 0-1;
-switch? @ ( My Speed? <=> Speed Limit?, 
-  1:     "You're going too fast!";
-  0:     "You're doing perfectly";
-  Neg1?: "You're going too slow!";
-)!->a;
-disp?@(a?)!;
+i = 0;
+while? @ (
+  (i? < 10),
+  {
+    disp? @ (i?)!;
+    i = i? + 1;
+  },
+)!;

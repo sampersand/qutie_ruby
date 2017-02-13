@@ -18,11 +18,13 @@ module Functions
     QT_Variable.new( :switch ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       switch_on = fetch(args, 0, :__switch_on);
       args.qt_get(switch_on, type: :BOTH)
-      # if args.locals.include?(switch_on)
-      #   args.locals[switch_on]
-      # else
-      #   args.stack[switch_on]
-      # end
+    },
+    QT_Variable.new( :if ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
+      cond     = fetch(args, 0, :__cond)
+      if_true  = fetch(args, 1, QT_True::INSTANCE , :true)
+      if_false = fetch(args, 2, QT_False::INSTANCE, :false, else_: QT_Null::INSTANCE)
+      if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false, QT_Boolean::NIL) } }
+      cond.qt_to_bool.bool_val ? if_true : if_false
     },
 
     QT_Variable.new( :return ) => QT_BuiltinFunciton.new{ |args, universe, stream|
@@ -35,17 +37,13 @@ module Functions
       # end
     },
 
-    QT_Variable.new( :if ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
-      cond     = fetch(args, 0, :__cond)
-      if_true  = fetch(args, 1, QT_True::INSTANCE , :true)
-      if_false = fetch(args, 2, QT_False::INSTANCE, :false, else_: QT_Null::INSTANCE)
-      if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false, QT_Boolean::NIL) } }
-      cond.qt_to_bool.bool_val ? if_true : if_false
-    },
     QT_Variable.new( :while ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
-      cond = args.stack.fetch(0){ args.locals.fetch(:__cond) }
-      body = args.stack.fetch(1){ args.locals.fetch(:__body) }
-      parser.parse!(stream: body.clone, universe: universe) while parser.parse!(stream: cond.clone, universe: universe).pop 
+      cond = fetch(args, 0, :__cond)
+      body = fetch(args, 1, :__body)
+      while cond.clone.qt_eval(universe, stream, parser).pop.qt_to_bool.bool_val
+        body.clone.qt_eval(universe, stream, parser)
+      end
+      true
     },
     QT_Variable.new( :unless ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       cond     = args.stack.fetch(0){ args.locals.fetch(:__cond) }
@@ -195,9 +193,9 @@ module Functions
     search_fors.each do |search_for|
       res = (search_for.is_a?(Integer) ? args.stack : args.locals).fetch(
               (search_for.is_a?(Symbol) ? QT_Variable.new( search_for ) : search_for), Ignore)
-      return res unless res.eql?(Ignore)
+      return res unless res.equal?( Ignore )
     end
-    raise "Cannot find args for #{search_fors}" if else_.eql?(Ignore)
+    raise "Cannot find args for #{search_fors}" if else_.equal?(Ignore)
     else_
   end
 

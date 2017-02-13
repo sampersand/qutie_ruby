@@ -57,7 +57,7 @@ class QT_Universe < QT_Object
 
 
     def qt_eval(universe, _stream, parser)
-      universe = universe.spawn_new_stack(new_stack: nil).clone
+      universe = universe.spawn_new_stack(new_stack: nil)#.clone #removed the .clone here
       res = parser.parse!(stream: @universe.clone, universe: universe)
       QT_Universe.new(body: '', universe: res, parens: @parens) # this is where it gets hacky
     end
@@ -93,7 +93,7 @@ class QT_Universe < QT_Object
       else fail "Unknown qt_get type `#{type}`!"
       end
     end
-    def qt_del(pos:, type:)
+    def qt_del(pos, type:)
       if type == :BOTH
         if @universe.locals.include?(pos)
           type = :LOCALS

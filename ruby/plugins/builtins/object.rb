@@ -58,11 +58,11 @@ class QT_Object
         def qt_set(pos, val, type:) QT_Missing::INSTANCE end
         def qt_del(pos, type:) QT_Missing::INSTANCE end
         def _peek(amnt=1)
-          qt_get(QT_Number.new(num_val: amnt), type: :STACK)
+          qt_get(QT_Number.new( amnt ), type: :STACK)
         end
         def _next(amnt=1)
           res = _peek(amnt)
-          qt_del(QT_Number.new(num_val: amnt), type: :STACK)
+          qt_del(QT_Number.new( amnt ), type: :STACK)
           res
         end
       # comp
@@ -79,20 +79,20 @@ class QT_Object
         def qt_neq(right) qt_eql(right).qt_not  end
         def qt_gth(right)
           cmp = qt_cmp(right)
-          cmp._missing? ? QT_Missing::INSTANCE : QT_Boolean::get( cmp.num_val < 0 )
+          cmp._missing? ? QT_Missing::INSTANCE : QT_Boolean::get( cmp.num_val > 0 )
         end
 
         def qt_lth(right)
           cmp = qt_cmp(right)
-          cmp._missing? ? QT_Missing::INSTANCE : QT_Boolean::get( cmp.num_val > 0 )
+          cmp._missing? ? QT_Missing::INSTANCE : QT_Boolean::get( cmp.num_val < 0 )
         end
         def qt_leq(right)
           cmp = qt_cmp(right)
-          cmp._missing? ? QT_Missing::INSTANCE : QT_Boolean::get( cmp.num_val >= 0 )
+          cmp._missing? ? QT_Missing::INSTANCE : QT_Boolean::get( cmp.num_val <= 0 )
         end
         def qt_geq(right)
           cmp = qt_cmp(right)
-          cmp._missing? ? QT_Missing::INSTANCE : QT_Boolean::get( cmp.num_val <= 0 )
+          cmp._missing? ? QT_Missing::INSTANCE : QT_Boolean::get( cmp.num_val >= 0 )
         end
 
       #3##
