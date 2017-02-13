@@ -15,8 +15,8 @@ require_relative 'functions'
 require_relative 'constants'
 parser = Parser.new
 parser.add_plugin(plugin: Whitespace)
-# parser.add_plugin(plugin: Variable)
-# parser.add_plugin(plugin: Number)
+parser.add_plugin(plugin: Variable)
+parser.add_plugin(plugin: Number)
 # parser.add_plugin(plugin: Universe)
 # parser.add_plugin(plugin: Operators)
 # parser.add_plugin(plugin: Comment)

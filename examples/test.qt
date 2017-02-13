@@ -16,3 +16,5 @@ a?
 val = a=3;
 cmd = text?@( val?, '"' )!;
 disp?@( cmd?! )!
+9.3
+0xaF

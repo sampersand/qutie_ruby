@@ -7,8 +7,8 @@ module Whitespace
 
   def next_token!(env)
     stream = env.stream
-    if WHITESPACE_REGEX.qt_match(stream._peek, env)._bool
-      stream._next # and ignore
+    unless WHITESPACE_REGEX.qt_match(stream._peek(env), env)._rb_false?
+      stream._next(env) # and ignore
       :retry
     end
   end

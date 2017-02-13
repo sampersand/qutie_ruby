@@ -1,20 +1,23 @@
+require_relative 'plugin'
 class QT_Number < QT_Object
   attr_reader :num_val
 
   def self.from(source, base: nil)
     fail "Bad source type `#{source.class}`" unless source.respond_to?(:text_val)
-    if base
-      new(source.text_val.to_i(base.num_val).to_f )
-    else
-      new(source.text_val.to_f)
-    end
+    val = source.text_val
+    val = val.to_i(Number::BASES[base.source_val][1].num_val) if base
+    new(val.to_f, base: base)
   end
 
-  def initialize(num_val)
+  def initialize(num_val, base: nil)
     @num_val = num_val
+    @given_base = base
   end
 
   def to_s
+    if @given_base
+      return "0#{@given_base.source_val.to_s}#{@num_val.to_i.to_s(Number::BASES[@given_base.source_val][1].num_val).upcase}"
+    end
     is_int = @num_val == @num_val.to_i rescue false
     is_int ? @num_val.to_i.to_s : @num_val.to_s
   end

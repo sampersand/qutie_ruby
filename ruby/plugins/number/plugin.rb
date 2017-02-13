@@ -19,18 +19,18 @@ module Number
 
   def next_number!(env)
     stream = env.stream
-    res = stream._next
+    res = stream._next(env)
     catch(:EOF) do
-      res += stream._next while DECIMAL_REGEX =~ stream._peek
-      if stream.qt_length(type: :STACK) > 1 && # this will fail when I upgrade it to QT_Number
-          DECIMAL_POINT_REGEX =~ stream._peek(2)
-        res += stream._next
-        res += stream._next while DECIMAL_REGEX =~ stream._peek
+      res += stream._next(env) while DECIMAL_REGEX._match?(stream._peek(env), env)
+      if stream.qt_length(env, type: :STACK) > 1 && # this will fail when I upgrade it to QT_Number
+          DECIMAL_POINT_REGEX._match?(stream._peek(env, 2), env)
+        res += stream._next(env)
+        res += stream._next(env) while DECIMAL_REGEX._match?( stream._peek(env), env )
       end
-      if stream.qt_length(type: :STACK) > 0 && EXPONENT_START =~ stream._peek
-        res += stream._next
-        res += stream._next if stream._peek =~ EXPONENT_SIGN_MODIFIER
-        res += stream._next while DECIMAL_REGEX =~ stream._peek
+      if stream.qt_length(env, type: :STACK) > 0 && EXPONENT_START._match?( stream._peek(env), env )
+        res += stream._next(env)
+        res += stream._next(env) if EXPONENT_SIGN_MODIFIER._match?( stream._peek(env), env )
+        res += stream._next(env) while DECIMAL_REGEX._match?( stream._peek(env), env )
       end
     end
     QT_Number::from( res )
@@ -38,20 +38,21 @@ module Number
 
   def next_base!(env)
     stream = env.stream
-    raise unless stream._next.text_val == '0' #too lazy to do a real comparison
-    base_regex, base = BASES[stream._next.source_val]
+    raise unless stream._next(env).text_val == '0' #too lazy to do a real comparison
+    base = stream._next(env)
+    base_regex = BASES[base.source_val][0]
     res = QT_Default::from( '' )
     catch(:EOF) do
-      res += stream._next while base_regex =~ stream._peek
+      res += stream._next(env) while base_regex._match?(stream._peek(env), env)
     end
     raise "No digits following based number `#{res}`" if res.source_val.empty?
     QT_Number::from( res, base: base )
   end
 
   def next_token!(env)
-    return unless env.stream._peek =~ DECIMAL_REGEX
+    return unless DECIMAL_REGEX._match?(env.stream._peek(env), env)
 
-    if BASE_START_REGEX =~ env.stream._peek(2)
+    if BASE_START_REGEX._match?(env.stream._peek(env, 2), env)
       next_base!(env)
     else
       next_number!(env)

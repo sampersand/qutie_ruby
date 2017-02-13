@@ -4,7 +4,7 @@ module Default
 
   module_function
   def next_token!(env)
-    env.stream._next
+    env.stream._next(env)
   end
   
   def handle(token, env)

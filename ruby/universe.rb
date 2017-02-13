@@ -117,7 +117,7 @@ class UniverseOLD
     end
 
 
-  def qt_length(type:)
+  def qt_length(_env, type:)
     case type
     when :STACK then @stack.length
     when :LOCALS then @locals.length
@@ -125,13 +125,13 @@ class UniverseOLD
     end
   end
 
-  def _peek(amnt=1)
+  def _peek(_env, amnt=1)
     peek(amnt: amnt)
   end
-  def _next(amnt=1)
+  def _next(_env, amnt=1)
     self.next(amnt: amnt)
   end
-  def _stackeach
+  def _stackeach(_env)
     @stack.each
   end
 

@@ -25,9 +25,13 @@ class QT_Object
     self == other
   end
 
-  def _bool
-    !(self.class == QT_False || self.class == QT_Null || self.class == QT_Missing)
+  def _rb_false?
+    self.class == QT_False || self.class == QT_Null || self.class == QT_Missing
   end
+  def _match?(right, env)
+    !qt_match(right, env)._rb_false?
+  end
+
   # def to_i; qt_to_num end
   # def +(other)   qt_add(other) end
   # def -(other)   qt_sub(other) end

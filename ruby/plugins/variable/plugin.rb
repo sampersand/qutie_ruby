@@ -8,14 +8,13 @@ module Variable
 
   def next_token!(env)
     stream = env.stream
-    return if stream._peek.qt_match(VARIABLE_START)._nil?
+    return unless VARIABLE_START._match?(stream._peek(env), env)
 
-    result = stream._next
+    result = stream._next(env)
     catch(:EOF) do
-      result = result.qt_add( stream._next ) until stream._peek.qt_match( VARIABLE_CONT )._nil?
+      result = result.qt_add( stream._next(env), env ) while VARIABLE_CONT._match?( stream._peek(env), env )
       nil
     end
-    # QT_Variable::from(source: result)
     QT_Variable.new( result.text_val.strip.to_sym )
   end
 
