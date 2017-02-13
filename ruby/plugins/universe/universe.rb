@@ -50,6 +50,10 @@ class QT_Universe < QT_Object
       #   else qt_get(QT_Variable::from(source: '__' + meth.to_s), type: :LOCALS)#fail "Unknown method `#{meth}`"
       #   end
       # end
+      def qt_to_text
+        p qt_get(QT_Variable.new( :__text ), type: :LOCALS)
+        super
+      end
     # conversion
       def qt_to_bool
         QT_Boolean::get(@universe.stack_empty? && @universe.shortened_locals_empty?)
@@ -72,8 +76,9 @@ class QT_Universe < QT_Object
       # func.program_stack.push args
       stream = @universe.clone
       $QT_CONTEXT.start(stream, self)
-      parser.parse!(stream: stream, universe: passed_args)
+      res=parser.parse!(stream: stream, universe: passed_args)
       $QT_CONTEXT.stop(stream)
+      res
       # func.program_stack.pop
     end
     def qt_get(pos, type:)  # fix this

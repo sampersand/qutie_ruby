@@ -40,7 +40,7 @@ class QT_Default < QT_Object
  # qt methods
     # conversion
       def qt_to_text
-        self
+        QT_Text.new( text_val )
       end
       def qt_to_bool
         QT_Boolean::get(@source_val.length != 0)
