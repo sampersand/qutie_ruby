@@ -12,7 +12,7 @@ Car <- {
   __num = {
     __self?.wheels
   };
-  __bool = { nil? }
+  __bool = { missing? }
 };
 
 

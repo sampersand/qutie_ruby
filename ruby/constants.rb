@@ -10,6 +10,7 @@ module Constants
     QT_Variable.new( :nil      ) => QT_Null::INSTANCE,
     QT_Variable.new( :null     ) => QT_Null::INSTANCE,
     QT_Variable.new( :none     ) => QT_Null::INSTANCE,
+    QT_Variable.new( :missing  ) => QT_Missing::INSTANCE,
     QT_Variable.new( :math_e   ) => QT_Number::E,
     QT_Variable.new( :math_pi  ) => QT_Number::PI,
     QT_Variable.new( :math_nan ) => QT_Number::NaN,

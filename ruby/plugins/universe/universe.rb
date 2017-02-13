@@ -56,20 +56,20 @@ class QT_Universe < QT_Object
       def qt_to_text(env)
         res = qt_method(:__text, env)
         return super if res._missing?
-        throw(:ERROR, QTE_Type.new(env, " `__text` returned a non-QT_Text value! ")) unless res.is_a?(QT_Text)
+        throw(:ERROR, QTE_Type.new(env, " `__text` returned a non-QT_Text value! `#{res}`")) unless res.is_a?(QT_Text)
         res
       end
 
       def qt_to_num(env)
         res = qt_method(:__num, env)
         return super if res._missing?
-        throw(:ERROR, QTE_Type.new(env, " __num`` returned a non-QT_Number value! ")) unless res.is_a?(QT_Number)
+        throw(:ERROR, QTE_Type.new(env, " __num`` returned a non-QT_Number value! `#{res}`")) unless res.is_a?(QT_Number)
         res
       end
       def qt_to_bool(env)
         res = qt_method(:__bool, env)
         return QT_Boolean::get(!@universe.stack_empty?(env) || !@universe.shortened_locals_empty?) if res._missing?
-        throw(:ERROR, QTE_Type.new(env, " `__bool` returned a non-QT_Boolean value! ")) unless res.is_a?(QT_Boolean)
+        throw(:ERROR, QTE_Type.new(env, " `__bool` returned a non-QT_Boolean value `#{res}`")) unless res.is_a?(QT_Boolean)
         res
       end
 
