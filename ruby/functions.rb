@@ -112,18 +112,19 @@ module Functions
       QT_Text.new( STDIN.gets endl.text_val )
     },
 
-    # i dont know how many of these work...
-
-    QT_Variable.new( :clone ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
-      qutie_func(args, universe, parser, :qt_clone){ |a| a.clone }
-    },
-
     QT_Variable.new( :syscall ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       sep = fetch(args, :sep, else_: QT_Text.new(""))
       args.locals[QT_Variable.new( :sep ) ] ||= sep
       to_call = FUNCTIONS[ QT_Variable.new( :text ) ].qt_call(args, universe, stream, parser) 
       QT_Text.new( `#{to_call}` )
     },
+
+    # i dont know how many of these work...
+
+    QT_Variable.new( :clone ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
+      qutie_func(args, universe, parser, :qt_clone){ |a| a.clone }
+    },
+
 
     QT_Variable.new( :import ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       file = args.stack.fetch(0){ args.locals.fetch(:__file) }
