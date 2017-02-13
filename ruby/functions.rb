@@ -26,6 +26,13 @@ module Functions
       if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false, QT_Boolean::NIL) } }
       cond.qt_to_bool.bool_val ? if_true : if_false
     },
+    QT_Variable.new( :unless ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
+      cond     = fetch(args, 0, :__cond)
+      if_true  = fetch(args, 1, QT_True::INSTANCE , :true)
+      if_false = fetch(args, 2, QT_False::INSTANCE, :false, else_: QT_Null::INSTANCE)
+      if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false, QT_Boolean::NIL) } }
+      !cond.qt_to_bool.bool_val ? if_true : if_false
+    },
 
     QT_Variable.new( :return ) => QT_BuiltinFunciton.new{ |args, universe, stream|
 
@@ -45,12 +52,7 @@ module Functions
       end
       true
     },
-    QT_Variable.new( :unless ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
-      cond     = args.stack.fetch(0){ args.locals.fetch(:__cond) }
-      if_true  = args.locals.fetch(true){ args.stack.fetch(1){ args.locals.fetch(:true) }   }
-      if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false, nil) } }
-      cond ? if_false : if_true
-    },
+
     QT_Variable.new( :until ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       cond = args.stack.fetch(0){ args.locals.fetch(:__cond) }
       body = args.stack.fetch(1){ args.locals.fetch(:__body) }
