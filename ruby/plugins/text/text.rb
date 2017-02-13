@@ -2,7 +2,7 @@ class QT_Text < QT_Object
 
   attr_reader :text_val
   attr_accessor :quotes
-  def self.from(source, quotes:)
+  def self.from(source, _env, quotes:)
     fail "Bad source type `#{source.class}`" unless source.is_a?(QT_Default)
     new( source.text_val, quotes: quotes )
   end
@@ -13,7 +13,7 @@ class QT_Text < QT_Object
     @quotes = quotes || gen_quotes
   end
 
-  EMPTY = from( QT_Default::EMPTY, quotes: [ QT_Default.new( :"'" ), QT_Default.new( :"'" ) ] )
+  EMPTY = new( '', quotes: [ QT_Default.new( :"'" ), QT_Default.new( :"'" ) ] )
   def gen_quotes
     ['' ,'']
     # if @text_val =~ /(?<!\\)'/
@@ -49,8 +49,8 @@ class QT_Text < QT_Object
       def qt_to_text(_env)
         clone
       end
-      def qt_to_num
-        QT_Number::from( self )
+      def qt_to_num(env)
+        QT_Number::from( self, env )
       end
 
       def qt_to_bool

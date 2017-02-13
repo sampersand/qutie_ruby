@@ -22,20 +22,24 @@ class Parser
   end
 
   def process(input:, additional_builtins: {}, universe: nil)
-    stream = UniverseOLD.new(stack: input.each_char.to_a.collect(&QT_Default::method(:from)))
+    stream = UniverseOLD.new
     universe ||= UniverseOLD.new
+    
     universe.globals.update(@builtins)
     universe.globals.update(additional_builtins)
+
+    env = Environment.new(stream, universe, self)
+    stream.stack = input.each_char.to_a.collect{ |e| QT_Default::from(e, env)}
+
     $QT_CONTEXT.start(stream, universe)
-    res = parse!(stream: stream, universe: universe) #dont need to copy stream cause we just made it.
+    res = parse!(env) #dont need to copy stream cause we just made it.
     $QT_CONTEXT.stop(stream)
     res
   end
 
-  def parse!(stream:, universe:)
-    env = Environment.new(stream, universe, self)
+  def parse!(env)
     catch(:EOF){ 
-      until stream.stack_empty?
+      until env.stream.stack_empty?
         token, plugin = next_token!(env)
         plugin.handle(token, env)
       end

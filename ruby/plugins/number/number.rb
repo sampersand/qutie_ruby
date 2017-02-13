@@ -2,7 +2,7 @@ require_relative 'plugin'
 class QT_Number < QT_Object
   attr_reader :num_val
 
-  def self.from(source, base: nil)
+  def self.from(source, _env, base: nil)
     fail "Bad source type `#{source.class}`" unless source.respond_to?(:text_val)
     val = source.text_val
     val = val.to_i(Number::BASES[base.source_val][1].num_val) if base
@@ -31,21 +31,21 @@ class QT_Number < QT_Object
   end
 
   # consts
-    NEG_1 = QT_Number.new( -1         )
-    ZERO  = QT_Number.new(  0         )
-    ONE   = QT_Number.new(  1         )
-    TWO   = QT_Number.new(  2         )
+    NEG_1 = new( -1         )
+    ZERO  = new(  0         )
+    ONE   = new(  1         )
+    TWO   = new(  2         )
 
-    E     = QT_Number.new( Math::E    )
-    PI    = QT_Number.new( Math::PI   )
-    NaN   = QT_Number.new( Float::NAN )
+    E     = new( Math::E    )
+    PI    = new( Math::PI   )
+    NaN   = new( Float::NAN )
 
   # qt methods
     # conversion
-      def qt_to_num
-        self
+      def qt_to_num(_env)
+        clone
       end
-      def qt_to_bool
+      def qt_to_bool(_env)
         QT_Boolean::get(@num_val != 0)
       end
 

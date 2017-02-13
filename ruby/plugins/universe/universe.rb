@@ -4,10 +4,10 @@ class QT_Universe < QT_Object
   attr_reader :body
   attr_reader :parens
   attr_accessor :__start_line_no 
-  def self.from(source:, current_universe:, parens:)
+  def self.from(source, env, current_universe:, parens:)
     # warn("QT_Universe::from doesnt conform to others!")
     new_universe = UniverseOLD.new
-    new_universe.stack = source.source_val.to_s.each_char.collect{ |c| QT_Default::from(c) }
+    new_universe.stack = source.source_val.to_s.each_char.collect{ |c| QT_Default::from(c, env) }
     # new_universe.locals = current_universe.locals
     # new_universe.globals = current_universe.globals
     new(body: source, universe: new_universe, parens: parens)
@@ -63,7 +63,7 @@ class QT_Universe < QT_Object
 
     def qt_eval(env)
       universe = env.universe.spawn_new_stack(new_stack: nil)#.clone #removed the .clone here
-      res = env.parser.parse!(stream: @universe.clone, universe: universe).u
+      res = env.parser.parse!(env.fork(universe: @universe.clone)).u
       QT_Universe.new(body: '', universe: res, parens: @parens) # this is where it gets hacky
     end
 
@@ -77,7 +77,7 @@ class QT_Universe < QT_Object
       # func.program_stack.push args
       stream = @universe.clone
       $QT_CONTEXT.start(stream, self)
-      res = env.parser.parse!(stream: stream, universe: passed_args)
+      res = env.parser.parse!(env.fork(stream: stream, universe: passed_args))
       $QT_CONTEXT.stop(stream)
       res.u
       # func.program_stack.pop

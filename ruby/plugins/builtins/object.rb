@@ -5,7 +5,7 @@ require_relative 'null'
 require_relative 'missing'
 
 class QT_Object
-  def self.from(source) #used when directly instatiating it, not copying, etc
+  def self.from(_source, _env) #used when directly instatiating it, not copying, etc
     new 
   end
 

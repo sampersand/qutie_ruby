@@ -2,7 +2,7 @@ class QT_Default < QT_Object
   attr_reader :source_val
 
   def text_val; @source_val.to_s end
-  def self.from(source_val)
+  def self.from(source_val, _env)
     new(source_val.to_sym)
   end
   def initialize(source_val)
@@ -10,7 +10,7 @@ class QT_Default < QT_Object
     @source_val = source_val # if this is updated, it'll break EMPTY
   end
   
-  EMPTY = from( '' )
+  EMPTY = new( :'' )
 
   def to_s
     res=@source_val.to_s
@@ -24,10 +24,10 @@ class QT_Default < QT_Object
     other.is_a?(QT_Default) && @source_val == other.source_val
   end
 
-  def +(other)
-    raise unless other.is_a?(QT_Default)
-    self.class::from( @source_val.to_s + other.source_val.to_s )
-  end
+  # def +(other)
+  #   raise unless other.is_a?(QT_Default)
+  #   self.class::from( @source_val.to_s + other.source_val.to_s )
+  # end
 
   def hash
     @source_val.hash
@@ -52,12 +52,12 @@ class QT_Default < QT_Object
         def qt_eql_r(left, _env) QT_Boolean::get( self == left ) end
         def qt_add(right, env)
           right = right.qt_to_text(env) or return
-          QT_Default::from( @source_val.to_s + right.text_val.to_s )
+          self.class::from( @source_val.to_s + right.text_val.to_s, env )
         end
 
         def qt_add_r(left, env)
           left = left.qt_to_text(env) or return
-          QT_Default::from( left.text_val.to_s + @source_val.to_s )
+          self.class::from( left.text_val.to_s + @source_val.to_s, env )
         end
 
 end

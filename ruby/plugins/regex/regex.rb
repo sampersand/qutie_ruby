@@ -1,7 +1,7 @@
 class QT_Regex < QT_Object
 
   attr_reader :regex_val
-  def self.from(source)
+  def self.from(source, _env)
     new(source[1...-1])
   end
 

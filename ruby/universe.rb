@@ -17,18 +17,18 @@ class UniverseOLD
 
   #stream methods
 
-    def next(amnt: 1)
+    def next(amnt: 1, env:)
       warn("Asking for `#{amnt.inspect}` elements") unless amnt.is_a?(Integer) && amnt != 0
       throw :EOF if stack_empty?
       return @stack.shift if amnt == 1
-      @stack.shift(amnt).reduce(&:+)
+      @stack.shift(amnt).reduce{ |a, b| a.qt_add(b, env) }
     end
 
-    def peek(amnt: 1)
+    def peek(amnt: 1, env:)
       warn("Asking for `#{amnt.inspect}` elements") unless amnt.is_a?(Integer) && amnt != 0
       throw :EOF if stack_empty?
       return @stack.first if amnt == 1
-      @stack.first(amnt).reduce(&:+)
+      @stack.first(amnt).reduce{ |a, b| a.qt_add(b, env) }
     end
 
   # stack
@@ -125,11 +125,11 @@ class UniverseOLD
     end
   end
 
-  def _peek(_env, amnt=1)
-    peek(amnt: amnt)
+  def _peek(env, amnt=1)
+    peek(amnt: amnt, env: env)
   end
-  def _next(_env, amnt=1)
-    self.next(amnt: amnt)
+  def _next(env, amnt=1)
+    self.next(amnt: amnt, env: env)
   end
   def _stackeach(_env)
     @stack.each

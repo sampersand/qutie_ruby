@@ -21,19 +21,19 @@ module Number
     stream = env.stream
     res = stream._next(env)
     catch(:EOF) do
-      res += stream._next(env) while DECIMAL_REGEX._match?(stream._peek(env), env)
+      res = res.qt_add( stream._next(env), env) while DECIMAL_REGEX._match?(stream._peek(env), env)
       if stream.qt_length(env, type: :STACK) > 1 && # this will fail when I upgrade it to QT_Number
           DECIMAL_POINT_REGEX._match?(stream._peek(env, 2), env)
-        res += stream._next(env)
-        res += stream._next(env) while DECIMAL_REGEX._match?( stream._peek(env), env )
+        res = res.qt_add( stream._next(env), env)
+        res = res.qt_add( stream._next(env), env) while DECIMAL_REGEX._match?( stream._peek(env), env )
       end
       if stream.qt_length(env, type: :STACK) > 0 && EXPONENT_START._match?( stream._peek(env), env )
-        res += stream._next(env)
-        res += stream._next(env) if EXPONENT_SIGN_MODIFIER._match?( stream._peek(env), env )
-        res += stream._next(env) while DECIMAL_REGEX._match?( stream._peek(env), env )
+        res = res.qt_add( stream._next(env), env)
+        res = res.qt_add( stream._next(env), env) if EXPONENT_SIGN_MODIFIER._match?( stream._peek(env), env )
+        res = res.qt_add( stream._next(env), env) while DECIMAL_REGEX._match?( stream._peek(env), env )
       end
     end
-    QT_Number::from( res )
+    QT_Number::from( res, env )
   end
 
   def next_base!(env)
@@ -41,12 +41,12 @@ module Number
     raise unless stream._next(env).text_val == '0' #too lazy to do a real comparison
     base = stream._next(env)
     base_regex = BASES[base.source_val][0]
-    res = QT_Default::from( '' )
+    res = QT_Default::from( '', env )
     catch(:EOF) do
-      res += stream._next(env) while base_regex._match?(stream._peek(env), env)
+      res = res.qt_add( stream._next(env), env) while base_regex._match?(stream._peek(env), env)
     end
     raise "No digits following based number `#{res}`" if res.source_val.empty?
-    QT_Number::from( res, base: base )
+    QT_Number::from( res, env, base: base )
   end
 
   def next_token!(env)

@@ -1,26 +1,26 @@
-require_relative '../text/text'
 module Comment
   module_function
 
-  SINGLE_START_HASH = QT_Default.new :'#'
-  SINGLE_START_SLASH = QT_Default.new :'//'
-  SINGLE_END = QT_Default.new :"\n"
+  SINGLE_START_HASH = QT_Regex.new( /#/ )
+  SINGLE_START_SLASH = QT_Regex.new( /\/{2}/ )
+  SINGLE_END = QT_Regex.new( /\n/ )
 
   def next_single!(env) # this will break if somehow SINGLE_STARTS includes single_end
     stream = env.stream
-    return unless SINGLE_START_HASH == stream._peek || SINGLE_START_SLASH == stream._peek(2)
-    stream._next until SINGLE_END == stream._peek
-    stream._next # and ignore
+    return unless SINGLE_START_HASH._match?( stream._peek(env), env) ||  
+                 SINGLE_START_SLASH._match?( stream._peek(env, 2), env)
+    stream._next(env) until SINGLE_END._match?( stream._peek(env), env)
+    stream._next(env) # and ignore
     :retry
   end
   
-  MULTI_LINE_START = QT_Default.new :'/*'
-  MULTI_LINE_END = QT_Default.new :'*/' 
+  MULTI_LINE_START = QT_Regex.new( /\/\*/ )
+  MULTI_LINE_END = QT_Regex.new( /\*\// ) 
   def next_multi!(env)
     stream = env.stream
-    return unless MULTI_LINE_START == stream._peek(2)
-    stream._next until MULTI_LINE_END == stream._peek(2)
-    stream._next(2) # and ignore
+    return unless MULTI_LINE_START._match?(stream._peek(env, 2), env)
+    stream._next(env) until MULTI_LINE_END._match?(stream._peek(env, 2), env)
+    stream._next(env, 2) # and ignore
     :retry
   end
 
