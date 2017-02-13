@@ -3,8 +3,8 @@ module Functions
     def initialize(&block)
       @func = block
     end
-    def qt_call(args, environment)
-      @func.call(args, environment) || environment.universe << QT_Null::INSTANCE
+    def qt_call(args, env)
+      @func.call(args, env) || env.universe << QT_Null::INSTANCE
     end
     def to_s?
       false
@@ -15,18 +15,18 @@ module Functions
 
   NoRet = Class.new
   FUNCTIONS = {
-    QT_Variable.new( :switch ) => QT_BuiltinFunciton.new{ |args, environment|
+    QT_Variable.new( :switch ) => QT_BuiltinFunciton.new{ |args, env|
       switch_on = fetch(args, 0, :__switch_on)
       args.qt_get(switch_on, type: :BOTH)
     },
-    QT_Variable.new( :if ) => QT_BuiltinFunciton.new{ |args, environment|
+    QT_Variable.new( :if ) => QT_BuiltinFunciton.new{ |args, env|
       cond     = fetch(args, 0, :__cond)
       if_true  = fetch(args, 1, QT_True::INSTANCE , :true)
       if_false = fetch(args, 2, QT_False::INSTANCE, :false, default: QT_Null::INSTANCE)
       if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false, QT_Boolean::NIL) } }
       cond.qt_to_bool.bool_val ? if_true : if_false
     },
-    QT_Variable.new( :unless ) => QT_BuiltinFunciton.new{ |args, environment|
+    QT_Variable.new( :unless ) => QT_BuiltinFunciton.new{ |args, env|
       cond     = fetch(args, 0, :__cond)
       if_true  = fetch(args, 1, QT_True::INSTANCE , :true)
       if_false = fetch(args, 2, QT_False::INSTANCE, :false, default: QT_Null::INSTANCE)
@@ -34,39 +34,39 @@ module Functions
       !cond.qt_to_bool.bool_val ? if_true : if_false
     },
 
-    QT_Variable.new( :while ) => QT_BuiltinFunciton.new{ |args, environment|
+    QT_Variable.new( :while ) => QT_BuiltinFunciton.new{ |args, env|
       cond = fetch(args, 0, :__cond)
       body = fetch(args, 1, :__body)
-      while cond.clone.qt_eval(environment).pop.qt_to_bool.bool_val
-        body.clone.qt_eval(environment)
+      while cond.clone.qt_eval(env).pop.qt_to_bool.bool_val
+        body.clone.qt_eval(env)
       end
       QT_Null::INSTANCE
     },
-    QT_Variable.new( :until ) => QT_BuiltinFunciton.new{ |args, environment|
+    QT_Variable.new( :until ) => QT_BuiltinFunciton.new{ |args, env|
       cond = fetch(args, 0, :__cond)
       body = fetch(args, 1, :__body)
-      until cond.clone.qt_eval(environment).pop.qt_to_bool.bool_val
-        body.clone.qt_eval(environment)
+      until cond.clone.qt_eval(env).pop.qt_to_bool.bool_val
+        body.clone.qt_eval(env)
       end
       QT_Null::INSTANCE
     },
 
-    QT_Variable.new( :for ) => QT_BuiltinFunciton.new{ |args, environment|
+    QT_Variable.new( :for ) => QT_BuiltinFunciton.new{ |args, env|
       start = fetch(args, 0, :__start)
       cond =  fetch(args, 1, :__cond)
       incr =  fetch(args, 2, :__incr)
       body =  fetch(args, 3, :__body)
-      start.clone.qt_eval(environment)
-      while cond.clone.qt_eval(environment).pop.qt_to_bool.bool_val
-        body.clone.qt_eval(environment)
-        incr.clone.qt_eval(environment)
+      start.clone.qt_eval(env)
+      while cond.clone.qt_eval(env).pop.qt_to_bool.bool_val
+        body.clone.qt_eval(env)
+        incr.clone.qt_eval(env)
       end
       QT_Null::INSTANCE
     },
 
 
 
-    QT_Variable.new( :return ) => QT_BuiltinFunciton.new{ |args, environment|
+    QT_Variable.new( :return ) => QT_BuiltinFunciton.new{ |args, env|
 
       # value = args.locals.fetch(:__value){ args.stack.fetch(0, NoRet) }
       # levels = args.locals.fetch(:__levels){ args.stack.fetch(1, 1) }
@@ -77,17 +77,17 @@ module Functions
       QT_Null::INSTANCE
     },
 
-    QT_Variable.new( :disp ) => QT_BuiltinFunciton.new{ |args, environment|
+    QT_Variable.new( :disp ) => QT_BuiltinFunciton.new{ |args, env|
 
       endl = fetch(args, :end, default: QT_Text.new("\n"))
       sep = fetch(args, :sep, default: QT_Text.new(""))
       args = args.clone
       args.locals[QT_Variable.new( :sep ) ] ||= sep
-      to_print = FUNCTIONS[ QT_Variable.new( :text ) ].qt_call(args, environment)
+      to_print = FUNCTIONS[ QT_Variable.new( :text ) ].qt_call(args, env)
       print(to_print.qt_add( endl ).text_val)
       QT_Null::INSTANCE
     },
-    QT_Variable.new( :prompt ) => QT_BuiltinFunciton.new{ |args, environment|
+    QT_Variable.new( :prompt ) => QT_BuiltinFunciton.new{ |args, env|
       prompt = fetch(args, 0, :__prompt, default: QT_Text.new( '' ))
       prefix = fetch(args, 2, :__prefix, default: QT_Text.new( " = " ))
       endl = fetch(args, 1, :__endl, default: QT_Text.new( "\n" ))
@@ -95,40 +95,40 @@ module Functions
       QT_Text.new( STDIN.gets endl.text_val )
     },
 
-    QT_Variable.new( :syscall ) => QT_BuiltinFunciton.new{ |args, environment|
+    QT_Variable.new( :syscall ) => QT_BuiltinFunciton.new{ |args, env|
       sep = fetch(args, :sep, default: QT_Text.new(""))
       args.locals[QT_Variable.new( :sep ) ] ||= sep
-      to_call = FUNCTIONS[ QT_Variable.new( :text ) ].qt_call(args, environment) 
+      to_call = FUNCTIONS[ QT_Variable.new( :text ) ].qt_call(args, env) 
       QT_Text.new( `#{to_call}` )
     },
 
 
-    QT_Variable.new( :text ) => QT_BuiltinFunciton.new{ |args, environment|
+    QT_Variable.new( :text ) => QT_BuiltinFunciton.new{ |args, env|
       to_text = fetch(args, 0, :__to_text, default: QT_Text::EMPTY)
       quote1   = fetch(args, 1, :quote, :__quote,  :quote1, :__quote1, default: QT_Text.new( '"' ))
       quote2   = fetch(args, 2, :quote2, :__quote2, default: quote1)
-      res = to_text.qt_to_text
-      res.quotes = [quote1.qt_to_text, 
-                    quote2.qt_to_text]
+      res = to_text.qt_to_text(env)
+      res.quotes = [quote1.qt_to_text(env), 
+                    quote2.qt_to_text(env)]
       res
     },
 
-    QT_Variable.new( :num ) => QT_BuiltinFunciton.new{ |args, environment|
+    QT_Variable.new( :num ) => QT_BuiltinFunciton.new{ |args, env|
       fetch(args, 0, :__to_num, default: QT_Number::ZERO).qt_to_num
     },
 
-    QT_Variable.new( :bool ) => QT_BuiltinFunciton.new{ |args, environment|
+    QT_Variable.new( :bool ) => QT_BuiltinFunciton.new{ |args, env|
       fetch(args, 0, :__to_num, default: QT_False::INSTANCE).qt_to_bool
     },
 
     # i dont know how many of these work...
 
-    QT_Variable.new( :clone ) => QT_BuiltinFunciton.new{ |args, environment|
+    QT_Variable.new( :clone ) => QT_BuiltinFunciton.new{ |args, env|
       # qutie_func(args, universe, parser, :qt_clone){ |a| a.clone }
     },
 
 
-    QT_Variable.new( :import ) => QT_BuiltinFunciton.new{ |args, environment|
+    QT_Variable.new( :import ) => QT_BuiltinFunciton.new{ |args, env|
       file = args.stack.fetch(0){ args.locals.fetch(:__file) }
       # passed_args = args.stack.fetch(1){ args.locals.fetch(:__args, universe.class.new) }
       pre_process = args.stack.fetch(2){ args.locals.fetch(:__preprocess, true) }
@@ -140,7 +140,7 @@ module Functions
 
     },
 
-    QT_Variable.new( :del ) => QT_BuiltinFunciton.new{ |args, environment|
+    QT_Variable.new( :del ) => QT_BuiltinFunciton.new{ |args, env|
         
       uni = args.stack.fetch(0){ args.locals.fetch(:__uni) }
       pos = args.stack.fetch(1){ args.locals.fetch(:__pos) }
@@ -159,7 +159,7 @@ module Functions
       QT_Null::INSTANCE
     },
 
-    QT_Variable.new( :len ) => QT_BuiltinFunciton.new{ |args, environment|
+    QT_Variable.new( :len ) => QT_BuiltinFunciton.new{ |args, env|
       arg = args.stack.fetch(0){ args.locals.fetch(:__arg) }
       type = args.stack.fetch(1){ args.locals.fetch(:__type, nil) }
       # u = universe.clone

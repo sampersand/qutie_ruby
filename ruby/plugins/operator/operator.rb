@@ -16,13 +16,13 @@ class QT_Operator < QT_Object
     @name.to_s
   end
 
-  def call(lhs_vars, rhs_vars, environment)
+  def call(lhs_vars, rhs_vars, env)
     fail unless lhs_vars.length == @operands[0]
     fail unless rhs_vars.length == @operands[1]
     if @bin_meth
       lhs_vars[0].method(@bin_meth).call( rhs_vars[0] )
     else
-      @func.call(*lhs_vars, *rhs_vars, environment)
+      @func.call(*lhs_vars, *rhs_vars, env)
     end
   end
 

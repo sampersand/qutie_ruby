@@ -12,9 +12,9 @@ module Universe
   ESCAPE = QT_Default.new( :'\\' )
   module_function
   
-  def next_token!(environment)
-    stream = environment.stream
-    universe = environment.universe
+  def next_token!(env)
+    stream = env.stream
+    universe = env.universe
     return unless L_PARENS.any?{ |lp| lp == stream._peek( lp._length ) }
     start_paren = stream._next
     body = QT_Default::EMPTY
@@ -69,8 +69,8 @@ module Universe
     res
   end
 
-  def handle(token, environment)
-    environment.universe << token
+  def handle(token, env)
+    env.universe << token
   end
 
 end

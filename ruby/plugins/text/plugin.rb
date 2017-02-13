@@ -21,8 +21,8 @@ module Text
     else chr
     end
   end
-  def next_token!(environment)
-    stream = environment.stream
+  def next_token!(env)
+    stream = env.stream
 
     return unless QUOTES.any?{ |q| q == stream._peek( q._length ) }
     start_quote = stream._next # if quotes change length this will break
@@ -46,7 +46,7 @@ module Text
     QT_Text::from( body, quotes: [start_quote, end_quote] )
   end
 
-  def handle(token, environment)
-    environment.universe << token
+  def handle(token, env)
+    env.universe << token
   end
 end

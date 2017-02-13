@@ -46,7 +46,7 @@ class QT_Text < QT_Object
       end
 
     # conversion
-      def qt_to_text
+      def qt_to_text(_env)
         clone
       end
       def qt_to_num
@@ -65,15 +65,15 @@ class QT_Text < QT_Object
         text and QT_Text.new(text) or QT_Null::INSTANCE
       end
 
-      def qt_eval(environment)
+      def qt_eval(env)
         raise unless @quotes[0] == @quotes[1] #why wouldn't they be?
         case @quotes[0].text_val
         when '`' then self.class.new( `#{@text_val}` )
         when "'" 
-          result = environment.parser.process( input: @text_val )
+          result = env.parser.process( input: @text_val )
           QT_Universe.new(body: '', universe: result.universe, parens: ['<', '>']) #to fix
         when '"' 
-          result = environment.parser.process( input: @text_val, universe: environment.universe )
+          result = env.parser.process( input: @text_val, universe: env.universe )
           QT_Universe.new(body: '', universe: result, parens: ['<', '>']) #to fix
         else fail "IDK HOW TO DEAL WITH QUOTE TYPE #{@quotes[0]}"
         end
@@ -84,23 +84,23 @@ class QT_Text < QT_Object
 
 
       private
-        def text_func_r(left, rmeth, lmeth=:qt_to_text)
+        def text_func_r(left, rmeth, env, lmeth=:qt_to_text)
           left = left.method(lmeth).() or return
-          QT_Text.new(left.text_val.method(rmeth).call(@text_val), quotes: @quotes)
+          QT_Text.new(left.text_val.method(rmeth).call(@text_val, env), quotes: @quotes)
         end
-        def text_func_l(right, lmeth, rmeth=:qt_to_text)
+        def text_func_l(right, lmeth, env, rmeth=:qt_to_text)
           right = right.method(rmeth).() or return
-          QT_Text.new(@text_val.method(lmeth).call(right.text_val), quotes: @quotes)
+          QT_Text.new(@text_val.method(lmeth).call(right.text_val, env), quotes: @quotes)
         end
       public
       # math
-        def qt_cmp(right:)
+        def qt_cmp(right, _env)
           return unless right.is_a?(QT_Text)
           QT_Number.new(@text_val <=> right.text_val)
         end
-        def qt_add_r(left) text_func_r(left, :+) end
-        def qt_mul(right) text_func_r(right, :*, :qt_to_num) end
-        def qt_add_l(right) text_func_l(right, :+) end
+        def qt_add_r(left, env) text_func_r(left, :+, env) end
+        def qt_mul(right, env) text_func_r(right, :*, env, :qt_to_num) end
+        def qt_add_l(right, env) text_func_l(right, :+, env) end
 end
 
 

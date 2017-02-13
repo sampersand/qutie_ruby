@@ -51,7 +51,7 @@ class QT_Universe < QT_Object
       #   else qt_get(QT_Variable::from(source: '__' + meth.to_s), type: :LOCALS)#fail "Unknown method `#{meth}`"
       #   end
       # end
-      def qt_to_text
+      def qt_to_text(env)
         p qt_get(QT_Variable.new( :__text ), type: :LOCALS)
         super
       end
@@ -61,13 +61,13 @@ class QT_Universe < QT_Object
       end
 
 
-    def qt_eval(environment)
-      universe = environment.universe.spawn_new_stack(new_stack: nil)#.clone #removed the .clone here
-      res = environment.parser.parse!(stream: @universe.clone, universe: universe).u
+    def qt_eval(env)
+      universe = env.universe.spawn_new_stack(new_stack: nil)#.clone #removed the .clone here
+      res = env.parser.parse!(stream: @universe.clone, universe: universe).u
       QT_Universe.new(body: '', universe: res, parens: @parens) # this is where it gets hacky
     end
 
-    def qt_call(args, environment) # fix this
+    def qt_call(args, env) # fix this
       raise "Args have to be a universe, not `#{args.class}`" unless args.is_a?(QT_Universe)
       passed_args = args.clone
       passed_args.globals.update(passed_args.locals)
@@ -77,7 +77,7 @@ class QT_Universe < QT_Object
       # func.program_stack.push args
       stream = @universe.clone
       $QT_CONTEXT.start(stream, self)
-      res = environment.parser.parse!(stream: stream, universe: passed_args)
+      res = env.parser.parse!(stream: stream, universe: passed_args)
       $QT_CONTEXT.stop(stream)
       res.u
       # func.program_stack.pop

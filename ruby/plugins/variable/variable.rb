@@ -24,11 +24,11 @@ class QT_Variable < QT_Object
 
   # qt methods
     # conversion
-      def qt_equal(right:)
+      def qt_equal(right)
         self == right
       end
 
-      def qt_to_text
+      def qt_to_text(_env)
         QT_Text.new(to_s)
       end
 

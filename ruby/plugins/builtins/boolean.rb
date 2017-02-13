@@ -14,19 +14,19 @@ class QT_Boolean < QT_Object
 
   # qt methods
     # methods
-      def qt_get(pos, type:)
+      def qt_get(pos, _env, type:)
         if pos == QT_Variable.new( :not )
           qt_not
         end
       end
     # operators
       # conversion
-        def qt_to_bool; self end
+        def qt_to_bool(_env); self end
 
       # operators 
-        def qt_eql(right); QT_Boolean::get right.is_a? self.class end
+        def qt_eql(right, _env); QT_Boolean::get right.is_a? self.class end
       # logic
-        def qt_not; QT_Boolean::get !self.class::VALUE end
+        def qt_not(_env); QT_Boolean::get !self.class::VALUE end
 end
 
 class QT_True < QT_Boolean

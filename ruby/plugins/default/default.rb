@@ -39,7 +39,7 @@ class QT_Default < QT_Object
 
  # qt methods
     # conversion
-      def qt_to_text
+      def qt_to_text(_env)
         QT_Text.new( text_val )
       end
       def qt_to_bool
@@ -48,16 +48,23 @@ class QT_Default < QT_Object
 
     # operators
       # math
-        def qt_eql_l(right) QT_Boolean::get( self == right ) end
-        def qt_eql_r(left) QT_Boolean::get( self == left ) end
-        def qt_add(right)
-          right = right.qt_to_text or return
+        def qt_eql_l(right, _env) QT_Boolean::get( self == right ) end
+        def qt_eql_r(left, _env) QT_Boolean::get( self == left ) end
+        def qt_add(right, env)
+          right = right.qt_to_text(env) or return
           QT_Default::from( @source_val.to_s + right.text_val.to_s )
         end
 
-        def qt_add_r(left)
-          left = left.qt_to_text or return
+        def qt_add_r(left, env)
+          left = left.qt_to_text(env) or return
           QT_Default::from( left.text_val.to_s + @source_val.to_s )
         end
 
 end
+
+
+
+
+
+
+
