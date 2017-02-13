@@ -17,7 +17,8 @@ module Number
 
   module_function
 
-  def next_number!(stream:)
+  def next_number!(environment)
+    stream = environment.stream
     res = stream._next
     catch(:EOF) do
       res += stream._next while DECIMAL_REGEX =~ stream._peek
@@ -35,7 +36,8 @@ module Number
     QT_Number::from( res )
   end
 
-  def next_base!(stream:)
+  def next_base!(environment)
+    stream = environment.stream
     raise unless stream._next.text_val == '0' #too lazy to do a real comparison
     base_regex, base = BASES[stream._next.source_val]
     res = QT_Default::from( '' )
@@ -46,18 +48,18 @@ module Number
     QT_Number::from( res, base: base )
   end
 
-  def next_token!(stream:,  **_)
-    return unless stream._peek =~ DECIMAL_REGEX
+  def next_token!(environment)
+    return unless environment.stream._peek =~ DECIMAL_REGEX
 
-    if BASE_START_REGEX =~ stream._peek(2)
-      next_base!(stream: stream)
+    if BASE_START_REGEX =~ environment.stream._peek(2)
+      next_base!(environment)
     else
-      next_number!(stream: stream)
+      next_number!(environment)
     end
   end
 
-  def handle(token:, universe:, **_)
-    universe << token
+  def handle(token, environment)
+    environment.universe << token
   end
 
 end

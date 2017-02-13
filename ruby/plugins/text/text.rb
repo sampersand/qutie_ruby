@@ -59,21 +59,21 @@ class QT_Text < QT_Object
 
     # operators
       # access
-      def qt_get(pos:, type: )
+      def qt_get(pos, type:)
         # ignores type
         text = @text_val[(pos.qt_to_num or return).num_val]
         text and QT_Text.new(text) or QT_Null::INSTANCE
       end
 
-      def qt_eval(universe, _stream, parser)
+      def qt_eval(environment)
         raise unless @quotes[0] == @quotes[1] #why wouldn't they be?
         case @quotes[0].text_val
         when '`' then self.class.new( `#{@text_val}` )
         when "'" 
-          result = parser.process( input: @text_val )
-          QT_Universe.new(body: '', universe: result, parens: ['<', '>']) #to fix
+          result = environment.parser.process( input: @text_val )
+          QT_Universe.new(body: '', universe: result.universe, parens: ['<', '>']) #to fix
         when '"' 
-          result = parser.process( input: @text_val, universe: universe )
+          result = environment.parser.process( input: @text_val, universe: environment.universe )
           QT_Universe.new(body: '', universe: result, parens: ['<', '>']) #to fix
         else fail "IDK HOW TO DEAL WITH QUOTE TYPE #{@quotes[0]}"
         end

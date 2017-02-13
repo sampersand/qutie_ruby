@@ -1,3 +1,4 @@
+require_relative 'environment'
 require_relative 'pre_parser'
 require_relative 'contexts'
 require_relative 'parser'
@@ -43,6 +44,6 @@ end
 
 require 'pp'
 puts '----[end]----'
-res.stack.each_with_index{ |i,j| puts "\t#{j}: #{i.inspect}"}
+res.u.stack.each_with_index{ |i,j| puts "\t#{j}: #{i.inspect}"}
 puts '-------------'
 

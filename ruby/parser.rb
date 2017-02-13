@@ -33,37 +33,27 @@ class Parser
   end
 
   def parse!(stream:, universe:)
+    environment = Environment.new(stream, universe, self)
     catch(:EOF){ 
       until stream.stack_empty?
-        token, plugin = next_token!(stream: stream,
-                                    universe: universe,
-                                    parser: self)
-        plugin.handle(token: token,
-                      stream: stream,
-                      universe: universe,
-                      parser: self)
+        token, plugin = next_token!(environment)
+        plugin.handle(token, environment)
       end
       nil
     }
-    universe
+    environment
   end
 
-  def next_token!(stream:, universe:, parser:)
-    self.class.next_token!(stream: stream,
-                           universe: universe,
-                           parser: parser)
+  def next_token!(environment)
+    self.class.next_token!(environment)
   end
 
-  def self.next_token!(stream:, universe:, parser:)
-    parser.plugins.each{ |pl|
-      token = pl.next_token!(stream: stream,
-                             universe: universe,
-                             parser: parser)
+  def self.next_token!(environment)
+    environment.parser.plugins.each do |pl|
+      token = pl.next_token!(environment)
       next unless token
-      return :retry != token  ? [token, pl] : next_token!(stream: stream,
-                                                         universe: universe,
-                                                         parser: parser)
-    } or fail "Nothing found!"
+      return :retry != token  ? [token, pl] : next_token!(environment)
+    end or fail "Nothing found!"
   end
 end
 

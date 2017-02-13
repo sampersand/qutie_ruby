@@ -12,7 +12,9 @@ module Universe
   ESCAPE = QT_Default.new( :'\\' )
   module_function
   
-  def next_token!(stream:, universe:, **_)
+  def next_token!(environment)
+    stream = environment.stream
+    universe = environment.universe
     return unless L_PARENS.any?{ |lp| lp == stream._peek( lp._length ) }
     start_paren = stream._next
     body = QT_Default::EMPTY
@@ -61,14 +63,14 @@ module Universe
                                                 "Reached EOF before finishing universe starting with: #{start_paren}"))
     end_paren = stream._next
     res=QT_Universe::from(source: body,
-                      current_universe: universe, 
-                      parens: [start_paren, end_paren])
+                          current_universe: universe, 
+                          parens: [start_paren, end_paren])
     res.__start_line_no = start_line_no
     res
   end
 
-  def handle(token:, universe:, **_)
-    universe << token
+  def handle(token, environment)
+    environment.universe << token
   end
 
 end

@@ -5,7 +5,8 @@ module Whitespace
 
   module_function
 
-  def next_token!(stream:, **_)
+  def next_token!(environment)
+    stream = environment.stream
     if WHITESPACE_REGEX =~ stream._peek
       stream._next # and ignore
       :retry

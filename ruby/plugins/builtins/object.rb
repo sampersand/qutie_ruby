@@ -70,7 +70,7 @@ class QT_Object
         end
 
       # comp
-        def qt_call(args:, universe:, stream:, parser:) end
+        def qt_call(args, environment) end
 
 
         # def qt_cmp(right:) end

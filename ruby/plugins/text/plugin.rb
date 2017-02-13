@@ -9,7 +9,7 @@ module Text
 
   module_function
 
-  def escape(stream:)
+  def escape(stream)
     case (chr=stream._next)
     when QT_Default.new( :'0' ) then QT_Default.new( :"\u0000" )
     when QT_Default.new( :n )   then QT_Default.new( :"\n"     )
@@ -21,7 +21,8 @@ module Text
     else chr
     end
   end
-  def next_token!(stream:, **_)
+  def next_token!(environment)
+    stream = environment.stream
 
     return unless QUOTES.any?{ |q| q == stream._peek( q._length ) }
     start_quote = stream._next # if quotes change length this will break
@@ -32,7 +33,7 @@ module Text
       until start_quote == stream._peek( start_quote._length )
         if ESCAPE == stream._peek(ESCAPE._length )
           stream._next( ESCAPE._length )
-          body += escape(stream: stream)
+          body += escape(stream)
         else
           body += stream._next
         end
@@ -45,7 +46,7 @@ module Text
     QT_Text::from( body, quotes: [start_quote, end_quote] )
   end
 
-  def handle(token:, universe:, **_)
-    universe << token
+  def handle(token, environment)
+    environment.universe << token
   end
 end
