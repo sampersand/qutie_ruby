@@ -31,6 +31,9 @@ class QT_Object
   def _match?(right, env)
     !qt_match(right, env)._rb_false?
   end
+  def _eql?(right, env)
+    qt_eql(right, env).bool_val
+  end
 
   # def to_i; qt_to_num end
   # def +(other)   qt_add(other) end

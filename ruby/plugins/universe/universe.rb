@@ -4,7 +4,7 @@ class QT_Universe < QT_Object
   attr_reader :body
   attr_reader :parens
   attr_accessor :__start_line_no 
-  def self.from(source, env, current_universe:, parens:)
+  def self.from(source, env, parens:)
     # warn("QT_Universe::from doesnt conform to others!")
     new_universe = UniverseOLD.new
     new_universe.stack = source.source_val.to_s.each_char.collect{ |c| QT_Default::from(c, env) }
@@ -52,7 +52,7 @@ class QT_Universe < QT_Object
       #   end
       # end
       def qt_to_text(env)
-        p qt_get(QT_Variable.new( :__text ), type: :LOCALS)
+        p qt_get(QT_Variable.new( :__text ), env, type: :LOCALS)
         super
       end
     # conversion
@@ -63,7 +63,7 @@ class QT_Universe < QT_Object
 
     def qt_eval(env)
       universe = env.universe.spawn_new_stack(new_stack: nil)#.clone #removed the .clone here
-      res = env.parser.parse!(env.fork(universe: @universe.clone)).u
+      res = env.parser.parse!(env.fork(stream: @universe.clone, universe: universe)).u
       QT_Universe.new(body: '', universe: res, parens: @parens) # this is where it gets hacky
     end
 
@@ -82,7 +82,7 @@ class QT_Universe < QT_Object
       res.u
       # func.program_stack.pop
     end
-    def qt_get(pos, type:)  # fix this
+    def qt_get(pos, env, type:)  # fix this
       return self if pos == QT_Variable.new( :'$' )
       case type
       when :BOTH then type = @universe.locals.include?(pos) ? :LOCALS : :STACK
@@ -91,7 +91,7 @@ class QT_Universe < QT_Object
 
       case type 
       when :STACK
-        stack_val = pos.qt_to_num
+        stack_val = pos.qt_to_num(env)
         return QT_Null::INSTANCE unless stack_val.respond_to?(:num_val)
         @universe.stack[stack_val.num_val] or QT_Null::INSTANCE
       when :LOCALS then @universe.locals[pos] or QT_Null::INSTANCE
@@ -99,7 +99,7 @@ class QT_Universe < QT_Object
       else fail "Unknown qt_get type `#{type}`!"
       end
     end
-    def qt_del(pos, type:)
+    def qt_del(pos, env, type:)
       if type == :BOTH
         if @universe.locals.include?(pos)
           type = :LOCALS

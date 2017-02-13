@@ -51,32 +51,32 @@ class QT_Number < QT_Object
 
     # operators
         private
-          def numer_func_l(right, lmeth)
-            right = right.qt_to_num 
-            return right if right == QT_Missing::INSTANCE 
+          def numer_func_l(right, env,  lmeth)
+            right = right.qt_to_num(env)
+            return right if right._eql?( QT_Missing::INSTANCE, env)
             QT_Number.new(@num_val.method(lmeth).call(right.num_val))
           end
-          def numer_func_r(left, lmeth)
-            left = left.qt_to_num 
-            return left if left == QT_Missing::INSTANCE 
+          def numer_func_r(left, env, lmeth)
+            left = left.qt_to_num(env)
+            return left if left._eql?( QT_Missing::INSTANCE, env)
             QT_Number.new(left.num_val.method(lmeth).call(@num_val) )
           end
 
         public
         # math
-          def qt_cmp_l(r) numer_func_l(r, :<=>)end
-          def qt_add_l(r) numer_func_l(r, :+) end
-          def qt_sub_l(r) numer_func_l(r, :-) end
-          def qt_mul_l(r) numer_func_l(r, :*) end
-          def qt_div_l(r) numer_func_l(r, :/) end
-          def qt_mod_l(r) numer_func_l(r, :%) end
-          def qt_pow_l(r) numer_func_l(r, :**) end
+          def qt_cmp_l(r, e) numer_func_l(r, e, :<=>)end
+          def qt_add_l(r, e) numer_func_l(r, e, :+) end
+          def qt_sub_l(r, e) numer_func_l(r, e, :-) end
+          def qt_mul_l(r, e) numer_func_l(r, e, :*) end
+          def qt_div_l(r, e) numer_func_l(r, e, :/) end
+          def qt_mod_l(r, e) numer_func_l(r, e, :%) end
+          def qt_pow_l(r, e) numer_func_l(r, e, :**) end
 
-          def qt_cmp_r(l) numer_func_r(l, :<=>)end
-          def qt_add_r(l) numer_func_r(l, :+) end
-          def qt_sub_r(l) numer_func_r(l, :-) end
-          def qt_mul_r(l) numer_func_r(l, :*) end
-          def qt_div_r(l) numer_func_r(l, :/) end
-          def qt_mod_r(l) numer_func_r(l, :%) end
-          def qt_pow_r(l) numer_func_r(l, :**) end
+          def qt_cmp_r(l, e) numer_func_r(l, e, :<=>)end
+          def qt_add_r(l, e) numer_func_r(l, e, :+) end
+          def qt_sub_r(l, e) numer_func_r(l, e, :-) end
+          def qt_mul_r(l, e) numer_func_r(l, e, :*) end
+          def qt_div_r(l, e) numer_func_r(l, e, :/) end
+          def qt_mod_r(l, e) numer_func_r(l, e, :%) end
+          def qt_pow_r(l, e) numer_func_r(l, e, :**) end
 end

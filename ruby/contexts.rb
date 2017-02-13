@@ -41,9 +41,9 @@ class Context
     line = ''
     catch(:EOF) do
       until lines == line_no
-        lines += 1 if NEWL == stream._next.text_val
+        lines += 1 if NEWL == stream._next(nil).text_val
       end
-      line += stream._next.text_val until NEWL == stream._peek.text_val
+      line += stream._next(nil).text_val until NEWL == stream._peek(nil).text_val
       true
     end or fail "Couldn't with finding line ##{line_no}"
     line

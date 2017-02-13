@@ -6,8 +6,8 @@ module Operators
     def next_token!(env)
       stream = env.stream
       OPERATORS.find do |oper|
-        if oper.name == stream._peek( oper.name.length ).source_val
-          stream._next( oper.name.length )
+        if oper.name == stream._peek( env, oper.name.length ).source_val
+          stream._next( env, oper.name.length )
           true
         end
       end

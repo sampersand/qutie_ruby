@@ -68,12 +68,12 @@ class QT_Text < QT_Object
       def qt_eval(env)
         raise unless @quotes[0] == @quotes[1] #why wouldn't they be?
         case @quotes[0].text_val
-        when '`' then self.class.new( `#{@text_val}` )
+        when '`' then self.class.new( `#{@text_val}`, quotes: @quotes )
         when "'" 
-          result = env.parser.process( input: @text_val )
-          QT_Universe.new(body: '', universe: result.universe, parens: ['<', '>']) #to fix
+          result = env.parser.process( input: @text_val ).u
+          QT_Universe.new(body: '', universe: result, parens: ['<', '>']) #to fix
         when '"' 
-          result = env.parser.process( input: @text_val, universe: env.universe )
+          result = env.parser.process( input: @text_val, universe: env.universe ).u
           QT_Universe.new(body: '', universe: result, parens: ['<', '>']) #to fix
         else fail "IDK HOW TO DEAL WITH QUOTE TYPE #{@quotes[0]}"
         end
@@ -85,12 +85,12 @@ class QT_Text < QT_Object
 
       private
         def text_func_r(left, rmeth, env, lmeth=:qt_to_text)
-          left = left.method(lmeth).() or return
-          QT_Text.new(left.text_val.method(rmeth).call(@text_val, env), quotes: @quotes)
+          left = left.method(lmeth).(env) or return
+          QT_Text.new(left.text_val.method(rmeth).call(@text_val), quotes: @quotes)
         end
         def text_func_l(right, lmeth, env, rmeth=:qt_to_text)
-          right = right.method(rmeth).() or return
-          QT_Text.new(@text_val.method(lmeth).call(right.text_val, env), quotes: @quotes)
+          right = right.method(rmeth).(env) or return
+          QT_Text.new(@text_val.method(lmeth).call(right.text_val), quotes: @quotes)
         end
       public
       # math

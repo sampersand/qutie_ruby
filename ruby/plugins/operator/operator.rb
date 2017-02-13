@@ -20,7 +20,7 @@ class QT_Operator < QT_Object
     fail unless lhs_vars.length == @operands[0]
     fail unless rhs_vars.length == @operands[1]
     if @bin_meth
-      lhs_vars[0].method(@bin_meth).call( rhs_vars[0] )
+      lhs_vars[0].method(@bin_meth).call( rhs_vars[0], env )
     else
       @func.call(*lhs_vars, *rhs_vars, env)
     end
@@ -50,9 +50,9 @@ module Operators
     QT_Operator.new(name: :'&&', priority: 24){ |l, r| l.qt_to_bool.bool_val ? r : l },
     QT_Operator.new(name: :'||', priority: 25){ |l, r| l.qt_to_bool.bool_val ? l : r },
 
-    QT_Operator.new(name: :'.S' , priority: 5){ |l, r| l.qt_get(r, type: :STACK)   },
-    QT_Operator.new(name: :'.L' , priority: 5){ |l, r| l.qt_get(r, type: :LOCALS)  },
-    QT_Operator.new(name: :'.G' , priority: 5){ |l, r| l.qt_get(r, type: :GLOBALS) },
+    QT_Operator.new(name: :'.S' , priority: 5){ |l, r, e| l.qt_get(r, e, type: :STACK)   },
+    QT_Operator.new(name: :'.L' , priority: 5){ |l, r, e| l.qt_get(r, e, type: :LOCALS)  },
+    QT_Operator.new(name: :'.G' , priority: 5){ |l, r, e| l.qt_get(r, e, type: :GLOBALS) },
 
     QT_Operator.new(name: :* , priority: 11, bin_meth: :qt_mul),
     QT_Operator.new(name: :/ , priority: 11, bin_meth: :qt_div),
@@ -64,7 +64,7 @@ module Operators
 
     QT_Operator.new(name: :'=' , priority: 35){ |l, r, e| e.u.locals[l] = r; r }, # this is akin to `.=`
     QT_Operator.new(name: :'@' , priority:  7){ |l, r, e| l.qt_call(r, e)    },
-    QT_Operator.new(name: :'.' , priority:  5){ |l, r, e| l.qt_get(r, type: :BOTH) },
+    QT_Operator.new(name: :'.' , priority:  5){ |l, r, e| l.qt_get(r, e, type: :BOTH) },
 
     QT_Operator.new(name: :';' , priority: 40, operands: [1, 0]){ true },
     QT_Operator.new(name: :',' , priority: 40, operands: [1, 0]){ |l| l },

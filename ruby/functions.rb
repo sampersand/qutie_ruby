@@ -24,20 +24,20 @@ module Functions
       if_true  = fetch(args, 1, QT_True::INSTANCE , :true)
       if_false = fetch(args, 2, QT_False::INSTANCE, :false, default: QT_Null::INSTANCE)
       if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false, QT_Boolean::NIL) } }
-      cond.qt_to_bool.bool_val ? if_true : if_false
+      cond.qt_to_bool(env).bool_val ? if_true : if_false
     },
     QT_Variable.new( :unless ) => QT_BuiltinFunciton.new{ |args, env|
       cond     = fetch(args, 0, :__cond)
       if_true  = fetch(args, 1, QT_True::INSTANCE , :true)
       if_false = fetch(args, 2, QT_False::INSTANCE, :false, default: QT_Null::INSTANCE)
       if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false, QT_Boolean::NIL) } }
-      !cond.qt_to_bool.bool_val ? if_true : if_false
+      !cond.qt_to_bool(env).bool_val ? if_true : if_false
     },
 
     QT_Variable.new( :while ) => QT_BuiltinFunciton.new{ |args, env|
       cond = fetch(args, 0, :__cond)
       body = fetch(args, 1, :__body)
-      while cond.clone.qt_eval(env).pop.qt_to_bool.bool_val
+      while cond.clone.qt_eval(env).pop.qt_to_bool(env).bool_val
         body.clone.qt_eval(env)
       end
       QT_Null::INSTANCE
@@ -45,7 +45,7 @@ module Functions
     QT_Variable.new( :until ) => QT_BuiltinFunciton.new{ |args, env|
       cond = fetch(args, 0, :__cond)
       body = fetch(args, 1, :__body)
-      until cond.clone.qt_eval(env).pop.qt_to_bool.bool_val
+      until cond.clone.qt_eval(env).pop.qt_to_bool(env).bool_val
         body.clone.qt_eval(env)
       end
       QT_Null::INSTANCE
@@ -57,7 +57,7 @@ module Functions
       incr =  fetch(args, 2, :__incr)
       body =  fetch(args, 3, :__body)
       start.clone.qt_eval(env)
-      while cond.clone.qt_eval(env).pop.qt_to_bool.bool_val
+      while cond.clone.qt_eval(env).pop.qt_to_bool(env).bool_val
         body.clone.qt_eval(env)
         incr.clone.qt_eval(env)
       end
@@ -84,7 +84,7 @@ module Functions
       args = args.clone
       args.locals[QT_Variable.new( :sep ) ] ||= sep
       to_print = FUNCTIONS[ QT_Variable.new( :text ) ].qt_call(args, env)
-      print(to_print.qt_add( endl ).text_val)
+      print(to_print.qt_add( endl, env ).text_val)
       QT_Null::INSTANCE
     },
     QT_Variable.new( :prompt ) => QT_BuiltinFunciton.new{ |args, env|
