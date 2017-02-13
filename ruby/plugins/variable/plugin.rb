@@ -8,11 +8,11 @@ module Variable
 
   def next_token!(env)
     stream = env.stream
-    return if stream._peek.qt_rgx(VARIABLE_START)._nil?
+    return if stream._peek.qt_match(VARIABLE_START)._nil?
 
     result = stream._next
     catch(:EOF) do
-      result = result.qt_add( stream._next ) until stream._peek.qt_rgx( VARIABLE_CONT )._nil?
+      result = result.qt_add( stream._next ) until stream._peek.qt_match( VARIABLE_CONT )._nil?
       nil
     end
     # QT_Variable::from(source: result)

@@ -25,22 +25,25 @@ class QT_Object
     self == other
   end
 
-  def to_i; qt_to_num end
-  def +(other)   qt_add(other) end
-  def -(other)   qt_sub(other) end
-  def *(other)   qt_mul(other) end
-  def /(other)   qt_div(other) end
-  def %(other)   qt_mod(other) end
-  def **(other)  qt_pow(other) end
-  def =~(other)
-    p binding.methods - Object.methods
-    # p Binding.of_caller do |b|
-    #   p b
-    # end
-    exit
-    res=qt_rgx other;res._nil??nil:res.to_i end
-  def <=>(other)res=qt_cmp other;res._nil??nil:res.to_i end
-  def ==(other)qt_eql(other).bool_val end
+  def _bool
+    !(self.class == QT_False || self.class == QT_Null || self.class == QT_Missing)
+  end
+  # def to_i; qt_to_num end
+  # def +(other)   qt_add(other) end
+  # def -(other)   qt_sub(other) end
+  # def *(other)   qt_mul(other) end
+  # def /(other)   qt_div(other) end
+  # def %(other)   qt_mod(other) end
+  # def **(other)  qt_pow(other) end
+  # def =~(other)
+  #   p binding.methods - Object.methods
+  #   # p Binding.of_caller do |b|
+  #   #   p b
+  #   # end
+  #   exit
+  #   res=qt_match other;res._nil??nil:res.to_i end
+  # def <=>(other)res=qt_cmp other;res._nil??nil:res.to_i end
+  # def ==(other)qt_eql(other).bool_val end
 
   # qt methods
     def _missing? # the reason this isn't a qt method is because it's just an alias that i'll be using over and over.
@@ -116,7 +119,7 @@ class QT_Object
           throw(:ERROR, QTError_MethodMissing.new($QT_CONTEXT.current, callername, self, right))
         end
 
-        def qt_rgx(right, env) __bi_method(right, env) end
+        def qt_match(right, env) __bi_method(right, env) end
         def qt_add(right, env) __bi_method(right, env) end
         def qt_cmp(right, env) __bi_method(right, env) end
         def qt_sub(right, env) __bi_method(right, env) end
@@ -131,7 +134,7 @@ class QT_Object
         def qt_div_r(_left, _env) QT_Missing::INSTANCE end
         def qt_mod_r(_left, _env) QT_Missing::INSTANCE end
         def qt_pow_r(_left, _env) QT_Missing::INSTANCE end
-        def qt_rgx_r(_left, _env) QT_Missing::INSTANCE end
+        def qt_match_r(_left, _env) QT_Missing::INSTANCE end
         def qt_cmp_r(_left, _env) QT_Missing::INSTANCE end
         def qt_eql_r(_left, _env) QT_Missing::INSTANCE end
         def qt_lth_r(_left, _env) QT_Missing::INSTANCE end
@@ -147,7 +150,7 @@ class QT_Object
         def qt_div_l(_right, _env) QT_Missing::INSTANCE end
         def qt_mod_l(_right, _env) QT_Missing::INSTANCE end
         def qt_pow_l(_right, _env) QT_Missing::INSTANCE end
-        def qt_rgx_l(_right, _env) QT_Missing::INSTANCE end
+        def qt_match_l(_right, _env) QT_Missing::INSTANCE end
         def qt_cmp_l(_right, _env) QT_Missing::INSTANCE end
         def qt_eql_l(_right, _env) QT_Missing::INSTANCE end
         def qt_lth_l(_right, _env) QT_Missing::INSTANCE end

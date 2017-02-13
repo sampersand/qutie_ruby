@@ -21,13 +21,13 @@ class QT_Regex < QT_Object
     @regex_val.hash
   end
   
-  def qt_rgx_l(right)
+  def qt_match_l(right, _env)
     return QT_Missing unless right.respond_to?(:text_val)
     res = @regex_val =~ right.text_val
     res ? QT_Number.new( res ) : QT_Null::INSTANCE
   end
 
-  def qt_rgx_r(left)
+  def qt_match_r(left, _env)
     return QT_Missing unless left.respond_to?(:text_val)
     res = left.text_val =~ @regex_val
     res ? QT_Number.new( res ) : QT_Null::INSTANCE
