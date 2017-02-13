@@ -1,3 +1,3 @@
-class QTError_Syntax < QTError
+class QTE_Syntax < QTE
 
 end

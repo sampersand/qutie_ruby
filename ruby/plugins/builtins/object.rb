@@ -61,7 +61,7 @@ class QT_Object
     end
 
     # methods
-      def qt_method(meth, _env) end
+      def qt_method(meth, _env) QT_Missing::INSTANCE end
       def qt_length(_env); QT_Missing::INSTANCE end
     # conversion
       def qt_to_num(_env); QT_Missing::INSTANCE end
@@ -123,7 +123,7 @@ class QT_Object
           return res unless res._missing?
           res = right.method(callername + '_r').(self, env)
           return res unless res._missing?
-          throw(:ERROR, QTError_MethodMissing.new($QT_CONTEXT.current, callername, self, right))
+          throw(:ERROR, QTE_MethodMissing.new($QT_CONTEXT.current, callername, self, right))
         end
 
         def qt_match(right, env) __bi_method(right, env) end
@@ -168,7 +168,7 @@ class QT_Object
 
 
       # logic
-        def qt_not(_env); qt_to_bool.qt_not end
+        def qt_not(_env); qt_to_bool(env).qt_not(env) end
 
 end
 

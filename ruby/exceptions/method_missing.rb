@@ -1,4 +1,4 @@
-class QTError_MethodMissing < QTError
+class QTE_MethodMissing < QTE
   def initialize( context, method_, caller_, args )
     super(context)
     @method = method_

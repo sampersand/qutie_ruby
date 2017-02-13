@@ -1,4 +1,4 @@
-class QTError# < QT_Object
+class QTE# < QT_Object
   def initialize(context)
     @context = context
   end
@@ -17,3 +17,4 @@ end
 require_relative 'method_missing'
 require_relative 'syntax_error'
 require_relative 'reached_eof'
+require_relative 'type_error'

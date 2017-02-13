@@ -53,13 +53,13 @@ class QT_Text < QT_Object
         QT_Number::from( self, env )
       end
 
-      def qt_to_bool
+      def qt_to_bool(_env)
         QT_Boolean::get(@text_val.length != 0)
       end
 
     # operators
       # access
-      def qt_get(pos, type:)
+      def qt_get(pos, _env, type:)
         # ignores type
         text = @text_val[(pos.qt_to_num or return).num_val]
         text and QT_Text.new(text) or QT_Null::INSTANCE

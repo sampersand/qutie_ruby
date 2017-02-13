@@ -42,22 +42,35 @@ class QT_Universe < QT_Object
 
   # qt methods
     # methods
-      # def qt_method(meth:)
-      #   # this method is deprecated for now
-      #   case meth
-      #   when :append then proc{|args|
-      #     @universe.stack << args.stack[0]
-      #   }
-      #   else qt_get(QT_Variable::from(source: '__' + meth.to_s), type: :LOCALS)#fail "Unknown method `#{meth}`"
-      #   end
-      # end
-      def qt_to_text(env)
-        p qt_get(QT_Variable.new( :__text ), env, type: :LOCALS)
-        super
+      def qt_method(meth, env)
+        text_func = qt_get(QT_Variable.new( meth ), env, type: :LOCALS)
+        return super if text_func._nil?
+        uni = @universe.clone
+        uni.stack.clear
+        uni.qt_set( QT_Variable.new( :__self ), self, env, type: :LOCALS)
+        args = self.class.new(body: '', universe: uni , parens: '')
+        text_func.qt_call(args, env ).qt_get( QT_Number::NEG_1, env, type: :STACK )
+
       end
-    # conversion
+
+      def qt_to_text(env)
+        res = qt_method(:__text, env)
+        return super if res._missing?
+        throw(:ERROR, QTE_Type.new(env, " `__text` returned a non-QT_Text value! ")) unless res.is_a?(QT_Text)
+        res
+      end
+
+      def qt_to_num(env)
+        res = qt_method(:__num, env)
+        return super if res._missing?
+        throw(:ERROR, QTE_Type.new(env, " __num`` returned a non-QT_Number value! ")) unless res.is_a?(QT_Number)
+        res
+      end
       def qt_to_bool(env)
-        QT_Boolean::get(@universe.stack_empty?(env) && @universe.shortened_locals_empty?)
+        res = qt_method(:__bool, env)
+        return QT_Boolean::get(!@universe.stack_empty?(env) || !@universe.shortened_locals_empty?) if res._missing?
+        throw(:ERROR, QTE_Type.new(env, " `__bool` returned a non-QT_Boolean value! ")) unless res.is_a?(QT_Boolean)
+        res
       end
 
 

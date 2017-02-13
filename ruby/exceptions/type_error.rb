@@ -1,4 +1,4 @@
-class QTE_Syntax_EOF < QTE_Syntax
+class QTE_Type < QTE
   attr_reader :message
   def initialize( context, message )
     super(context)

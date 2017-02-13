@@ -45,10 +45,10 @@ module Operators
     QT_Operator.new(name: :>=,   priority: 20, bin_meth: :qt_geq), 
     QT_Operator.new(name: :'.=', priority:  6, bin_meth: :qt_set),
 
-    QT_Operator.new(name: :'@0', priority:  7){ |l, r, e| CALL_OPER.call([l], [r], e).qt_get(QT_Number::NEG_1, type: :STACK) },
+    QT_Operator.new(name: :'@0', priority:  7){ |l, r, e| CALL_OPER.call([l], [r], e).qt_get(QT_Number::NEG_1, e, type: :STACK) },
 
-    QT_Operator.new(name: :'&&', priority: 24){ |l, r| l.qt_to_bool.bool_val ? r : l },
-    QT_Operator.new(name: :'||', priority: 25){ |l, r| l.qt_to_bool.bool_val ? l : r },
+    QT_Operator.new(name: :'&&', priority: 24){ |l, r, e| l.qt_to_bool(e).bool_val ? r : l },
+    QT_Operator.new(name: :'||', priority: 25){ |l, r, e| l.qt_to_bool(e).bool_val ? l : r },
 
     QT_Operator.new(name: :'.S' , priority: 5){ |l, r, e| l.qt_get(r, e, type: :STACK)   },
     QT_Operator.new(name: :'.L' , priority: 5){ |l, r, e| l.qt_get(r, e, type: :LOCALS)  },
@@ -68,7 +68,7 @@ module Operators
 
     QT_Operator.new(name: :';' , priority: 40, operands: [1, 0]){ true },
     QT_Operator.new(name: :',' , priority: 40, operands: [1, 0]){ |l| l },
-    QT_Operator.new(name: :'?' , priority:  1, operands: [1, 0]){ |l, e| e.u.qt_get(l, type: :NON_STACK) }, # akin to `.`
+    QT_Operator.new(name: :'?' , priority:  1, operands: [1, 0]){ |l, e| e.u.qt_get(l, e, type: :NON_STACK) }, # akin to `.`
     QT_Operator.new(name: :'!' , priority:  1, operands: [1, 0]){ |l, e| l.qt_eval(e) }, #universe, stream, parser
   ]
 

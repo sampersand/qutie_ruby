@@ -60,7 +60,7 @@ module Universe
         body = body.qt_add( stream._next(env), env )
       end
       true
-    end or throw(:ERROR, QTError_Syntax_EOF.new($QT_CONTEXT.current,
+    end or throw(:ERROR, QTE_Syntax_EOF.new($QT_CONTEXT.current,
                                                 "Reached EOF before finishing universe starting with: #{start_paren}"))
     end_paren = stream._next(env)
     res=QT_Universe::from(body, env, parens: [start_paren, end_paren])

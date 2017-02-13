@@ -42,7 +42,7 @@ class QT_Default < QT_Object
       def qt_to_text(_env)
         QT_Text.new( text_val )
       end
-      def qt_to_bool
+      def qt_to_bool(_env)
         QT_Boolean::get(@source_val.length != 0)
       end
 

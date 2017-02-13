@@ -57,25 +57,28 @@ class UniverseOLD
     end
 
   # locals, globals, and stack
-    def [](val)
-      stack_incl = @stack.include?(val)
-      locals_incl = @locals.include?(val)
-      globals_incl = @globals.include?(val)
-      STDERR.puts("Both locals and stack respond to `#{val.inspect}`!") if locals_incl && stack_incl
+    def [](key)
+      stack_incl = @stack.include?(key)
+      locals_incl = @locals.include?(key)
+      globals_incl = @globals.include?(key)
+      STDERR.puts("Both locals and stack respond to `#{key.inspect}`!") if locals_incl && stack_incl
       if locals_incl
-        @locals[val]
+        @locals[key]
       elsif stack_incl
-        @stack[val]
+        @stack[key]
       elsif globals_incl
-        @globals[val]
+        @globals[key]
       else
-        # STDERR.puts("Neither Locals, Globals, nor Stack respond to `#{val.inspect}`")
+        # STDERR.puts("Neither Locals, Globals, nor Stack respond to `#{key.inspect}`")
         QT_Null::INSTANCE
       end
     end
-    def qt_get(pos, type: :BOTH) #ignores type
+    def qt_get(pos, _env, type: :BOTH) #ignores type
       return QT_Universe.new(body: '', universe: self, parens: ['<', '>']) if pos == QT_Variable.new( :'$' )
       self[pos] || QT_Null::INSTANCE
+    end
+    def qt_set(pos, val, _env, type: :BOTH) #ignores type
+      self.locals[pos] = val
     end
 
   # repr

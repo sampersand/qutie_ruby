@@ -41,7 +41,7 @@ module Text
       end_quote = stream._next(env, start_quote._length )
       fail unless start_quote._eql?( end_quote, env )
       true
-    end or throw(:ERROR, QTError_Syntax_EOF.new($QT_CONTEXT.current,
+    end or throw(:ERROR, QTE_Syntax_EOF.new($QT_CONTEXT.current,
                                                 "Reached EOF before finishing string starting with: #{start_quote}"))
     QT_Text::from( body, env, quotes: [start_quote, end_quote] )
   end

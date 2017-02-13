@@ -9,13 +9,18 @@ Car <- {
   drive = {dist=dist?||__args?.0;
     disp? @ ( if? @ (dist?, 'I drove ' + dist? + ' miles!', 'vroom vroom!')! )!;
   };
-
+  __num = {
+    __self?.wheels
+  };
+  __bool = { nil? }
 };
 
 
 
-car = Car? @ (maker: 'toyoya')!;
-text? @ (car?)!
+car = Car? @ (maker: 'toyoya';)!;
+text? @ (car?)!,
+num? @ (car?)!,
+bool? @ (car?)!
 # disp? @ (car?.__text @ (__self=car?;)!,.0 )!;
 # car?.drive @ ( 5 )!;
 # car?.drive @ ( dist=9.3 )!;

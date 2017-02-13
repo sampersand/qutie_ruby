@@ -17,7 +17,7 @@ module Functions
   FUNCTIONS = {
     QT_Variable.new( :switch ) => QT_BuiltinFunciton.new{ |args, env|
       switch_on = fetch(args, 0, :__switch_on)
-      args.qt_get(switch_on, type: :BOTH)
+      args.qt_get(switch_on, env, type: :BOTH)
     },
     QT_Variable.new( :if ) => QT_BuiltinFunciton.new{ |args, env|
       cond     = fetch(args, 0, :__cond)
@@ -114,11 +114,11 @@ module Functions
     },
 
     QT_Variable.new( :num ) => QT_BuiltinFunciton.new{ |args, env|
-      fetch(args, 0, :__to_num, default: QT_Number::ZERO).qt_to_num
+      fetch(args, 0, :__to_num, default: QT_Number::ZERO).qt_to_num(env)
     },
 
     QT_Variable.new( :bool ) => QT_BuiltinFunciton.new{ |args, env|
-      fetch(args, 0, :__to_num, default: QT_False::INSTANCE).qt_to_bool
+      fetch(args, 0, :__to_num, default: QT_False::INSTANCE).qt_to_bool(env)
     },
 
     # i dont know how many of these work...
