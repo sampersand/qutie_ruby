@@ -67,6 +67,9 @@ class QT_Text < QT_Object
         when "'" 
           result = parser.process( input: @text_val )
           QT_Universe.new(body: '', universe: result, parens: ['<', '>']) #to fix
+        when '"' 
+          result = parser.process( input: @text_val, universe: universe )
+          QT_Universe.new(body: '', universe: result, parens: ['<', '>']) #to fix
         else fail "IDK HOW TO DEAL WITH QUOTE TYPE #{@quotes[0]}"
         end
       end

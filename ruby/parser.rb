@@ -21,9 +21,9 @@ class Parser
     @builtins.update builtins
   end
 
-  def process(input:, additional_builtins: {})
+  def process(input:, additional_builtins: {}, universe: nil)
     stream = UniverseOLD.new(stack: input.each_char.to_a.collect(&QT_Default::method(:from)))
-    universe = UniverseOLD.new
+    universe ||= UniverseOLD.new
     universe.globals.update(@builtins)
     universe.globals.update(additional_builtins)
     $QT_CONTEXT.start(stream, universe)

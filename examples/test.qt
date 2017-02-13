@@ -13,6 +13,10 @@
 # a?
 # ('ls'!.0 + ``)!.0,!,
 # 'ls'!.0 + ``,!
-val = ls;
-cmd = text?@( val?, '`' )!;
-disp?@( cmd?! )!
+# val = a=3;
+# cmd = text?@( val?, '"' )!;
+# disp?@( cmd?! )!
+a = 4;
+txt = "a = 3";
+txt?!;
+a?
