@@ -19,20 +19,20 @@ class UniverseOLD
 
     def next(amnt: 1, env:)
       warn("Asking for `#{amnt.inspect}` elements") unless amnt.is_a?(Integer) && amnt != 0
-      throw :EOF if stack_empty?
+      throw :EOF if stack_empty?(env)
       return @stack.shift if amnt == 1
       @stack.shift(amnt).reduce{ |a, b| a.qt_add(b, env) }
     end
 
     def peek(amnt: 1, env:)
       warn("Asking for `#{amnt.inspect}` elements") unless amnt.is_a?(Integer) && amnt != 0
-      throw :EOF if stack_empty?
+      throw :EOF if stack_empty?(env)
       return @stack.first if amnt == 1
       @stack.first(amnt).reduce{ |a, b| a.qt_add(b, env) }
     end
 
   # stack
-    def stack_empty?
+    def stack_empty?(_env)
       @stack.empty?
     end
 
@@ -96,7 +96,7 @@ class UniverseOLD
     def to_s(parens=['<', '>'])
       parens[0] +(if shortened_locals_empty?
                     stack_s
-                  elsif stack_empty?
+                  elsif stack_empty?(nil)
                     locals_s
                   else
                     " [#{stack_s}] | {#{locals_s}} "

@@ -56,8 +56,8 @@ class QT_Universe < QT_Object
         super
       end
     # conversion
-      def qt_to_bool
-        QT_Boolean::get(@universe.stack_empty? && @universe.shortened_locals_empty?)
+      def qt_to_bool(env)
+        QT_Boolean::get(@universe.stack_empty?(env) && @universe.shortened_locals_empty?)
       end
 
 

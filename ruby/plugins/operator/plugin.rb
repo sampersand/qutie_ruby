@@ -38,7 +38,7 @@ module Operators
       rhs = universe.spawn_new_stack(new_stack: nil)
       token_priority = oper.priority
       catch(:EOF){
-        until stream.stack_empty?
+        until stream.stack_empty?(env)
           ntoken = parser.next_token!(env.fork(stream: stream.clone, universe: rhs))
           # if ntoken[0] =~ /[-+*\/]/ and ntoken[1] == Operator and rhs.stack_empty?  # this is dangerous
           #   ntoken = parser.next_token!(stream: stream,

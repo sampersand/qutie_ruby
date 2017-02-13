@@ -39,7 +39,7 @@ class Parser
 
   def parse!(env)
     catch(:EOF){ 
-      until env.stream.stack_empty?
+      until env.stream.stack_empty?(env)
         token, plugin = next_token!(env)
         plugin.handle(token, env)
       end
