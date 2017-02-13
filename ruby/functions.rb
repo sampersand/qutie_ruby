@@ -11,16 +11,18 @@ module Functions
     end
 
   end
+  Ignore = Class.new
 
-  NoRet = Class.new()
+  NoRet = Class.new
   FUNCTIONS = {
     QT_Variable.new( :switch ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
-      switch_on = args.stack.fetch(0){ args.locals.fetch(:__switch_on) }
-      if args.locals.include?(switch_on)
-        args.locals[switch_on]
-      else
-        args.stack[switch_on]
-      end
+      switch_on = fetch(args, 0, :__switch_on);
+      args.qt_get(switch_on, type: :BOTH)
+      # if args.locals.include?(switch_on)
+      #   args.locals[switch_on]
+      # else
+      #   args.stack[switch_on]
+      # end
     },
 
     QT_Variable.new( :return ) => QT_BuiltinFunciton.new{ |args, universe, stream|
@@ -34,8 +36,9 @@ module Functions
     },
 
     QT_Variable.new( :if ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
-      cond     = args.stack.fetch(0){ args.locals.fetch(:__cond) }
-      if_true  = args.locals.fetch(true){ args.stack.fetch(1){ args.locals.fetch(:true) }   }
+      cond     = fetch(args, 0, :__cond)
+      if_true  = fetch(args, 1, QT_True::INSTANCE , :true)
+      if_false = fetch(args, 2, QT_False::INSTANCE, :false, else_: QT_Null::INSTANCE)
       if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false, QT_Boolean::NIL) } }
       cond.qt_to_bool.bool_val ? if_true : if_false
     },
@@ -100,12 +103,11 @@ module Functions
     },
     QT_Variable.new( :disp ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
 
-      endl = args.qt_get( QT_Variable.new( :end ), type: :NON_STACK)
-      sep  = args.qt_get( QT_Variable.new( :sep ), type: :NON_STACK)
-      endl = QT_Text.new("\n") if endl == QT_Null::INSTANCE
-      sep = QT_Text.new('') if sep == QT_Null::INSTANCE
-      args.locals[:sep] = sep # forces it to be '' if not specified, but doesnt override text's default
-      to_print=FUNCTIONS[QT_Variable.new( :text )].qt_call(args, universe, stream, parser) 
+      endl = fetch(args, :end, else_: QT_Text.new("\n"))
+      sep = fetch(args, :sep, else_: QT_Text.new(""))
+      args = args.clone
+      args.locals[QT_Variable.new( :sep ) ] ||= sep
+      to_print = FUNCTIONS[ QT_Variable.new( :text ) ].qt_call(args, universe, stream, parser) 
       print(to_print.qt_add( endl ).text_val)
       true
     },
@@ -188,6 +190,17 @@ module Functions
   }
 
   module_function
+
+  def fetch(args, *search_fors, else_: Ignore)
+    search_fors.each do |search_for|
+      res = (search_for.is_a?(Integer) ? args.stack : args.locals).fetch(
+              (search_for.is_a?(Symbol) ? QT_Variable.new( search_for ) : search_for), Ignore)
+      return res unless res.eql?(Ignore)
+    end
+    raise "Cannot find args for #{search_fors}" if else_.eql?(Ignore)
+    else_
+  end
+
   def qutie_func(arg, universe, parser, name)
     uni = UniverseOLD.new(globals: universe.globals.clone.update(universe.locals))
     uni.locals[:__self] ||= arg

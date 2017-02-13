@@ -98,7 +98,7 @@ class UniverseOLD
                   elsif stack_empty?
                     locals_s
                   else
-                    "[#{stack_s}] | {#{locals_s}}"
+                    " [#{stack_s}] | {#{locals_s}} "
                   end) + parens[1]
     end
 
