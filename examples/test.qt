@@ -17,6 +17,8 @@
 # cmd = text?@( val?, '"' )!;
 # disp?@( cmd?! )!
 a = 4;
-txt = "a = 3";
+txt = `a=3;`;
 txt?!;
+txt = `A=4 && echo $PWD\\\\c`;
+txt?!,
 a?
