@@ -124,6 +124,7 @@ class QT_Object
           res = right.method(callername + '_r').(self, env)
           return res unless res._missing?
           throw(:ERROR, QTE_MethodMissing.new($QT_CONTEXT.current, callername, self, right))
+          fail
         end
 
         def qt_match(right, env) __bi_method(right, env) end

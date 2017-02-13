@@ -1,17 +1,20 @@
 Fraction <- {
   numer = numer? || __args?.0;
   denom = denom? || __args?.1;
-  disp?@(numer?==0)!;
   __text = { __self?.numer + '/' + __self?.denom };
   __num =  { __self?.numer    /    __self?.denom };
   __bool = { __self?.numer == 0 };
+  __add_l = { Fraction? @ (numer? + right? * denom?, denom?)!
+
+  };
   # __num = {
   #   __self?.wheels
   # };
   # __bool = { missing? }
 };
 
-car = Fraction? @ (0, 3)!;
-text? @ (car?)!,
-num? @ (car?)!,
-bool? @ (car?)!
+frac = Fraction? @ (1, 3)!;
+frac? + 3,
+# text? @ (frac?)!,
+# num? @ (frac?)!,
+# bool? @ (frac?)!
