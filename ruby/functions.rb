@@ -34,16 +34,6 @@ module Functions
       !cond.qt_to_bool.bool_val ? if_true : if_false
     },
 
-    QT_Variable.new( :return ) => QT_BuiltinFunciton.new{ |args, universe, stream|
-
-      # value = args.locals.fetch(:__value){ args.stack.fetch(0, NoRet) }
-      # levels = args.locals.fetch(:__levels){ args.stack.fetch(1, 1) }
-      # if levels > 0
-      #   universe.program_stack.pop # to remove us
-      #   throw :EOF, [levels, value]
-      # end
-    },
-
     QT_Variable.new( :while ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       cond = fetch(args, 0, :__cond)
       body = fetch(args, 1, :__body)
@@ -59,6 +49,31 @@ module Functions
         body.clone.qt_eval(universe, stream, parser)
       end
       true
+    },
+
+    QT_Variable.new( :for ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
+      start = fetch(args, 0, :__start)
+      cond =  fetch(args, 1, :__cond)
+      incr =  fetch(args, 2, :__incr)
+      body =  fetch(args, 3, :__body)
+      start.clone.qt_eval(universe, stream, parser)
+      while cond.clone.qt_eval(universe, stream, parser).pop.qt_to_bool.bool_val
+        body.clone.qt_eval(universe, stream, parser)
+        incr.clone.qt_eval(universe, stream, parser)
+      end
+      true
+    },
+
+
+
+    QT_Variable.new( :return ) => QT_BuiltinFunciton.new{ |args, universe, stream|
+
+      # value = args.locals.fetch(:__value){ args.stack.fetch(0, NoRet) }
+      # levels = args.locals.fetch(:__levels){ args.stack.fetch(1, 1) }
+      # if levels > 0
+      #   universe.program_stack.pop # to remove us
+      #   throw :EOF, [levels, value]
+      # end
     },
 
     QT_Variable.new( :del ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
@@ -79,27 +94,6 @@ module Functions
       end
     },
 
-    QT_Variable.new( :for ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
-      start = fetch(args, 0, :__start)
-      cond =  fetch(args, 1, :__cond)
-      incr =  fetch(args, 2, :__incr)
-      body =  fetch(args, 3, :__body)
-      start.clone.qt_eval(universe, stream, parser)
-      while cond.clone.qt_eval(universe, stream, parser).pop.qt_to_bool.bool_val
-        body.clone.qt_eval(universe, stream, parser)
-        incr.clone.qt_eval(universe, stream, parser)
-      end
-      true
-    },
-
-    # i dont know how many of these work...
-
-    QT_Variable.new( :clone ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
-      case args
-      when true, false, nil, Numeric, Fixnum then args
-      else qutie_func(args, universe, parser, :__clone){ |a| a.clone }
-      end
-    },
     QT_Variable.new( :disp ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
 
       endl = fetch(args, :end, else_: QT_Text.new("\n"))
@@ -111,14 +105,20 @@ module Functions
       true
     },
 
+    # i dont know how many of these work...
+
+    QT_Variable.new( :clone ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
+      qutie_func(args, universe, parser, :qt_clone){ |a| a.clone }
+    },
+
     QT_Variable.new( :prompt ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
-      prompt = args.stack.fetch(0){ args.locals.fetch(:__prompt, '') }
-      prefix = args.stack.fetch(2){ args.locals.fetch(:__prefix, "\n>") }
-      endl = args.stack.fetch(1){ args.locals.fetch(:__endl, "\n") }
+      prompt = fetch(args, 0, :__prompt, else_: QT_Text.new( '' ))
+      prefix = fetch(args, 2, :__prefix, else_: QT_Text.new( " = " ))
+      endl = fetch(args, 1, :__endl, else_: QT_Text.new( "\n" ))
       # args.locals[:sep] ||= '' # forces it to be '' if not specified, but doesnt override text's default
       # prefix=FUNCTIONS[:text].call(prefix, universe, stream, parser) 
-      print prompt + prefix
-      STDIN.gets endl
+      print prompt.text_val + prefix.text_val
+      QT_Text.new( STDIN.gets endl.text_val )
     },
 
     QT_Variable.new( :syscall ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|

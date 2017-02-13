@@ -84,12 +84,13 @@ class UniverseOLD
     end
 
     def stack_s
-      stck = @stack.collect{|e| self.eql?(e.respond_to?(:universe) ? e.universe : e) ? QT_Variable.new( :'$' ) : e }
+      stck = @stack.collect{|e| self.equal?(e.respond_to?(:universe) ? e.universe : e) ? QT_Variable.new( :'$' ) : e }
       stck.collect(&:to_s).join(', ').dump[1...-1]
     end
 
     def locals_s
-      shortened_locals.collect{|k,v| "#{k}: #{v}"}.join(', ')
+      shortened_locals.collect{|k, v| [k, (self.equal?(v.respond_to?(:universe) ? v.universe : v) ? QT_Variable.new( :'$' ) : v )]}
+                      .collect{|k,v| "#{k}: #{v}"}.join(', ')
     end
 
     def to_s(parens=['<', '>'])
