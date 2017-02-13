@@ -104,6 +104,13 @@ module Functions
       print(to_print.qt_add( endl ).text_val)
       true
     },
+    QT_Variable.new( :prompt ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
+      prompt = fetch(args, 0, :__prompt, else_: QT_Text.new( '' ))
+      prefix = fetch(args, 2, :__prefix, else_: QT_Text.new( " = " ))
+      endl = fetch(args, 1, :__endl, else_: QT_Text.new( "\n" ))
+      print prompt.text_val + prefix.text_val
+      QT_Text.new( STDIN.gets endl.text_val )
+    },
 
     # i dont know how many of these work...
 
@@ -111,24 +118,11 @@ module Functions
       qutie_func(args, universe, parser, :qt_clone){ |a| a.clone }
     },
 
-    QT_Variable.new( :prompt ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
-      prompt = fetch(args, 0, :__prompt, else_: QT_Text.new( '' ))
-      prefix = fetch(args, 2, :__prefix, else_: QT_Text.new( " = " ))
-      endl = fetch(args, 1, :__endl, else_: QT_Text.new( "\n" ))
-      # args.locals[:sep] ||= '' # forces it to be '' if not specified, but doesnt override text's default
-      # prefix=FUNCTIONS[:text].call(prefix, universe, stream, parser) 
-      print prompt.text_val + prefix.text_val
-      QT_Text.new( STDIN.gets endl.text_val )
-    },
-
     QT_Variable.new( :syscall ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
-      sep  = args.get(:sep) || " "
-      args.locals[:sep] = sep # forces it to be '' if not specified, but doesnt override text's default
-      to_call=FUNCTIONS[:text].qt_call(args: args,
-                                       universe: universe,
-                                       stream: stream,
-                                       parser: parser) 
-      `#{to_call}`
+      sep = fetch(args, :sep, else_: QT_Text.new(""))
+      args.locals[QT_Variable.new( :sep ) ] ||= sep
+      to_call = FUNCTIONS[ QT_Variable.new( :text ) ].qt_call(args, universe, stream, parser) 
+      QT_Text.new( `#{to_call}` )
     },
 
     QT_Variable.new( :import ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
