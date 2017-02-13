@@ -1,6 +1,7 @@
 class QT_Text < QT_Object
 
   attr_reader :text_val
+  attr_accessor :quotes
   def self.from(source, quotes:)
     fail "Bad source type `#{source.class}`" unless source.is_a?(QT_Default)
     new( source.text_val, quotes: quotes )

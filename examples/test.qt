@@ -13,4 +13,6 @@
 # a?
 # ('ls'!.0 + ``)!.0,!,
 # 'ls'!.0 + ``,!
-disp?@( text? @ (5)! )!
+val = ls;
+cmd = text?@( val?, '`' )!;
+disp?@( cmd?! )!

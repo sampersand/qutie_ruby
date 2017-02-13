@@ -140,8 +140,11 @@ module Functions
 
     QT_Variable.new( :text ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       to_text = fetch(args, 0, :__to_text)
-      quote   = fetch(args, 1, :quote, :__quote, default: QT_Text.new( '"' ))
-      to_text.qt_to_text(quote: quote)
+      quote1   = fetch(args, 1, :quote, :__quote,  :quote1, :__quote1, default: QT_Text.new( '"' ))
+      quote2   = fetch(args, 2, :quote2, :__quote2, default: quote1)
+      res = to_text.qt_to_text
+      res.quotes = [quote1.qt_to_text, quote2.qt_to_text]
+      res
       # sep     = fetch(args, 1, :sep, :__sep, default: QT_Text.new( ' ' ))
       # QT_Text.new( args._stackeach.collect{|arg| var = arg.qt_to_text(quote: quote)
       #   }.join(sep.qt_to_text.text_val))
