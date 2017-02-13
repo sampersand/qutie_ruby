@@ -52,16 +52,14 @@ module Functions
       end
       true
     },
-
     QT_Variable.new( :until ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
-      cond = args.stack.fetch(0){ args.locals.fetch(:__cond) }
-      body = args.stack.fetch(1){ args.locals.fetch(:__body) }
-      parser.parse!(stream: body.clone, universe: universe) until parser.parse!(stream: cond.clone, universe: universe).pop 
+      cond = fetch(args, 0, :__cond)
+      body = fetch(args, 1, :__body)
+      until cond.clone.qt_eval(universe, stream, parser).pop.qt_to_bool.bool_val
+        body.clone.qt_eval(universe, stream, parser)
+      end
+      true
     },
-
-
-
-
 
     QT_Variable.new( :del ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
         
