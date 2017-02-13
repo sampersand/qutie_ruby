@@ -22,14 +22,14 @@ module Functions
     QT_Variable.new( :if ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       cond     = fetch(args, 0, :__cond)
       if_true  = fetch(args, 1, QT_True::INSTANCE , :true)
-      if_false = fetch(args, 2, QT_False::INSTANCE, :false, else_: QT_Null::INSTANCE)
+      if_false = fetch(args, 2, QT_False::INSTANCE, :false, default: QT_Null::INSTANCE)
       if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false, QT_Boolean::NIL) } }
       cond.qt_to_bool.bool_val ? if_true : if_false
     },
     QT_Variable.new( :unless ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       cond     = fetch(args, 0, :__cond)
       if_true  = fetch(args, 1, QT_True::INSTANCE , :true)
-      if_false = fetch(args, 2, QT_False::INSTANCE, :false, else_: QT_Null::INSTANCE)
+      if_false = fetch(args, 2, QT_False::INSTANCE, :false, default: QT_Null::INSTANCE)
       if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false, QT_Boolean::NIL) } }
       !cond.qt_to_bool.bool_val ? if_true : if_false
     },
@@ -96,8 +96,8 @@ module Functions
 
     QT_Variable.new( :disp ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
 
-      endl = fetch(args, :end, else_: QT_Text.new("\n"))
-      sep = fetch(args, :sep, else_: QT_Text.new(""))
+      endl = fetch(args, :end, default: QT_Text.new("\n"))
+      sep = fetch(args, :sep, default: QT_Text.new(""))
       args = args.clone
       args.locals[QT_Variable.new( :sep ) ] ||= sep
       to_print = FUNCTIONS[ QT_Variable.new( :text ) ].qt_call(args, universe, stream, parser) 
@@ -105,15 +105,15 @@ module Functions
       true
     },
     QT_Variable.new( :prompt ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
-      prompt = fetch(args, 0, :__prompt, else_: QT_Text.new( '' ))
-      prefix = fetch(args, 2, :__prefix, else_: QT_Text.new( " = " ))
-      endl = fetch(args, 1, :__endl, else_: QT_Text.new( "\n" ))
+      prompt = fetch(args, 0, :__prompt, default: QT_Text.new( '' ))
+      prefix = fetch(args, 2, :__prefix, default: QT_Text.new( " = " ))
+      endl = fetch(args, 1, :__endl, default: QT_Text.new( "\n" ))
       print prompt.text_val + prefix.text_val
       QT_Text.new( STDIN.gets endl.text_val )
     },
 
     QT_Variable.new( :syscall ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
-      sep = fetch(args, :sep, else_: QT_Text.new(""))
+      sep = fetch(args, :sep, default: QT_Text.new(""))
       args.locals[QT_Variable.new( :sep ) ] ||= sep
       to_call = FUNCTIONS[ QT_Variable.new( :text ) ].qt_call(args, universe, stream, parser) 
       QT_Text.new( `#{to_call}` )
@@ -139,15 +139,12 @@ module Functions
     },
 
     QT_Variable.new( :text ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
-      if args.respond_to?(:qt_get)
-        sep  = args.qt_get(QT_Variable.new( :sep ), type: :BOTH)
-        sep = QT_Text::new(' ') if sep == QT_Null::INSTANCE
-        QT_Text::new(args.stack.collect{ |arg|
-            qutie_func(arg, universe, parser, :__text){ |a| a.nil? ? a.inspect : a.qt_to_text.text_val }
-          }.join(sep.qt_to_text.text_val))
-      else
-        args.qt_to_text
-      end
+      to_text = fetch(args, 0, :__to_text)
+      quote   = fetch(args, 1, :quote, :__quote, default: QT_Text.new( '"' ))
+      to_text.qt_to_text(quote: quote)
+      # sep     = fetch(args, 1, :sep, :__sep, default: QT_Text.new( ' ' ))
+      # QT_Text.new( args._stackeach.collect{|arg| var = arg.qt_to_text(quote: quote)
+      #   }.join(sep.qt_to_text.text_val))
     },
 
     QT_Variable.new( :num ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
@@ -185,14 +182,14 @@ module Functions
 
   module_function
 
-  def fetch(args, *search_fors, else_: Ignore)
+  def fetch(args, *search_fors, default: Ignore)
     search_fors.each do |search_for|
       res = (search_for.is_a?(Integer) ? args.stack : args.locals).fetch(
               (search_for.is_a?(Symbol) ? QT_Variable.new( search_for ) : search_for), Ignore)
       return res unless res.equal?( Ignore )
     end
-    raise "Cannot find args for #{search_fors}" if else_.equal?(Ignore)
-    else_
+    raise "Cannot find args for #{search_fors}" if default.equal?(Ignore)
+    default
   end
 
   def qutie_func(arg, universe, parser, name)

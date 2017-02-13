@@ -131,6 +131,9 @@ class UniverseOLD
   def _next(amnt=1)
     self.next(amnt: amnt)
   end
+  def _stackeach
+    @stack.each
+  end
 
 end
 

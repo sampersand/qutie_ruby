@@ -65,6 +65,10 @@ class QT_Object
           qt_del(QT_Number.new( amnt ), type: :STACK)
           res
         end
+        def _stackeach
+          @universe._stackeach # so bad
+        end
+
       # comp
         def qt_call(args:, universe:, stream:, parser:) end
 
