@@ -16,7 +16,7 @@ module Functions
   NoRet = Class.new
   FUNCTIONS = {
     QT_Variable.new( :switch ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
-      switch_on = fetch(args, 0, :__switch_on);
+      switch_on = fetch(args, 0, :__switch_on)
       args.qt_get(switch_on, type: :BOTH)
     },
     QT_Variable.new( :if ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
@@ -80,15 +80,16 @@ module Functions
     },
 
     QT_Variable.new( :for ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
-      start = args.stack.fetch(0){ args.locals.fetch(:__start) }
-      cond = args.stack.fetch(1){ args.locals.fetch(:__cond) }
-      incr = args.stack.fetch(2){ args.locals.fetch(:__incr) }
-      body = args.stack.fetch(3){ args.locals.fetch(:__body) }
-      parser.parse!(stream: start.clone, universe: universe)
-      while parser.parse!(stream: cond.clone, universe: universe).pop
-        parser.parse!(stream: body.clone, universe: universe)
-        parser.parse!(stream: incr.clone, universe: universe)
+      start = fetch(args, 0, :__start)
+      cond =  fetch(args, 1, :__cond)
+      incr =  fetch(args, 2, :__incr)
+      body =  fetch(args, 3, :__body)
+      start.clone.qt_eval(universe, stream, parser)
+      while cond.clone.qt_eval(universe, stream, parser).pop.qt_to_bool.bool_val
+        body.clone.qt_eval(universe, stream, parser)
+        incr.clone.qt_eval(universe, stream, parser)
       end
+      true
     },
 
     # i dont know how many of these work...
@@ -145,7 +146,7 @@ module Functions
     QT_Variable.new( :text ) => QT_BuiltinFunciton.new{ |args, universe, stream, parser|
       if args.respond_to?(:qt_get)
         sep  = args.qt_get(QT_Variable.new( :sep ), type: :BOTH)
-        sep = QT_Text::new(' ') if sep == QT_Null::INSTANCE;
+        sep = QT_Text::new(' ') if sep == QT_Null::INSTANCE
         QT_Text::new(args.stack.collect{ |arg|
             qutie_func(arg, universe, parser, :__text){ |a| a.nil? ? a.inspect : a.qt_to_text.text_val }
           }.join(sep.qt_to_text.text_val))
