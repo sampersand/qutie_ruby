@@ -2,11 +2,11 @@ class QT_Number < QT_Object
   attr_reader :num_val
 
   def self.from(source, base: nil)
-    fail "Bad source type `#{source.class}`" unless source.is_a?(QT_Default)
+    fail "Bad source type `#{source.class}`" unless source.respond_to?(:text_val)
     if base
-      new(source.source_val.to_s.to_i(base.num_val).to_f )
+      new(source.text_val.to_i(base.num_val).to_f )
     else
-      new(source.source_val.to_s.to_f)
+      new(source.text_val.to_f)
     end
   end
 

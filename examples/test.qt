@@ -16,9 +16,6 @@
 # val = a=3;
 # cmd = text?@( val?, '"' )!;
 # disp?@( cmd?! )!
-a = 4;
-txt = `a=3;`;
-txt?!;
-txt = `A=4 && echo $PWD\\\\c`;
-txt?!,
-a?
+bool?@(bool?@()!)!,
+bool?@(num?@()!)!,
+bool?@(text?@()!)!,

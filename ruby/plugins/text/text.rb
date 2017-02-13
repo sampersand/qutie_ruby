@@ -13,6 +13,7 @@ class QT_Text < QT_Object
     @quotes = quotes || gen_quotes
   end
 
+  EMPTY = from( QT_Default::EMPTY, quotes: [ QT_Default.new( :"'" ), QT_Default.new( :"'" ) ] )
   def gen_quotes
     ['' ,'']
     # if @text_val =~ /(?<!\\)'/
@@ -46,8 +47,12 @@ class QT_Text < QT_Object
 
     # conversion
       def qt_to_text
-        self
+        clone
       end
+      def qt_to_num
+        QT_Number::from( self )
+      end
+
       def qt_to_bool
         QT_Boolean::get(@text_val.length != 0)
       end
