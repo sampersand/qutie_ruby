@@ -1,0 +1,7 @@
+arg = foo;
+arg = bar;
+arg = baz;
+switch?@(arg?,
+  foo: 1,
+  bar: 2,
+  baz: 3)!,

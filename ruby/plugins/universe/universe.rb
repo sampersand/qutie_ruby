@@ -92,14 +92,12 @@ class QT_Universe < QT_Object
         passed_args = args.clone
         passed_args.globals.update(passed_args.locals)
         passed_args.locals.clear
-        # passed_args.stack.clear
-        passed_args.locals[QT_Variable.new :__args ] = args
-        # func.program_stack.push args
+        passed_args.locals[ QT_Variable.new :__args ] = passed_args
         stream = @universe.clone
-        $QT_CONTEXT.start(stream, self)
-        res = env.parser.parse!(env.fork(stream: stream, universe: passed_args))
-        $QT_CONTEXT.stop(stream)
-        res.u
+        env.parser.parse!(env.fork(stream: stream, universe: passed_args)).u
+        # func.program_stack.push args
+        # $QT_CONTEXT.start(stream, self)
+        # $QT_CONTEXT.stop(stream)
         # func.program_stack.pop
       end
 

@@ -1,19 +1,34 @@
 Car = {
-  maker = maker? || 'honda';
+  maker = maker? || honda;
   wheels = wheels? || 4;
 
   __text = {
     `I'm a ` + __self?.maker + ' with ' + __self?.wheels + ' wheels!'
   };
 
-  drive = {dist=dist?||__args?.0;
-    disp? @ ( if? @ (dist?, 'I drove ' + dist? + ' miles!', 'vroom vroom!')! )!;
+drive = { 
+    $? -> a;
+    a = $?;
+    disp?@(a?.0)!;
+    stop?@(0)!;
+    dist = $?.0 || $?.dist;
+    # disp? @ ( if? @ (dist?, 'I drove ' + dist? + ' miles!', 'vroom vroom!')! )!;
   };
 
 };
 
-car = Car? @ {maker: 'toyoya'}!;
-disp? @ (car?.__text @ (__self=car?;)!,.0 )!;
+car = Car? @ (maker: toyoya)!;
+# disp? @ (car?)!;
 car?.drive @ ( 5 )!;
-car?.drive @ ( dist=9.3 )!;
-car?.drive @ ()!;
+# car?.drive @ ( dist=9.3; )!;
+# car?.drive @ ()!;
+# dist?
+
+
+
+
+
+
+
+
+

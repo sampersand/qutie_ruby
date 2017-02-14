@@ -35,7 +35,8 @@ module Operators
       universe = env.universe
       stream = env.stream
       parser = env.parser
-      rhs = universe.spawn_new_stack(new_stack: nil)
+      # rhs = universe.spawn_new_stack(new_stack: universe.stack.clone)
+      rhs = universe
       token_priority = oper.priority
       catch(:EOF){
         until stream.stack_empty?(env)
@@ -57,8 +58,10 @@ module Operators
         end
         nil
       }
-      raise "Ambiguous rhs for operator `#{oper}`: #{rhs.stack}" unless rhs.stack.length == 1
-      rhs.stack[0]
+      # rhs.stack.shift(universe.stack.length);
+      # # p rhs.stack
+      # raise "Ambiguous rhs for operator `#{oper}`: #{rhs.stack}" unless rhs.stack.length == 1
+      rhs.stack.pop
     end
 
     # def fix_lhs(token)

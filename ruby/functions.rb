@@ -102,6 +102,11 @@ module Functions
       fetch(args, 0, :__to_num, default: QT_Number::ZERO).qt_to_num(env)
     },
 
+    QT_Variable.new( :stop ) => QT_BuiltinFunciton.new{ |args, env|
+      exit fetch(args, 0, :__code, default: QT_Number::ZERO).qt_to_num(env).num_val
+    },
+
+
     QT_Variable.new( :bool ) => QT_BuiltinFunciton.new{ |args, env|
       fetch(args, 0, :__to_num, default: QT_False::INSTANCE).qt_to_bool(env)
     },

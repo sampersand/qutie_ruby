@@ -74,7 +74,7 @@ class UniverseOLD
       end
     end
     def qt_get(pos, _env, type: :BOTH) #ignores type
-      return QT_Universe.new(body: '', universe: self, parens: ['<', '>']) if pos == QT_Variable.new( :'$' )
+      return QT_Universe.new(body: '', universe: _env.universe, parens: ['<', '>']) if pos == QT_Variable.new( :'$' )
       self[pos] || QT_Null::INSTANCE
     end
     def qt_set(pos, val, _env, type: :BOTH) #ignores type

@@ -4,12 +4,12 @@ Fraction = {
   __text = { __self?.numer + '/' + __self?.denom };
   __num =  { __self?.numer    /    __self?.denom };
   __bool = { __self?.numer == 0 };
-  __add_l = { Fraction? @ (numer? + __args?.0 * denom?, denom?)! };
-  __add_r: __add_l?;
-  __cmp_l = { num?@(__self?)! <=> __args?.0 };
+  __add = { Fraction? @ (numer? + __args?.0 * denom?, denom?)! }, -> __add_r;
+  __cmp = { num?@(__self?)! <=> __args?.0 }, -> __cmp_r;
 };
 
-frac = Fraction? @ (2.0, 3)!;
+frac = Fraction? @ (2, 3)!;
 disp?@( frac? + 3 )!;
 disp?@( 3 + frac? )!;
 disp?@( 3 + frac? <=> 2/3)!;
+disp?@( 2/3 <=> 3 + frac?)!;
