@@ -14,5 +14,7 @@ module Constants
     QT_Variable.new( :math_e   ) => QT_Number::E,
     QT_Variable.new( :math_pi  ) => QT_Number::PI,
     QT_Variable.new( :math_nan ) => QT_Number::NaN,
+    # QT_Variable.new( :QT_Variable ) => QT_Variable.new(:'').qt_to_class(nil),
+    # QT_Variable.new( :QT_Number ) => QT_Number.new(:'').qt_to_class(nil),
   }
 end

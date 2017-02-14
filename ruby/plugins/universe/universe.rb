@@ -43,7 +43,8 @@ class QT_Universe < QT_Object
   # qt methods
     # methods
       def qt_method(meth, args, env)
-        text_func = qt_get(QT_Variable.new( meth ), env, type: QT_Variable.new( :LOCALS ) )
+        # text_func = qt_get(QT_Variable.new( meth ), env, type: QT_Variable.new( :LOCALS ) )
+        text_func = @universe.locals[QT_Variable.new( meth )] || QT_Null::INSTANCE
         return super if text_func._nil?
         uni = @universe.clone
         uni.globals.update(uni.locals)
@@ -125,6 +126,8 @@ class QT_Universe < QT_Object
       end
 
       def qt_get(pos, env, type:)  # fix this
+        # res = qt_method(:__get, UniverseOLD.new(stack:[pos],locals:{QT_Variable.new(:type)=>type}), env)
+        # return res unless res._missing?
         return self if pos == QT_Variable.new( :'$' )
 
         type = type.var_val

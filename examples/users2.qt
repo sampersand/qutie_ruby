@@ -1,21 +1,22 @@
 Users = {
   {} -> users;
 
-  __bool = { bool?@(len?@(__self?)!)! };
+  __bool = {
+    bool?@(len?@(__self?)!)!
+  };
   __text = {
     if?@( __self?, {
         i = 0;
-        res = i? + '. ' + __self?.users.i?;
+        res = i? + '. ' + __self?.i?;
         i = i? + 1;
         while?@( (i? < len?@( __self? )! ),{
-          res = res? + '\n'+ i? + '. ' + __self?.users.i?;
+          res = res? + '\n'+ i? + '. ' + __self?.i?;
           i = i? + 1;
         })!;
         res?
       },
       { "No users!" })!,!.0
   };
-
 
   __len = {
     len?@( __self?.users, STACK )!

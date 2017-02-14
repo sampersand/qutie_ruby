@@ -1,20 +1,8 @@
-i = 0;
-until? @ (
-  (i? >= 10),
-  {
-    disp? @ (i?)!;
-    i = i? + 1;
-  },
-)!;
-for? @ ((i = 0;)(i? < 10)(i = i? + 1;){
-  disp? @ (i?)!;
-})!;
-a = syscall? @ ('ls')!;
-a?
-('ls'!.0 + ``)!.0,!,
-'ls'!.0 + ``,!
-val = a=3;
-cmd = text?@( val?, '"' )!;
-disp?@( cmd?! )!;
-9.3;
-0xaF
+Car = {
+  __get = {
+    1
+  };
+};
+
+car = Car? @ (maker: toyoya)!;
+car?.1
