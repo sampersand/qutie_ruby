@@ -22,12 +22,12 @@ module Number
     res = stream._next(env)
     catch(:EOF) do
       res = res.qt_add( stream._next(env), env) while DECIMAL_REGEX._match?(stream._peek(env), env)
-      if stream.qt_length(env, type: :STACK) > 1 && # this will fail when I upgrade it to QT_Number
+      if stream.qt_length(env, type: QT_Variable.new( :STACK ) ) > 1 && # this will fail when I upgrade it to QT_Number
           DECIMAL_POINT_REGEX._match?(stream._peek(env, 2), env)
         res = res.qt_add( stream._next(env), env)
         res = res.qt_add( stream._next(env), env) while DECIMAL_REGEX._match?( stream._peek(env), env )
       end
-      if stream.qt_length(env, type: :STACK) > 0 && EXPONENT_START._match?( stream._peek(env), env )
+      if stream.qt_length(env, type: QT_Variable.new( :STACK ) ) > 0 && EXPONENT_START._match?( stream._peek(env), env )
         res = res.qt_add( stream._next(env), env)
         res = res.qt_add( stream._next(env), env) if EXPONENT_SIGN_MODIFIER._match?( stream._peek(env), env )
         res = res.qt_add( stream._next(env), env) while DECIMAL_REGEX._match?( stream._peek(env), env )

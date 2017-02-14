@@ -43,17 +43,17 @@ class QT_Universe < QT_Object
   # qt methods
     # methods
       def qt_method(meth, args, env)
-        text_func = qt_get(QT_Variable.new( meth ), env, type: :LOCALS)
+        text_func = qt_get(QT_Variable.new( meth ), env, type: QT_Variable.new( :LOCALS ) )
         return super if text_func._nil?
         uni = @universe.clone
         uni.globals.update(uni.locals)
         uni.stack.clear
         uni.locals.clear
-        uni.qt_set( QT_Variable.new( :__self ), self, env, type: :LOCALS)
-        args.locals.each{ |k, v| uni.qt_set(k, v, env, type: :LOCALS) }
+        uni.qt_set( QT_Variable.new( :__self ), self, env, type: QT_Variable.new( :LOCALS ) )
+        args.locals.each{ |k, v| uni.qt_set(k, v, env, type: QT_Variable.new( :LOCALS) ) }
         args.stack.each{ |v| uni._append(v, env) }
         args = self.class.new(body: '', universe: uni , parens: '')
-        text_func.qt_call(args, env).qt_get( QT_Number::NEG_1, env, type: :STACK )
+        text_func.qt_call(args, env).qt_get( QT_Number::NEG_1, env, type: QT_Variable.new( :STACK  ) )
       end
 
       def __uni_method(meth, var, var_name, env)
@@ -75,8 +75,31 @@ class QT_Universe < QT_Object
       end
       def qt_to_bool(env)
         res = qt_method(:__bool, UniverseOLD.new, env)
-        return QT_Boolean::get(!@universe.stack_empty?(env) || !@universe.shortened_locals_empty?) if res._missing?
+        return QT_Boolean::get(!@universe.stack_empty?(env) || !@universe.reduced_locals_empty?) if res._missing?
         throw(:ERROR, QTE_Type.new(env, " `__bool` returned a non-QT_Boolean value `#{res}`")) unless res.is_a?(QT_Boolean)
+        res
+      end
+      def qt_length(env, type:)
+        res = qt_method(:__len, UniverseOLD.new, env)
+        if res._missing?
+          return QT_Number.new( (case type.var_val.upcase
+                                 when :GLOBALS then @universe.globals.length
+                                 when :LOCALS then @universe.reduced_locals.length
+                                 when :STACK then @universe.stack.length
+                                 when :BOTH
+                                   lcls = @universe.reduced_locals.length
+                                   stck = @universe.stack.length
+                                   raise "Both Locals (#{lcls}) and Stack (#{stck}) have a length!" if (lcls != 0) && (stck != 0)
+                                  lcls == 0 ? stck : lcls
+                                 else raise "unknown length type `#{type.inspect}`"
+                                 end or begin
+                                   puts "Error: `#{a.inspect}` doesn't repsond to type param `#{type.inspect}`"
+                                   exit(1)
+                                 end)
+                                )
+        end
+
+        throw(:ERROR, QTE_Type.new(env, " `__bool` returned a non-QT_Number value `#{res}`")) unless res.is_a?(QT_Number)
         res
       end
 
@@ -103,6 +126,8 @@ class QT_Universe < QT_Object
 
       def qt_get(pos, env, type:)  # fix this
         return self if pos == QT_Variable.new( :'$' )
+
+        type = type.var_val
         case type
         when :BOTH then type = @universe.locals.include?(pos) ? :LOCALS : :STACK
         when :NON_STACK then type = @universe.locals.include?(pos) ? :LOCALS : :GLOBALS
@@ -111,7 +136,7 @@ class QT_Universe < QT_Object
         case type 
         when :STACK
           stack_val = pos.qt_to_num(env)
-          return QT_Null::INSTANCE unless stack_val.respond_to?(:num_val)
+          return QT_Missing::INSTANCE unless stack_val.respond_to?(:num_val)
           @universe.stack[stack_val.num_val] or QT_Null::INSTANCE
         when :LOCALS then @universe.locals[pos] or QT_Null::INSTANCE
         when :GLOBALS then @universe.globals[pos] or QT_Null::INSTANCE
@@ -119,7 +144,28 @@ class QT_Universe < QT_Object
         end
       end
 
+      def qt_set(pos, val, env, type:)  # fix this
+        return QT_Missing::INSTANCE if pos == QT_Variable.new( :'$' ) # undefined?
+        type = type.var_val
+        case type
+        when :BOTH then type = @universe.locals.include?(pos) ? :LOCALS : pos.is_a?(QT_Number) ? :STACK : :LOCALS
+        when :NON_STACK then type = @universe.locals.include?(pos) ? :LOCALS : :GLOBALS
+        end
+
+        case type 
+        when :STACK
+          throw(:ERROR, QTE_Type.new(env, " cannot set the non-integer stack position `#{pos}`")) unless pos.is_a?(QT_Number)
+          @universe.stack[pos.num_val] = val
+        when :LOCALS
+          @universe.locals[pos] = val
+        when :GLOBALS
+          @universe.globals[pos] = val
+        else fail "Unknown qt_get type `#{type}`!"
+        end
+      end
+
       def qt_del(pos, env, type:)
+        type = type.var_val
         if type == :BOTH
           if @universe.locals.include?(pos)
             type = :LOCALS

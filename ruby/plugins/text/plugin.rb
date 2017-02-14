@@ -10,7 +10,7 @@ module Text
   module_function
 
   def escape(env, stream)
-    case (chr=stream._next)
+    case (chr=stream._next(env))
     when QT_Default.new( :'0' ) then QT_Default.new( :"\u0000" )
     when QT_Default.new( :n )   then QT_Default.new( :"\n"     )
     when QT_Default.new( :t )   then QT_Default.new( :"\t"     )

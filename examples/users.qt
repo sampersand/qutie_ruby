@@ -1,5 +1,5 @@
 Users = {
-  users ||= {};
+  || $?.users || {} -> users;
 
   __text = {
     if(0 == len(__self?.users, S), [return('no users!')], []),!;
@@ -16,26 +16,31 @@ Users = {
   };
 
   get = function(pos?) {
-    return(__self?.users.pos?);
+    __self?.users.pos?;
   };
 
-  add = function(user?) {
-    (__self?.users)!.0 .= [ len(__self?.users, S), user? ]!;
+  __len = {
+    len?@( __self?.users, stack )!
+  };
+  add = {
+    || $?.user? -> user;
+    __self?.users .= [ len?@( __self? )!, user? ]!;
   };
 };
 
 User = {
-  || pass -> pass; // aka, take the positional argument over the keyword
-  || name -> name; // expands to `|name?->name`
-  __text = {
-    text? @ ('`'+__self?.name+'`', '=', __self?.pass)!
-  };
+  || $?.name -> name;
+  || $?.pass -> pass;
+  __text = { '`' + __self?.name + '`=' + __self?.pass };
 };
 
 users = Users?@()!;
-users?.add@(__self=users?; User?@('john', 'password123')!);
+users?.add@(__self=users?; User?@('john', 'password123')!)!;
+users?.add@(__self=users?; User?@('john', 'password123')!)!;
+users?.add@(__self=users?; User?@('john', 'password123')!)!;
+users?.users,
 # users?.add@(__self=users?; User?@('fred', 'lemmiein')!);
-users?.add@(__self=users?; User?@('jill', 'ilikepie')!);
+# users?.add@(__self=users?; User?@('jill', 'ilikepie')!);
 # disp? @ (users?);
 
 

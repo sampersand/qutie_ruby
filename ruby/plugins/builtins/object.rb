@@ -63,7 +63,7 @@ class QT_Object
 
     # methods
       def qt_method(meth, args, _env) QT_Missing::INSTANCE end
-      def qt_length(_env); QT_Missing::INSTANCE end
+      def qt_length(_env, type:); QT_Missing::INSTANCE end
     # conversion
       def qt_to_num(_env); QT_Missing::INSTANCE end
       def qt_to_text(_env); QT_Text.new(to_s) end
@@ -76,11 +76,11 @@ class QT_Object
         def qt_set(pos, val, _env, type:) QT_Missing::INSTANCE end
         def qt_del(pos, _env, type:) QT_Missing::INSTANCE end
         def _peek(env, amnt=1)
-          qt_get(QT_Number.new( amnt ), env, type: :STACK)
+          qt_get(QT_Number.new( amnt ), env, type: QT_Variable.new( :STACK ) )
         end
         def _next(env, amnt=1)
           res = _peek(amnt)
-          qt_del(QT_Number.new( amnt ), env, type: :STACK)
+          qt_del(QT_Number.new( amnt ), env, type: QT_Variable.new( :STACK ) )
           res
         end
         def _stackeach(_env)

@@ -1,3 +1,4 @@
+require_relative 'plugins/default/default'
 module Functions
   class QT_BuiltinFunciton < QT_Object
     def initialize(&block)
@@ -17,20 +18,20 @@ module Functions
   FUNCTIONS = {
     QT_Variable.new( :switch ) => QT_BuiltinFunciton.new{ |args, env|
       switch_on = fetch(args, 0, :__switch_on)
-      args.qt_get(switch_on, env, type: :BOTH)
+      args.qt_get(switch_on, env, type: QT_Variable.new( :BOTH ))
     },
     QT_Variable.new( :if ) => QT_BuiltinFunciton.new{ |args, env|
       cond     = fetch(args, 0, :__cond)
       if_true  = fetch(args, 1, QT_True::INSTANCE , :true)
       if_false = fetch(args, 2, QT_False::INSTANCE, :false, default: QT_Null::INSTANCE)
-      if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false, QT_Boolean::NIL) } }
+      if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false, QT_Null::INSTANCE) } }
       cond.qt_to_bool(env).bool_val ? if_true : if_false
     },
     QT_Variable.new( :unless ) => QT_BuiltinFunciton.new{ |args, env|
       cond     = fetch(args, 0, :__cond)
       if_true  = fetch(args, 1, QT_True::INSTANCE , :true)
       if_false = fetch(args, 2, QT_False::INSTANCE, :false, default: QT_Null::INSTANCE)
-      if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false, QT_Boolean::NIL) } }
+      if_false = args.locals.fetch(false){ args.stack.fetch(2){ args.locals.fetch(:false, QT_Null::INSTANCE) } }
       !cond.qt_to_bool(env).bool_val ? if_true : if_false
     },
 
@@ -114,6 +115,13 @@ module Functions
     QT_Variable.new( :class ) => QT_BuiltinFunciton.new{ |args, env|
       fetch(args, 0, :__to_class).qt_to_class(env)
     },
+
+    QT_Variable.new( :len ) => QT_BuiltinFunciton.new{ |args, env|
+      arg = fetch(args, 0, :__arg)
+      arg.qt_length( env, type: fetch(args, 1, :__type, default: QT_Variable.new( :BOTH )))
+    },
+
+
     # i dont know how many of these work...
 
     QT_Variable.new( :clone ) => QT_BuiltinFunciton.new{ |args, env|
@@ -162,30 +170,6 @@ module Functions
       end
       QT_Null::INSTANCE
     },
-
-    QT_Variable.new( :len ) => QT_BuiltinFunciton.new{ |args, env|
-      arg = args.stack.fetch(0){ args.locals.fetch(:__arg) }
-      type = args.stack.fetch(1){ args.locals.fetch(:__type, nil) }
-      # u = universe.clone
-      u.globals[:__type] = type
-      # qutie_func(arg, u, parser, :__len){ |a|
-      #   case type
-      #   when :g, :G then a.respond_to?(:globals) && a.globals.length
-      #   when :v, :V, :l, :L then a.respond_to?(:locals) && a.locals.length
-      #   when :a, :A, :s, :S then a.respond_to?(:stack) && a.stack.length
-      #   when nil
-      #     lcls = a.respond_to?(:locals) ? a.locals.length : 0
-      #     stck = a.respond_to?(:stack)  ? a.stack.length : 0
-      #     raise "unspecified type yielded both lcls and stack" unless (lcls == 0) || (stck == 0)
-      #     lcls == 0 ? stck : lcls
-      #   else raise "unknown type `#{type.inspect}`"
-      #   end or begin
-      #     puts "Error: `#{a.inspect}` doesn't repsond to type param `#{type.inspect}`"
-      #     exit(1)
-      #   end
-      # }
-    },
-
   }
 
   module_function

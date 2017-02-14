@@ -41,7 +41,7 @@ class QT_Text < QT_Object
 
   # qt methods
     # methods
-      def qt_length
+      def qt_length(_env, type: ) #ignore type
         QT_Number.new(@text_val.length)
       end
 

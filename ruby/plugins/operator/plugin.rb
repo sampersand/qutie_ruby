@@ -28,7 +28,7 @@ module Operators
     end
 
     def get_lhs(oper, env)
-      env.universe.pop
+      env.universe.pop || QT_Null::INSTANCE
     end
 
     def get_rhs(oper, env)
