@@ -43,7 +43,7 @@ module Operators
     QT_Operator.new(name: :'!=', priority: 20, bin_meth: :qt_neq), # equivalent
     QT_Operator.new(name: :<=,   priority: 20, bin_meth: :qt_leq), 
     QT_Operator.new(name: :>=,   priority: 20, bin_meth: :qt_geq), 
-    QT_Operator.new(name: :'.=', priority:  6, bin_meth: :qt_set),
+    QT_Operator.new(name: :'.=', priority:  6){ |l, r, e| l.qt_set(*r.stack, e, type: :BOTH) },
 
     QT_Operator.new(name: :'@0', priority:  7){ |l, r, e| CALL_OPER.call([l], [r], e).qt_get(QT_Number::NEG_1, e, type: :STACK) },
 

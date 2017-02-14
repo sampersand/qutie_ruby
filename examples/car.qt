@@ -6,24 +6,19 @@ Car = {
     `I'm a ` + __self?.maker + ' with ' + __self?.wheels + ' wheels!'
   };
 
-drive = { 
-    $? -> a;
-    a = $?;
-    disp?@(a?.0)!;
-    stop?@(0)!;
+  drive = { 
     dist = $?.0 || $?.dist;
-    # disp? @ ( if? @ (dist?, 'I drove ' + dist? + ' miles!', 'vroom vroom!')! )!;
+    disp? @ ( if? @ (dist?, 'I drove ' + dist? + ' miles!', 'vroom vroom!')! )!;
   };
 
 };
 
 car = Car? @ (maker: toyoya)!;
-# disp? @ (car?)!;
+disp? @ (car?)!;
 car?.drive @ ( 5 )!;
-# car?.drive @ ( dist=9.3; )!;
-# car?.drive @ ()!;
-# dist?
-
+car?.drive @ ( dist=9.3 )!;
+car?.drive @ ()!;
+dist?
 
 
 
