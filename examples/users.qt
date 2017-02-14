@@ -37,12 +37,17 @@ User = {
   __text = { '`' + __self?.name + '`=' + __self?.pass };
 };
 
-users = Users();
-users?.add@(__self=users?; User?@('john', 'password123')! )!;
-users?.add@(__self=users?; User?@('fred', 'lemmiein')! )!;
-users?.add@(__self=users?; User?@('jill', 'ilikepie')! )!;
+# users?.add@(__self=users?; new User('john', 'password123') )!;
+# users?.add@(__self=users?; new User('fred', 'lemmiein') )!;
+# users?.add@(__self=users?; new User('jill', 'ilikepie') )!;
+users = new Users();
+users?.add( new User('sam', 'password123')       );
+users?.add( new User('fred', 'let me in')        );
+users?.add( new User('john', 'i like my dog :P') );
+{
+  #)
+}
 disp( users? );
-disp( new Users() );
 
 
 

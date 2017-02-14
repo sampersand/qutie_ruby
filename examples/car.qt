@@ -1,29 +1,25 @@
+array = [1, 2, 3, 4]
+
 Car = {
-  maker = maker? || honda;
+  maker  = maker? || honda;
   wheels = wheels? || 4;
 
   __text = {
-    `I'm a ` + __self?.maker + ' with ' + __self?.wheels + ' wheels!'
+    'I\'m a ' + __self?.maker + ' with ' + __self?.wheels + ' wheels!'
   };
 
   drive = { 
-    dist = $?.0 || $?.dist;
-    disp? @ ( if? @ (dist?, 'I drove ' + dist? + ' miles!', 'vroom vroom!')! )!;
+    dist = __args?.0 || __args?.dist;
+    disp( if(dist?,  
+             'I drove ' + dist? + ' miles!',
+             'vroom vroom!')
+        );
   };
 
 };
 
-car = Car? @ (maker: toyoya)!;
-disp? @ (car?)!;
-car?.drive @ ( 5 )!;
-car?.drive @ ( dist=9.3 )!;
-car?.drive @ ()!;
-dist?
-
-
-
-
-
-
-
-
+car = new Car(maker: toyoya);
+disp( text(car?) );
+car?.drive( 5 );
+# car?.drive( dist=9.3 );
+car?.drive();;

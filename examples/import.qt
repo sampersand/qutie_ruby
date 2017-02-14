@@ -1,4 +1,3 @@
-# code = "greet = function(user?) {disp('Hello, ', user?);};";
-# code?@()!,.greet@(fred)!,
-# import('import_2.qt')@()!,.greet@(fred)!
-import('import_2.qt').greet@(fred)!
+imp=import('import_2');
+greet('sam');
+imp?.greet('sam');

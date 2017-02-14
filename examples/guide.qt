@@ -1,0 +1,37 @@
+/* Objects are always interpreted literally. */
+  400;  # Number( 400 )
+  9.3;  # Number( 9.3 )
+  foo;  # Constant( foo )
+  'hi'; # Text( 'hi' )
+
+/* All the basic arithmatic operators are supported */
+  3 + 4;  # Number(  7 )
+  1 - 9;  # Number( -8 )
+  3 ** 2; # Number(  9 )
+
+/* To assign objects, use the `=` operator */
+  bar = 3;   # Sets Constant( bar ) to Number( 3 )
+  baz = 'a'; # Sets Constant( baz ) to Text( 'a' )
+
+/* Like before, objects are _ALWAYS_ interpreted literally */
+  bar; # Constant( bar )
+  baz; # Constant( baz )
+
+/* To retrieve values, use the `?` operator */
+  bar?; # Retrieves the value of `Constant( bar )` --> `Number( 3 )`
+  baz?; # Retrieves the value of `Constant( baz )` --> `Text( 'a' )`
+
+/* Assignment isn't limited to Constants */
+  'fav_color' = 'red'; # VariableList[Text( 'fav_color' )] = Text( 'red' )
+  'fav_color';  # Text( 'fav_color' )
+  'fav_color'?; # Text( 'red' )
+
+
+
+
+
+
+
+
+
+

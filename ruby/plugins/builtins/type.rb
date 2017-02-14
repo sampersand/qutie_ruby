@@ -1,9 +1,9 @@
 require_relative 'object'
 require_relative 'boolean'
-class QT_Class < QT_Object
+class QT_Type < QT_Object
   attr_reader :source
-  def initialize(source_class)
-    @source = source_class
+  def initialize(source)
+    @source = source
   end
   def to_s
     "<type #{@source}>"

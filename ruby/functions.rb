@@ -112,8 +112,8 @@ module Functions
       fetch(args, 0, :__to_num, default: QT_False::INSTANCE).qt_to_bool(env)
     },
 
-    QT_Variable.new( :class ) => QT_BuiltinFunciton.new{ |args, env|
-      fetch(args, 0, :__to_class).qt_to_class(env)
+    QT_Variable.new( :type ) => QT_BuiltinFunciton.new{ |args, env|
+      fetch(args, 0, :__to_type).qt_to_type(env)
     },
 
     QT_Variable.new( :len ) => QT_BuiltinFunciton.new{ |args, env|
