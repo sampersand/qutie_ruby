@@ -1,8 +1,2 @@
-Car = {
-  __get = {
-    1
-  };
-};
-
-car = Car? @ (maker: toyoya)!;
-car?.1
+# disp?@("hello!")!;
+disp("hello!");
