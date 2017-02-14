@@ -64,35 +64,20 @@ module Functions
       QT_Null::INSTANCE
     },
 
-
-
-    QT_Variable.new( :return ) => QT_BuiltinFunciton.new{ |args, env|
-
-      # value = args.locals.fetch(:__value){ args.stack.fetch(0, NoRet) }
-      # levels = args.locals.fetch(:__levels){ args.stack.fetch(1, 1) }
-      # if levels > 0
-      #   universe.program_stack.pop # to remove us
-      #   throw :EOF, [levels, value]
-      # end
-      QT_Null::INSTANCE
-    },
-
     QT_Variable.new( :disp ) => QT_BuiltinFunciton.new{ |args, env|
 
       endl = fetch(args, :end, default: QT_Text.new("\n"))
       sep = fetch(args, :sep, default: QT_Text.new(""))
-      args = args.clone
-      args.locals[QT_Variable.new( :sep ) ] ||= sep
-      to_print = FUNCTIONS[ QT_Variable.new( :text ) ].qt_call(args, env)
-      print(to_print.qt_add( endl, env ).text_val)
+      to_print = args.stack.collect{ |arg| arg.qt_to_text(env).text_val }.join(sep.qt_to_text(env).text_val)
+      print(to_print + endl.qt_to_text(env).text_val)
       QT_Null::INSTANCE
     },
     QT_Variable.new( :prompt ) => QT_BuiltinFunciton.new{ |args, env|
       prompt = fetch(args, 0, :__prompt, default: QT_Text.new( '' ))
-      prefix = fetch(args, 2, :__prefix, default: QT_Text.new( " = " ))
-      endl = fetch(args, 1, :__endl, default: QT_Text.new( "\n" ))
+      prefix = fetch(args, 1, :__prefix, default: QT_Text.new( " = " ))
+      endl = fetch(args, 2, :__endl, default: QT_Text.new( "\n" ))
       print prompt.text_val + prefix.text_val
-      QT_Text.new( STDIN.gets endl.text_val )
+      QT_Text.new( STDIN.gets(endl.text_val).chomp )
     },
 
     QT_Variable.new( :syscall ) => QT_BuiltinFunciton.new{ |args, env|
@@ -121,12 +106,26 @@ module Functions
       fetch(args, 0, :__to_num, default: QT_False::INSTANCE).qt_to_bool(env)
     },
 
+    QT_Variable.new( :class ) => QT_BuiltinFunciton.new{ |args, env|
+      fetch(args, 0, :__to_class).qt_to_class(env)
+    },
     # i dont know how many of these work...
 
     QT_Variable.new( :clone ) => QT_BuiltinFunciton.new{ |args, env|
       # qutie_func(args, universe, parser, :qt_clone){ |a| a.clone }
     },
 
+
+    QT_Variable.new( :return ) => QT_BuiltinFunciton.new{ |args, env|
+
+      # value = args.locals.fetch(:__value){ args.stack.fetch(0, NoRet) }
+      # levels = args.locals.fetch(:__levels){ args.stack.fetch(1, 1) }
+      # if levels > 0
+      #   universe.program_stack.pop # to remove us
+      #   throw :EOF, [levels, value]
+      # end
+      QT_Null::INSTANCE
+    },
 
     QT_Variable.new( :import ) => QT_BuiltinFunciton.new{ |args, env|
       file = args.stack.fetch(0){ args.locals.fetch(:__file) }

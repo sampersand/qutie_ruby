@@ -50,25 +50,31 @@ class QT_Universe < QT_Object
         uni.stack.clear
         uni.locals.clear
         uni.qt_set( QT_Variable.new( :__self ), self, env, type: :LOCALS)
-        args.each{ |k, v| uni.qt_set(k, v, env, type: :LOCALS) }
+        args.locals.each{ |k, v| uni.qt_set(k, v, env, type: :LOCALS) }
+        args.stack.each{ |v| uni._append(v, env) }
         args = self.class.new(body: '', universe: uni , parens: '')
         text_func.qt_call(args, env).qt_get( QT_Number::NEG_1, env, type: :STACK )
       end
 
+      def __uni_method(meth, var, var_name, env)
+        res=qt_method(meth,UniverseOLD.new(stack:[var],locals:{QT_Variable.new(var_name)=>var}),env)
+        res._missing? ? nil : res
+      end
+
       def qt_to_text(env)
-        res = qt_method(:__text, {}, env)
+        res = qt_method(:__text, UniverseOLD.new, env)
         return super if res._missing?
         throw(:ERROR, QTE_Type.new(env, " `__text` returned a non-QT_Text value! `#{res}`")) unless res.is_a?(QT_Text)
         res
       end
       def qt_to_num(env)
-        res = qt_method(:__num, {}, env)
+        res = qt_method(:__num, UniverseOLD.new, env)
         return super if res._missing?
-        throw(:ERROR, QTE_Type.new(env, " __num`` returned a non-QT_Number value! `#{res}`")) unless res.is_a?(QT_Number)
+        throw(:ERROR, QTE_Type.new(env, " `__num` returned a non-QT_Number value! `#{res}`")) unless res.is_a?(QT_Number)
         res
       end
       def qt_to_bool(env)
-        res = qt_method(:__bool, {}, env)
+        res = qt_method(:__bool, UniverseOLD.new, env)
         return QT_Boolean::get(!@universe.stack_empty?(env) || !@universe.shortened_locals_empty?) if res._missing?
         throw(:ERROR, QTE_Type.new(env, " `__bool` returned a non-QT_Boolean value `#{res}`")) unless res.is_a?(QT_Boolean)
         res
@@ -132,12 +138,29 @@ class QT_Universe < QT_Object
         QT_Null::INSTANCE
       end
 
+      def qt_cmp(r, e) __uni_method(:__cmp, r, :__right, e) || super end
+      def qt_add(r, e) __uni_method(:__add, r, :__right, e) || super end
+      def qt_sub(r, e) __uni_method(:__sub, r, :__right, e) || super end
+      def qt_mul(r, e) __uni_method(:__mul, r, :__right, e) || super end
+      def qt_div(r, e) __uni_method(:__div, r, :__right, e) || super end
+      def qt_mod(r, e) __uni_method(:__mod, r, :__right, e) || super end
+      def qt_pow(r, e) __uni_method(:__pow, r, :__right, e) || super end
 
-      def qt_add_l(right, env)
-        qt_method(:__add_l, { QT_Variable.new(:right) => right }, env)
-      end
+      def qt_cmp_l(r, e) __uni_method(:__cmp_l, r, :__right, e) || super end
+      def qt_add_l(r, e) __uni_method(:__add_l, r, :__right, e) || super end
+      def qt_sub_l(r, e) __uni_method(:__sub_l, r, :__right, e) || super end
+      def qt_mul_l(r, e) __uni_method(:__mul_l, r, :__right, e) || super end
+      def qt_div_l(r, e) __uni_method(:__div_l, r, :__right, e) || super end
+      def qt_mod_l(r, e) __uni_method(:__mod_l, r, :__right, e) || super end
+      def qt_pow_l(r, e) __uni_method(:__pow_l, r, :__right, e) || super end
 
-
+      def qt_cmp_r(l, e) __uni_method(:__cmp_r, l, :__left, e) || super end
+      def qt_add_r(l, e) __uni_method(:__add_r, l, :__left, e) || super end
+      def qt_sub_r(l, e) __uni_method(:__sub_r, l, :__left, e) || super end
+      def qt_mul_r(l, e) __uni_method(:__mul_r, l, :__left, e) || super end
+      def qt_div_r(l, e) __uni_method(:__div_r, l, :__left, e) || super end
+      def qt_mod_r(l, e) __uni_method(:__mod_r, l, :__left, e) || super end
+      def qt_pow_r(l, e) __uni_method(:__pow_r, l, :__left, e) || super end
 end
 
 

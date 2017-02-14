@@ -138,6 +138,10 @@ class UniverseOLD
     @stack.each
   end
 
+  def _append(val, env)
+    @stack << val
+  end
+
 end
 
 

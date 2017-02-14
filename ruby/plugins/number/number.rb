@@ -52,13 +52,15 @@ class QT_Number < QT_Object
     # operators
         private
           def numer_func_l(right, env,  lmeth)
-            right = right.qt_to_num(env)
-            return right if right._eql?( QT_Missing::INSTANCE, env)
+            # right = right.qt_to_num(env)
+            return QT_Missing::INSTANCE unless right.is_a?(self.class)
+            return QT_Missing::INSTANCE if right._eql?( QT_Missing::INSTANCE, env)
             QT_Number.new(@num_val.method(lmeth).call(right.num_val))
           end
           def numer_func_r(left, env, lmeth)
-            left = left.qt_to_num(env)
-            return left if left._eql?( QT_Missing::INSTANCE, env)
+            # left = left.qt_to_num(env)
+            return QT_Missing::INSTANCE unless left.is_a?(self.class)
+            return QT_Missing::INSTANCE if left._eql?( QT_Missing::INSTANCE, env)
             QT_Number.new(left.num_val.method(lmeth).call(@num_val) )
           end
 
