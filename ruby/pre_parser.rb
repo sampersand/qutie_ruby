@@ -30,7 +30,7 @@ module PreParser
   # METHOD_CALL_REG = /([a-z_][a-z_0-9]*\?(?:\.[a-z_0-9]*)*)\.([a-z_0-9]*)(?=[\[({])/i
   # METHOD_CALL_REG = /([a-z_][a-z_0-9]*\?)\.([a-z_0-9]*)(?=[\[({])/i
   FUNCITON_DECL_REG = /([a-z_][a-z_0-9 ]*\s*=\s*)function\s*[(]([^)]*?)[)]\s*([{(\[])/i
-  CLASS_INSTANCE_REG = /[nN][eE][wW]\s+([A-Z_][a-zA-Z_0-9]*)(?=[(])/
+  CLASS_INSTANCE_REG = /new\s+([a-z_][a-z_0-9]*)(?=[(])/i
     # text.gsub!(/(\$|[a-z][a-z_0-9]*\?)([({\[])/i, '\1@\2') # replace 'function(args)' with''
     # text.gsub!(/(\$|[a-z][a-z_0-9]*)([({\[])/i, '\1?@\2') # replace 'function(args)' with''
   FUNCTION_CALL_REG = /([a-z_][a-z_0-9]*)\s*(?=[\[({])/i

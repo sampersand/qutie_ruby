@@ -38,11 +38,10 @@ User = {
 };
 
 users = Users();
-users?.add@(__self=users?; User?@('john', 'password123')!)!;
-users?.add@(__self=users?; User?@('fred', 'lemmiein')!)!;
-users?.add@(__self=users?; User?@('jill', 'ilikepie')!)!;
+users?.add@(__self=users?; User?@('john', 'password123')! )!;
+users?.add@(__self=users?; User?@('fred', 'lemmiein')! )!;
+users?.add@(__self=users?; User?@('jill', 'ilikepie')! )!;
 disp( users? );
-# disp? @ (users?);
 
 
 

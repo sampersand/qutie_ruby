@@ -1,47 +1,48 @@
 Users = {
-  || $?.users || {} -> users;
+  {} -> users;
 
-  __text = {
-    if(0 == len(__self?.users, S), [return('no users!')], []),!;
-
-    i=0;
-    res = text(sep=''; i?, '. ', __self?.get(i?));
-    i++;
-    while{ (i? < len( __self?.users, S ) ) {
-       res <+- text(sep=''; '\n',i?, '. ', __self?.get(i?));
-       i++;
-      }
-    };
-    res?
+  __bool = {
+    bool(len(__self?))
   };
-
-  get = function(pos?) {
-    __self?.users.pos?;
+  __text = {
+    if?@0( __self? {
+        i = 0;
+        res = i? + '. ' + __self?.users.i?;
+        i = i? + 1;
+        while( (i? < len( __self? ) ),{
+          res = res? + '\n'+ i? + '. ' + __self?.users.i?;
+          i = i? + 1;
+        });
+        res?
+      } else; {
+        "No users!"
+      }
+    )!
   };
 
   __len = {
-    len?@( __self?.users, stack )!
+    len( __self?.users, STACK )
   };
+
   add = {
-    || $?.user? -> user;
-    __self?.users .= [ len?@( __self? )!, user? ]!;
+    $?.0 || $?.user? -> user;
+    __self?.users .= [len(__self?), user?]!;
   };
+
 };
 
 User = {
-  || $?.name -> name;
-  || $?.pass -> pass;
+  $?.1 || $?.pass -> pass; ;#pop the password
+  $?.0 || $?.name -> name; ;#pop the username
   __text = { '`' + __self?.name + '`=' + __self?.pass };
 };
 
-users = Users?@()!;
-users?.add@(__self=users?; User?@('john', 'password123')!)!;
-users?.add@(__self=users?; User?@('john', 'password123')!)!;
-users?.add@(__self=users?; User?@('john', 'password123')!)!;
-diisp(users?);
-# users?.add@(__self=users?; User?@('fred', 'lemmiein')!);
-# users?.add@(__self=users?; User?@('jill', 'ilikepie')!);
-# disp? @ (users?);
+users = Users();
+users?.add@(__self=users?; User?@('john', 'password123')! )!;
+users?.add@(__self=users?; User?@('fred', 'lemmiein')! )!;
+users?.add@(__self=users?; User?@('jill', 'ilikepie')! )!;
+disp( users? );
+disp( new Users() );
 
 
 
