@@ -172,6 +172,9 @@ class QT_Object
 
       # logic
         def qt_not(env); qt_to_bool(env).qt_not(env) end
+        def qt_neg(env); QT_Missing::INSTANCE end
+        def qt_pos(env); QT_Missing::INSTANCE end
+        def qt_inv(env); QT_Missing::INSTANCE end
 
 end
 

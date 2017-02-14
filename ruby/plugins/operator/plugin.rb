@@ -61,7 +61,7 @@ module Operators
       # rhs.stack.shift(universe.stack.length);
       # # p rhs.stack
       # raise "Ambiguous rhs for operator `#{oper}`: #{rhs.stack}" unless rhs.stack.length == 1
-      rhs.stack.pop
+      rhs.stack.pop || QT_Null::INSTANCE
     end
 
     # def fix_lhs(token)

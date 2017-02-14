@@ -20,7 +20,8 @@ class QT_Missing < QT_Object
         def qt_eql_r(l, _env)
           QT_Boolean::get( self.class == l.class )# same thing as qt_eql_l
         end
-
+        # def qt_sub_l(right, env) right.qt_neg(env) end
+        # def qt_add_l(right, env) right.qt_pos(env) end
   INSTANCE = new
 end
 
