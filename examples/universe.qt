@@ -3,30 +3,33 @@ b = 9.3;
 'abc' -> c;
 d = false?;
 
-b?; #=> gives 9.3
-c?; #=> gives 'abc'
+disp('-----');
+disp(b?); #=> gives 9.3
+disp(c?); #=> gives 'abc'
 
 func = {
   a? + b?
 };
+disp('-----');
   # (a=3; b=4;)! is 'evaluate the inside, but do not switch scope'
   # (a=3; b=4;)@() is 'evaluate the inside, but do switch scope'
-func? @ ()!; #=> 12.3 (you do not have to specify the variables)
-func? @ (a=3; b=4;)!; #=> 7
-b?; #=> still 9.3
+disp(func()); #=> 12.3 (you do not have to specify the variables)
+disz(func((a=3; b=4;)@())); #=> 7
+disp(b?); #=> still 9.3
 
+disp('-----');
 list = [1, 2, 3]@(); # makes a conventional list
 hash = {a:   1;
         b =  2;
         c <- 3;}@(); # makes a conventional hash
-list?.a; #=> nil
-list?.0; #=> 1
-
-hash?.0; #=> nil
-hash?.a; #=> 1
-hash?.c; #=> 3
-'abc'.0; #=> 'a'
-'abc'.4; #=> nil
+disp(list?.a); #=> nil
+disp(list?.0); #=> 1
+disp('-----');
+disp(hash?.0); #=> nil
+disp(hash?.a); #=> 1
+disp(hash?.c); #=> 3
+disp('abc'.0); #=> 'a'
+disp('abc'.4); #=> nil
 
 
 

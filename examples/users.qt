@@ -38,7 +38,7 @@ users = Users?@()!;
 users?.add@(__self=users?; User?@('john', 'password123')!)!;
 users?.add@(__self=users?; User?@('john', 'password123')!)!;
 users?.add@(__self=users?; User?@('john', 'password123')!)!;
-users?.users,
+diisp(users?);
 # users?.add@(__self=users?; User?@('fred', 'lemmiein')!);
 # users?.add@(__self=users?; User?@('jill', 'ilikepie')!);
 # disp? @ (users?);

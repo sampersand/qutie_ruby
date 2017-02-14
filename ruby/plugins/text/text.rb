@@ -60,9 +60,9 @@ class QT_Text < QT_Object
 
     # operators
       # access
-      def qt_get(pos, _env, type:)
+      def qt_get(pos, env, type:)
         # ignores type
-        text = @text_val[(pos.qt_to_num or return).num_val]
+        text = @text_val[(pos.qt_to_num(env) or return QT_Null::INSTANCE).num_val]
         text and QT_Text.new(text) or QT_Null::INSTANCE
       end
 

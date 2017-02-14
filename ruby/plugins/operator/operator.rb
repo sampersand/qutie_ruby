@@ -46,7 +46,7 @@ module Operators
     QT_Operator.new(name: :>=,   priority: 20, bin_meth: :qt_geq), 
     QT_Operator.new(name: :'.=', priority:  6){ |l, r, e| l.qt_set(*r.stack, e, type: QT_Variable.new( :BOTH ) ) },
 
-    QT_Operator.new(name: :'@0', priority:  7){ |l, r, e| CALL_OPER.call([l], [r], e).qt_get(QT_Number::NEG_1, e, type: QT_Variable.new( :STACK ) ) },
+    QT_Operator.new(name: :'@0', priority:  7){ |l, r, e| CALL_OPER.call([l], [r], e).qt_eval(e).qt_get(QT_Number::NEG_1, e, type: QT_Variable.new( :STACK ) ) },
 
     QT_Operator.new(name: :'&&', priority: 24){ |l, r, e| l.qt_to_bool(e).bool_val ? r : l },
     QT_Operator.new(name: :'||', priority: 25){ |l, r, e| l.qt_to_bool(e).bool_val ? l : r },
