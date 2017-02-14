@@ -1,2 +1,4 @@
-# disp?@("hello!")!;
-disp("hello!");
+foo = {
+  a? + b?
+};
+foo(a=3, b=4)
