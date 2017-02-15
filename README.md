@@ -1,18 +1,16 @@
  
-/* 1. Comments can be made in one of three ways: */
-  /* With the C-Style Block comment
-    like this one is written in */
-  // With the C-Style single-line comment
-  # Or with the `Pound` character.
+1. Comments can be made in one of three ways:
+  - Started by `/*`, and ended by `*/`.
+  - Started by `//`, and ended by the end of the line.
+  - Started by `#`, and ended by the end of the line.
 
-/* 2. There are only four types. */
+2. There are Four basic `Types`:
+  1. `Number` -- There is no distinction between Integers and Floating Point numbers
+    - `500`
+    - `3.5`
+    - `0xA`
 
-  /* 2.1 Number -- There is no distinction between Integers and Floating Point numbers. */
-    500
-    3.5
-    0xA
-
-  /* 2.2 Text -- You can start and end text with any of: `'" - they all act the same */
+  2. `Text` -- You can start and end text with any of: `\`'"`4 - they all act the same */
     'I\'m a text'    # Characters following a \ have special meaning
     "Spam & eggs"
     `Alsi a text`
