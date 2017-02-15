@@ -80,8 +80,8 @@ class QT_Text < QT_Object
         end
       end
 
-      def qt_eql_l(r) QT_Boolean::get( self == r ) end
-      def qt_eql_r(l) QT_Boolean::get( self == l ) end
+      def qt_eql_l(r, _env) QT_Boolean::get( self == r ) end
+      def qt_eql_r(l, _env) QT_Boolean::get( self == l ) end
 
 
       private

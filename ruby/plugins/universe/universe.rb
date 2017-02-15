@@ -113,6 +113,7 @@ class QT_Universe < QT_Object
 
       def qt_call(args, env) # fix this
         raise "Args have to be a universe, not `#{args.class}`" unless args.is_a?(QT_Universe)
+        args = args.qt_eval(env.clone)
         passed_args = args.clone
         passed_args.globals.update(passed_args.locals)
         passed_args.locals.clear

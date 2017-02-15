@@ -27,9 +27,9 @@ module PreParser
   end
 
   NEW_CLS_REG = /new\s+([a-z_][a-z_0-9]+)/i
-  METHOD_CALL_REG = /([a-z_][a-z_0-9]*\?(?:\.[a-z_0-9]*)*)\.([a-z_0-9]*)(?=[\[({])/i
+  METHOD_CALL_REG = /([a-z_][a-z_0-9]*(?:\.[a-z_0-9]*)*)\.([a-z_0-9]*)(?=[\[({])/i
   # METHOD_CALL_REG = /([a-z_][a-z_0-9]*\?)\.([a-z_0-9]*)(?=[\[({])/i
-  FUNCITON_DECL_REG = /([a-z_][a-z_0-9 ]*\s*=\s*)function\s*[(]([^)]*?)[)]\s*([{(\[])/i
+  FUNCTION_DECL_REG = /([a-z_][a-z_0-9 ]*\s*=\s*)function\s*[(]([^)]*?)[)]\s*([{(\[])/i
   CLASS_INSTANCE_REG = /new\s+([a-z_][a-z_0-9]*)(?=[(])/i
     # text.gsub!(/(\$|[a-z][a-z_0-9]*\?)([({\[])/i, '\1@\2') # replace 'function(args)' with''
     # text.gsub!(/(\$|[a-z][a-z_0-9]*)([({\[])/i, '\1?@\2') # replace 'function(args)' with''
@@ -42,7 +42,7 @@ module PreParser
     keys = Functions::FUNCTIONS.keys.collect(&:to_s).join('|')
     while pos = text.index(/(?<=#{keys})[({\[]/)
       parens = get_parens!(text, pos)
-      text.insert(pos, "?@#{parens}!,")
+      text.insert(pos, "@#{parens}!,")
     end
 
     while pos = text.index(CLASS_INSTANCE_REG)
@@ -50,32 +50,31 @@ module PreParser
       class_name=match[1]
       text.sub!(CLASS_INSTANCE_REG, '')
       parens = get_parens!(text, pos)
-      text.insert(pos, "#{class_name}?@#{parens}!,")
+      text.insert(pos, "#{class_name}@#{parens}!,")
     end
 
-    while pos = text.index(METHOD_CALL_REG)
-      match=text.match(METHOD_CALL_REG)
-      var=match[1]
-      func=match[2]
-      text.sub!(METHOD_CALL_REG, '')
-      parens = get_parens!(text, pos)
-      text.insert(pos, "#{var}.#{func}@#{parens[0]}__self=#{var};#{parens[1..-1]}!,")
-    end
+    # while pos = text.index(METHOD_CALL_REG)
+    #   match=text.match(METHOD_CALL_REG)
+    #   var=match[1]
+    #   func=match[2]
+    #   text.sub!(METHOD_CALL_REG, '')
+    #   parens = get_parens!(text, pos)
+    #   text.insert(pos, "#{var}.#{func}@#{parens[0]}__self=#{var};#{parens[1..-1]}!,")
+    # end
 
     while pos = text.index(FUNCTION_CALL_REG)
       func_name = text.match(FUNCTION_CALL_REG)[1]
       text.sub!(FUNCTION_CALL_REG, '')
       parens = get_parens!(text, pos)
-      text.insert(pos, "#{func_name}?@#{parens}!,.NEG_1?,")
+      text.insert(pos, "#{func_name}@#{parens}!,")#,.NEG_1?,")
     end
-
-    while pos = text.index(FUNCITON_DECL_REG)
-      match=text.match(FUNCITON_DECL_REG)
+    while pos = text.index(FUNCTION_DECL_REG)
+      match=text.match(FUNCTION_DECL_REG)
       func=match[1]
       func_start_paren=match[3]
       args=match[2].split(/(?<!\\),/).collect{|e| e.gsub(/\\,/, ',')}.collect(&:strip)
       args_str = args.each_with_index.collect(&method(:handle_func_arg)).join
-      text.sub!(FUNCITON_DECL_REG, '')
+      text.sub!(FUNCTION_DECL_REG, '')
       text.insert(pos, "#{func}#{func_start_paren}#{args_str}")
     end
 

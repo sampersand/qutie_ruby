@@ -1,2 +1,41 @@
-foo = 1;
-a = foo;
+# Car = {
+#   maker  = maker  || 'honda';
+#   wheels = wheels || 4;
+
+#   __text = {
+#     'I\'m a ' + __self.maker + ' with ' + __self.wheels + ' wheels!'
+#   };
+
+#   drive = { 
+#     dist = $.0 || dist;
+#     song = $.1 || song;
+#     _();
+#     disp( if(dist,
+#              'I drove ' + dist + ' miles!',
+#              'vroom vroom!'), end='';
+#         );
+#     disp( "I sang " + if(song, song, "nothing") + "!");
+#   };
+
+# };
+
+# car = new Car(maker: 'toyota');
+# car.drive( 9.3, 'chicken' );
+# car.drive@( (dist: 3; song: 'wheels on bus';)@(),.dist )!;
+# car.drive();
+
+
+
+
+
+foo = {
+  a+b
+};
+foo@(a=1;b=2;);
+a
+
+
+
+
+
+
