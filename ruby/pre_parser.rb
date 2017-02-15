@@ -40,7 +40,7 @@ module PreParser
     # text.gsub!(/import[({\[]([^)\]}]+)[)\]}]/, '(""+`cat \1.qt`!)!.0,!,')
     text.gsub!(/import[({\[](['"])([^)\]}]+)[)\]}]/, '((\1\1+`cat \1\2.qt`!)!.0,!)!.0')
     keys = Functions::FUNCTIONS.keys.collect(&:to_s).join('|')
-    while pos =git text.index(/(?<=#{keys})[({\[]/)
+    while pos = text.index(/(?<=#{keys})[({\[]/)
       parens = get_parens!(text, pos)
       text.insert(pos, "?@#{parens}!,")
     end
