@@ -1,4 +1,4 @@
-UserList = {
+Users = {
   {} -> users;
 
   __bool = {
@@ -31,25 +31,17 @@ UserList = {
 
 };
 
-User = class() {
+User = {
   $?.1 || $?.pass -> pass; ;#pop the password
   $?.0 || $?.name -> name; ;#pop the username
   __text = { '`' + __self?.name + '`=' + __self?.pass };
 };
 
-users = new UserList();
-users?.add( new User('john', 'password123') );
-users?.add( new User('fred', 'lemmiein')    );
-users?.add( new User('jill', 'ilikepie')    );
+users = Users();
+users?.add@(__self=users?; User?@('john', 'password123')! )!;
+users?.add@(__self=users?; User?@('fred', 'lemmiein')! )!;
+users?.add@(__self=users?; User?@('jill', 'ilikepie')! )!;
 disp( users? );
-
-
-
-
-
-
-
-
 
 
 

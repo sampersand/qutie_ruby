@@ -1,3 +1,10 @@
+<<<<<<< HEAD
 import[import_2];
 greet('sam');
 imp?.greet('sam');
+=======
+# code = "greet = function(user?) {disp('Hello, ', user?);};";
+# code?@()!,.greet@(fred)!,
+# import('import_2.qt')@()!,.greet@(fred)!
+import('import_2.qt').greet@(fred)!
+>>>>>>> parent of 86eaa06... Import is a macro

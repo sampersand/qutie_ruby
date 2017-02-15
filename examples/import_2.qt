@@ -1,3 +1,8 @@
+<<<<<<< HEAD
 greet = { -> user;
   disp?@('Hello, ', user?, ". The pwd is ", `pwd`!)!;
+=======
+greet = function(user?) {
+  disp('Hello, ', user?);
+>>>>>>> parent of 86eaa06... Import is a macro
 };

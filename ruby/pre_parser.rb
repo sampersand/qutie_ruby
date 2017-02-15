@@ -27,7 +27,11 @@ module PreParser
   end
 
   NEW_CLS_REG = /new\s+([a-z_][a-z_0-9]+)/i
+<<<<<<< HEAD
   METHOD_CALL_REG = /([a-z_][a-z_0-9]*(?:\.[a-z_0-9]*)*)\.([a-z_0-9]*)(?=[\[({])/i
+=======
+  # METHOD_CALL_REG = /([a-z_][a-z_0-9]*\?(?:\.[a-z_0-9]*)*)\.([a-z_0-9]*)(?=[\[({])/i
+>>>>>>> parent of 86eaa06... Import is a macro
   # METHOD_CALL_REG = /([a-z_][a-z_0-9]*\?)\.([a-z_0-9]*)(?=[\[({])/i
   FUNCTION_DECL_REG = /([a-z_][a-z_0-9 ]*\s*=\s*)function\s*[(]([^)]*?)[)]\s*([{(\[])/i
   CLASS_INSTANCE_REG = /new\s+([a-z_][a-z_0-9]*)(?=[(])/i
@@ -37,13 +41,24 @@ module PreParser
   ADD_QUESTION_MARK = /\b([a-z_][a-z_0-9]*)(?=\s*[^=?\s]|$)(?![\w\s]*')\b/i
   def pre_process!(text)
     # text.gsub!(/(?<!__)(self|args)(?!\?)/, '__\1?')
+<<<<<<< HEAD
     # text.gsub!(/import[({\[](['"])([^)\]}]+)[)\]}]/, '((\1\1+`cat \1\2.qt`!)!.0,!)!.0')
     text.gsub!(/import[({\[]([^)\]}]+)[)\]}];/, '""+`cat \1.qt`!,!;')
+=======
+>>>>>>> parent of 86eaa06... Import is a macro
     keys = Functions::FUNCTIONS.keys.collect(&:to_s).join('|')
     while pos = text.index(/(?<=#{keys})[({\[]/)
       parens = get_parens!(text, pos)
       text.insert(pos, "?@#{parens},")
     end
+
+    while pos = text.index(FUNCTION_CALL_REG)
+      func_name = text.match(FUNCTION_CALL_REG)[1]
+      text.sub!(FUNCTION_CALL_REG, '')
+      parens = get_parens!(text, pos)
+      text.insert(pos, "#{func_name}?@#{parens}!,.NEG_1?,")
+    end
+
 
     while pos = text.index(CLASS_INSTANCE_REG)
       match=text.match(CLASS_INSTANCE_REG)
@@ -61,6 +76,7 @@ module PreParser
     #   parens = get_parens!(text, pos)
     #   text.insert(pos, "#{var}.#{func}@#{parens[0]}__self=#{var};#{parens[1..-1]}!,")
     # end
+<<<<<<< HEAD
 
     while pos = text.index(FUNCTION_CALL_REG)
       func_name = text.match(FUNCTION_CALL_REG)[1]
@@ -70,6 +86,10 @@ module PreParser
     end
     while pos = text.index(FUNCTION_DECL_REG)
       match=text.match(FUNCTION_DECL_REG)
+=======
+    while pos = text.index(FUNCITON_DECL_REG)
+      match=text.match(FUNCITON_DECL_REG)
+>>>>>>> parent of 86eaa06... Import is a macro
       func=match[1]
       func_start_paren=match[3]
       args=match[2].split(/(?<!\\),/).collect{|e| e.gsub(/\\,/, ',')}.collect(&:strip)

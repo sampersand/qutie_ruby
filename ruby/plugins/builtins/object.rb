@@ -3,7 +3,7 @@ class QT_Object; end
 require_relative 'boolean'
 require_relative 'null'
 require_relative 'missing'
-require_relative 'type'
+require_relative 'class'
 
 class QT_Object
   def self.from(_source, _env) #used when directly instatiating it, not copying, etc
@@ -68,7 +68,7 @@ class QT_Object
       def qt_to_num(_env); QT_Missing::INSTANCE end
       def qt_to_text(_env); QT_Text.new(to_s) end
       def qt_to_bool(_env); QT_Boolean::get(true) end
-      def qt_to_type(_env); QT_Type.new( self.class ) end
+      def qt_to_class(_env); QT_Class.new( self.class ) end
 
     # operators 
       # access

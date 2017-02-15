@@ -24,30 +24,30 @@ module Universe
     catch(:EOF) do
       loop do
         # this is very hacky right here
-          # begin # UNSAFE AND HACKY
-          #   if ["'", '"', '`'].any?{|q| q._eql?(stream._peek(env),env)}
-          #     quote = stream._next(env)
-          #     body = body.qt_add(quote, env)
-          #     until quote._eql?( stream._peek(env), env )
-          #       body << stream.next if stream.peek?(str: '\\')
-          #       body << stream.next
-          #     end
-          #     body << stream.next
-          #     next
-          #   end
+        # begin # UNSAFE AND HACKY
+        #   if stream.peek_any?(vals: ["'", '"', '`'])
+        #     quote = stream.next
+        #     body << quote
+        #     until stream.peek?(str: quote)
+        #       body << stream.next if stream.peek?(str: '\\')
+        #       body << stream.next
+        #     end
+        #     body << stream.next
+        #     next
+        #   end
 
-          #   if stream.peek_any?(vals: ['#', '//'])
-          #     body << stream.next until stream.peek?(str: "\n")
-          #     body << stream.next
-          #     next
-          #   end
+        #   if stream.peek_any?(vals: ['#', '//'])
+        #     body << stream.next until stream.peek?(str: "\n")
+        #     body << stream.next
+        #     next
+        #   end
 
-          #   if stream.peek_any?(vals: ['/*'])
-          #     body << stream.next until stream.peek?(str: '*/')
-          #     body << stream.next(amnt: 2)
-          #     next
-          #   end
-          # end
+        #   if stream.peek_any?(vals: ['/*'])
+        #     body << stream.next until stream.peek?(str: '*/')
+        #     body << stream.next(amnt: 2)
+        #     next
+        #   end
+        # end
 
         if L_PARENS.any?{ |lp| lp._eql?( stream._peek(env), env ) }
           parens += 1

@@ -1,25 +1,46 @@
+<<<<<<< HEAD
   #[DISP_TEXT]
+=======
+>>>>>>> parent of 86eaa06... Import is a macro
 Car = {
-  maker  = maker? || honda;
+  maker = maker? || honda;
   wheels = wheels? || 4;
 
   __text = {
+<<<<<<< HEAD
     disp(type(__self?))
     'I\'m a ' + __self?.maker + ' with ' + __self?.wheels + ' wheels!'
+=======
+    `I'm a ` + __self?.maker + ' with ' + __self?.wheels + ' wheels!'
+>>>>>>> parent of 86eaa06... Import is a macro
   };
 
   drive = { 
-    dist = __args?.0 || __args?.dist;
-    disp( if(dist?,  
-             'I drove ' + dist? + ' miles!',
-             'vroom vroom!')
-        );
+    dist = $?.0 || $?.dist;
+    disp? @ ( if? @ (dist?, 'I drove ' + dist? + ' miles!', 'vroom vroom!')! )!;
   };
 
 };
 
+<<<<<<< HEAD
 car = new Car(maker: toyota;)!;
 disp( car? );
 car?.drive( 5 );
 car?.drive( dist=9.3 );
 car?.drive();
+=======
+car = Car? @ (maker: toyoya)!;
+disp? @ (car?)!;
+car?.drive @ ( 5 )!;
+car?.drive @ ( dist=9.3 )!;
+car?.drive @ ()!;
+dist?
+
+
+
+
+
+
+
+
+>>>>>>> parent of 86eaa06... Import is a macro

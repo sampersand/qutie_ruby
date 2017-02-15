@@ -2,8 +2,9 @@ Fraction = {
   numer = __args?.0;
   denom = __args?.1;
   __text = { __self?.numer + '/' + __self?.denom };
-  __num =  { __self?.numer /  __self?.denom };
+  __num =  { __self?.numer    /    __self?.denom };
   __bool = { __self?.numer == 0 };
+<<<<<<< HEAD
   __add = { new Fraction(numer? + __args?.0 * denom?, denom?) };//, -> __add_r;
   __cmp = { num(__self?) <=> __args.0 }, -> __cmp_r;
 };
@@ -13,3 +14,14 @@ disp( frac? );
 disp( frac? + 3 );
 disp( 3 + frac? )!;
 disp( 3 + frac? <=> 2/3)!;
+=======
+  __add = { Fraction? @ (numer? + __args?.0 * denom?, denom?)! }, -> __add_r;
+  __cmp = { num?@(__self?)! <=> __args?.0 }, -> __cmp_r;
+};
+
+frac = Fraction? @ (2, 3)!;
+disp?@( frac? + 3 )!;
+disp?@( 3 + frac? )!;
+disp?@( 3 + frac? <=> 2/3)!;
+disp?@( 2/3 <=> 3 + frac?)!;
+>>>>>>> parent of 86eaa06... Import is a macro
