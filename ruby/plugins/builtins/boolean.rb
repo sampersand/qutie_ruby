@@ -15,7 +15,7 @@ class QT_Boolean < QT_Object
   # qt methods
     # methods
       def qt_get(pos, env, type:)
-        if pos == QT_Variable.new( :not )
+        if pos == QT_Symbol.new( :not )
           qt_not(env)
         end
       end

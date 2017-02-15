@@ -1,25 +1,25 @@
-class QT_Variable < QT_Object
+class QT_Symbol < QT_Object
 
-  attr_reader :var_val
+  attr_reader :sym_val
   def self.from(source, _env)
     fail "INTERNAL: Bad source type `#{source.class}`" unless source.is_a?(QT_Default)
     new( source.source_val.to_sym )
   end
   
-  def initialize(var_val)
-    @var_val = var_val
+  def initialize(sym_val)
+    @sym_val = sym_val
   end
 
   def to_s
-    @var_val.to_s
+    @sym_val.to_s
   end
 
   def ==(other)
-    other.is_a?(QT_Variable) && @var_val == other.var_val
+    other.is_a?(QT_Symbol) && @sym_val == other.sym_val
   end
 
   def hash
-    @var_val.hash
+    @sym_val.hash
   end
 
   # qt methods

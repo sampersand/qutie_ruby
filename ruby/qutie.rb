@@ -7,7 +7,7 @@ require_relative 'plugins/whitespace/plugin'
 require_relative 'plugins/universe/plugin'
 require_relative 'plugins/number/plugin'
 require_relative 'plugins/operator/plugin'
-require_relative 'plugins/variable/plugin'
+require_relative 'plugins/symbol/plugin'
 require_relative 'plugins/comment/plugin'
 require_relative 'plugins/text/plugin'
 
@@ -15,7 +15,7 @@ require_relative 'functions'
 require_relative 'constants'
 parser = Parser.new
 parser.add_plugin(plugin: Whitespace)
-parser.add_plugin(plugin: Variable)
+parser.add_plugin(plugin: Symbols)
 parser.add_plugin(plugin: Number)
 parser.add_plugin(plugin: Universe)
 parser.add_plugin(plugin: Operators)

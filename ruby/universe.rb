@@ -46,7 +46,7 @@ class UniverseOLD
 
   # locals
     def reduced_locals
-      @locals.reject{|k, v| k.is_a?(QT_Variable) && k.var_val.to_s.start_with?('__')}
+      @locals.reject{|k, v| k.is_a?(QT_Symbol) && k.sym_val.to_s.start_with?('__')}
     end
 
     def locals_empty?
@@ -73,11 +73,11 @@ class UniverseOLD
         QT_Null::INSTANCE
       end
     end
-    def qt_get(pos, _env, type: QT_Variable.new( :BOTH )) #ignores type
-      return QT_Universe.new(body: '', universe: _env.universe, parens: ['<', '>']) if pos == QT_Variable.new( :'$' )
+    def qt_get(pos, _env, type: QT_Symbol.new( :BOTH )) #ignores type
+      return QT_Universe.new(body: '', universe: _env.universe, parens: ['<', '>']) if pos == QT_Symbol.new( :'$' )
       self[pos] || QT_Null::INSTANCE
     end
-    def qt_set(pos, val, _env, type: QT_Variable.new( :BOTH )) #ignores type
+    def qt_set(pos, val, _env, type: QT_Symbol.new( :BOTH )) #ignores type
       self.locals[pos] = val
     end
 
@@ -87,12 +87,12 @@ class UniverseOLD
     end
 
     def stack_s
-      stck = @stack.collect{|e| self.equal?(e.respond_to?(:universe) ? e.universe : e) ? QT_Variable.new( :'$' ) : e }
+      stck = @stack.collect{|e| self.equal?(e.respond_to?(:universe) ? e.universe : e) ? QT_Symbol.new( :'$' ) : e }
       stck.collect(&:to_s).join(', ').dump[1...-1]
     end
 
     def locals_s
-      reduced_locals.collect{|k, v| [k, (self.equal?(v.respond_to?(:universe) ? v.universe : v) ? QT_Variable.new( :'$' ) : v )]}
+      reduced_locals.collect{|k, v| [k, (self.equal?(v.respond_to?(:universe) ? v.universe : v) ? QT_Symbol.new( :'$' ) : v )]}
                       .collect{|k,v| "#{k}: #{v}"}.join(', ')
     end
 
@@ -121,7 +121,7 @@ class UniverseOLD
 
 
   def qt_length(_env, type:)
-    case type.var_val
+    case type.sym_val
     when :STACK then @stack.length
     when :LOCALS then @locals.length
     when :GLOBALS then @globals.length

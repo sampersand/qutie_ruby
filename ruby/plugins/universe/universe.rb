@@ -43,22 +43,22 @@ class QT_Universe < QT_Object
   # qt methods
     # methods
       def qt_method(meth, args, env)
-        # text_func = qt_get(QT_Variable.new( meth ), env, type: QT_Variable.new( :LOCALS ) )
-        text_func = @universe.locals[QT_Variable.new( meth )] || QT_Null::INSTANCE
+        # text_func = qt_get(QT_Symbol.new( meth ), env, type: QT_Symbol.new( :LOCALS ) )
+        text_func = @universe.locals[QT_Symbol.new( meth )] || QT_Null::INSTANCE
         return super if text_func._nil?
         uni = @universe.clone
         uni.globals.update(uni.locals)
         uni.stack.clear
         uni.locals.clear
-        uni.qt_set( QT_Variable.new( :__self ), self, env, type: QT_Variable.new( :LOCALS ) )
-        args.locals.each{ |k, v| uni.qt_set(k, v, env, type: QT_Variable.new( :LOCALS) ) }
+        uni.qt_set( QT_Symbol.new( :__self ), self, env, type: QT_Symbol.new( :LOCALS ) )
+        args.locals.each{ |k, v| uni.qt_set(k, v, env, type: QT_Symbol.new( :LOCALS) ) }
         args.stack.each{ |v| uni._append(v, env) }
         args = self.class.new(body: '', universe: uni , parens: '')
-        text_func.qt_call(args, env).qt_get( QT_Number::NEG_1, env, type: QT_Variable.new( :STACK  ) )
+        text_func.qt_call(args, env).qt_get( QT_Number::NEG_1, env, type: QT_Symbol.new( :STACK  ) )
       end
 
       def __uni_method(meth, var, var_name, env)
-        res=qt_method(meth,UniverseOLD.new(stack:[var],locals:{QT_Variable.new(var_name)=>var}),env)
+        res=qt_method(meth,UniverseOLD.new(stack:[var],locals:{QT_Symbol.new(var_name)=>var}),env)
         res._missing? ? nil : res
       end
 
@@ -83,7 +83,7 @@ class QT_Universe < QT_Object
       def qt_length(env, type:)
         res = qt_method(:__len, UniverseOLD.new, env)
         if res._missing?
-          return QT_Number.new( (case type.var_val.upcase
+          return QT_Number.new( (case type.sym_val.upcase
                                  when :GLOBALS then @universe.globals.length
                                  when :LOCALS then @universe.reduced_locals.length
                                  when :STACK then @universe.stack.length
@@ -116,7 +116,7 @@ class QT_Universe < QT_Object
         passed_args = args.clone
         passed_args.globals.update(passed_args.locals)
         passed_args.locals.clear
-        passed_args.locals[ QT_Variable.new :__args ] = passed_args
+        passed_args.locals[ QT_Symbol.new :__args ] = passed_args
         stream = @universe.clone
         env.parser.parse!(env.fork(stream: stream, universe: passed_args)).u
         # func.program_stack.push args
@@ -126,11 +126,11 @@ class QT_Universe < QT_Object
       end
 
       def qt_get(pos, env, type:)  # fix this
-        # res = qt_method(:__get, UniverseOLD.new(stack:[pos],locals:{QT_Variable.new(:type)=>type}), env)
+        # res = qt_method(:__get, UniverseOLD.new(stack:[pos],locals:{QT_Symbol.new(:type)=>type}), env)
         # return res unless res._missing?
-        return self if pos == QT_Variable.new( :'$' )
+        return self if pos == QT_Symbol.new( :'$' )
 
-        type = type.var_val
+        type = type.sym_val
         case type
         when :BOTH then type = @universe.locals.include?(pos) ? :LOCALS : :STACK
         when :NON_STACK then type = @universe.locals.include?(pos) ? :LOCALS : :GLOBALS
@@ -148,8 +148,8 @@ class QT_Universe < QT_Object
       end
 
       def qt_set(pos, val, env, type:)  # fix this
-        return QT_Missing::INSTANCE if pos == QT_Variable.new( :'$' ) # undefined?
-        type = type.var_val
+        return QT_Missing::INSTANCE if pos == QT_Symbol.new( :'$' ) # undefined?
+        type = type.sym_val
         case type
         when :BOTH then type = @universe.locals.include?(pos) ? :LOCALS : pos.is_a?(QT_Number) ? :STACK : :LOCALS
         when :NON_STACK then type = @universe.locals.include?(pos) ? :LOCALS : :GLOBALS
@@ -168,7 +168,7 @@ class QT_Universe < QT_Object
       end
 
       def qt_del(pos, env, type:)
-        type = type.var_val
+        type = type.sym_val
         if type == :BOTH
           if @universe.locals.include?(pos)
             type = :LOCALS
