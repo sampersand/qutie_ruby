@@ -75,6 +75,7 @@ module Operators
 
   EQL_OPER  = Operators::OPERATORS.find{ |e| e.name == :'=' }
   CALL_OPER = Operators::OPERATORS.find{ |e| e.name == :'@' }
+  INDEX_OPER = Operators::OPERATORS.find{ |e| e.name == :'?' }
 
 end
 

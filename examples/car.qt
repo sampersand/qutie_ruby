@@ -1,5 +1,3 @@
-array = [1, 2, 3, 4]
-
 Car = {
   maker  = maker? || honda;
   wheels = wheels? || 4;

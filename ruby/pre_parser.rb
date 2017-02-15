@@ -34,11 +34,11 @@ module PreParser
     # text.gsub!(/(\$|[a-z][a-z_0-9]*\?)([({\[])/i, '\1@\2') # replace 'function(args)' with''
     # text.gsub!(/(\$|[a-z][a-z_0-9]*)([({\[])/i, '\1?@\2') # replace 'function(args)' with''
   FUNCTION_CALL_REG = /([a-z_][a-z_0-9]*)\s*(?=[\[({])/i
-
+  ADD_QUESTION_MARK = /\b([a-z_][a-z_0-9]*)(?=\s*[^=?\s]|$)(?![\w\s]*')\b/i
   def pre_process!(text)
     # text.gsub!(/(?<!__)(self|args)(?!\?)/, '__\1?')
-    # text.gsub!(/import[({\[]([^)\]}]+)[)\]}]/, '(""+`cat \1.qt`!)!.0,!,')
-    text.gsub!(/import[({\[](['"])([^)\]}]+)[)\]}]/, '((\1\1+`cat \1\2.qt`!)!.0,!)!.0')
+    # text.gsub!(/import[({\[](['"])([^)\]}]+)[)\]}]/, '((\1\1+`cat \1\2.qt`!)!.0,!)!.0')
+    text.gsub!(/import[({\[]([^)\]}]+)[)\]}];/, '""+`cat \1.qt`!,!;')
     keys = Functions::FUNCTIONS.keys.collect(&:to_s).join('|')
     while pos = text.index(/(?<=#{keys})[({\[]/)
       parens = get_parens!(text, pos)
@@ -79,38 +79,14 @@ module PreParser
       text.insert(pos, "#{func}#{func_start_paren}#{args_str}")
     end
 
+    # text.gsub!(ADD_QUESTION_MARK, '\1?')
+    # puts text
     # text.gsub!(/(function|class)(\(.*?\))?\s*/i, '') # replace 'function(args)' with''
-    text.gsub!(/([a-z_0-9]+)\s*(\*\*|\+|-|\*|\/|%|\|\||&&|\^)=/i,'\1=\1?\2') # x=
-    text.gsub!(/([a-z_0-9]+)\s*<(\*\*|\+|-|\*|\/|%|\|\||&&|\^)-/i,'\1<-\1?\2') # -x>
-    text.gsub!(/-(\*\*|\+|-|\*|\/|%|\|\||&&|\^)>\s*([a-z_0-9]+)/i,'\1\2?->\2') # <x-
+    # text.gsub!(/([a-z_0-9]+)\s*(\*\*|\+|-|\*|\/|%|\|\||&&|\^)=/i,'\1=\1?\2') # x=
+    # text.gsub!(/([a-z_0-9]+)\s*<(\*\*|\+|-|\*|\/|%|\|\||&&|\^)-/i,'\1<-\1?\2') # -x>
+    # text.gsub!(/-(\*\*|\+|-|\*|\/|%|\|\||&&|\^)>\s*([a-z_0-9]+)/i,'\1\2?->\2') # <x-
     # text.gsub!(/(^\s*__self\?(?:\s*\.\s*.+?)*)\s*\.\s*(.+?)\s*=\s(.+);/,'\1.=(\2,\3)!;') # replace '__self?.x=y' with '__self?.=(y,z)'
-    text.gsub!(/(\+|-)\1([a-z_0-9]+)\b/i,'\2=\2?\11') # ++i
-    # text.gsub!(/\b([a-z_0-9]+)(\+|-)(\2)/i,'($?.-1,.=(\1,\1?\21)!;\1?)!,.0') # i++
-    text.gsub!(/\b([a-z_0-9]+)(\+|-)(\2)/i,'($?.-1,.=(\1,\1?\21)!;\1?)@(),') # i++
+    # text.gsub!(/(\+|-)\1([a-z_0-9]+)\b/i,'\2=\2?\11') # ++i
+    # text.gsub!(/\b([a-z_0-9]+)(\+|-)(\2)/i,'($?.-1,.=(\1,\1?\21)!;\1?)@(),') # i++
   end
-  # def pre_process!(text, show_text: false)
-  #   text.gsub!(/
-  #       new\s+
-  #       ([a-z_][a-z_0-9]+\?)
-  #       [(]
-  #         (.*?)
-  #       [)]/xi, '(i=clone?@(\1)$@();i?.__init@(__self=i?;\2)!;i?)$') # replace 'new cls?()'
-
-  #   text.gsub!(/\b
-  #       ([a-zA-Z_][a-zA-Z_0-9]*\?)
-  #       \.
-  #       ([a-zA-Z_][a-zA-Z_0-9]*)
-  #       ([(])
-  #       \s*/x,'\1.\2@$\3__self=\1;') # replace 'x.y(z)' with '(x.y @(__self=x;z)!)$$'
-  #   text.gsub!(/\b([a-z_0-9]+)(\+|-)(\2)/i,'__temp=\1?;\1=\1?\21;__temp?') # i++
-  #   text.gsub!(/(\+|-)\1([a-z_0-9]+)\b/i,'\2=\2?\11') # ++i
-  
-    
-
-  
-  #   if show_text
-  #     puts text
-  #     puts '---'
-  #   end
-  # end
 end

@@ -10,6 +10,7 @@ require_relative 'plugins/operator/plugin'
 require_relative 'plugins/variable/plugin'
 require_relative 'plugins/comment/plugin'
 require_relative 'plugins/text/plugin'
+require_relative 'plugins/get_var/plugin'
 
 require_relative 'functions'
 require_relative 'constants'
@@ -21,6 +22,7 @@ parser.add_plugin(plugin: Universe)
 parser.add_plugin(plugin: Operators)
 parser.add_plugin(plugin: Comment)
 parser.add_plugin(plugin: Text)
+parser.add_plugin(plugin: GetVar)
 parser.add_builtins(builtins: Functions::FUNCTIONS)
 parser.add_builtins(builtins: Constants::CONSTANTS)
 # ARGV[0] = '/Users/westerhack/code/ruby/qutie/examples/users.qt'
