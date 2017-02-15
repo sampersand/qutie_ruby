@@ -5,6 +5,7 @@ module Functions
       @func = block
     end
     def qt_call(args, env)
+      args = args.qt_eval(env.clone)
       @func.call(args, env) || env.universe << QT_Null::INSTANCE
     end
     def to_s?

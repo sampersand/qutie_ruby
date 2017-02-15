@@ -114,12 +114,11 @@ class QT_Universe < QT_Object
       def qt_call(args, env) # fix this
         raise "Args have to be a universe, not `#{args.class}`" unless args.is_a?(QT_Universe)
         args = args.qt_eval(env.clone)
-        passed_args = args.clone
-        passed_args.globals.update(passed_args.locals)
-        passed_args.locals.clear
-        passed_args.locals[ QT_Variable.new :__args ] = passed_args
+        args.globals.update(args.locals)
+        args.locals.clear
+        args.locals[ QT_Variable.new :__args ] = args
         stream = @universe.clone
-        env.parser.parse!(env.fork(stream: stream, universe: passed_args)).u
+        env.parser.parse!(env.fork(stream: stream, universe: args)).u
         # func.program_stack.push args
         # $QT_CONTEXT.start(stream, self)
         # $QT_CONTEXT.stop(stream)
