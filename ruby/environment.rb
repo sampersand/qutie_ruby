@@ -14,4 +14,8 @@ class Environment
   def fork(stream: @stream, universe: @universe, parser: @parser)
     self.class.new(stream, universe, parser)
   end
+
+  def clone
+    self.class.new(@stream.clone, @universe.clone, @parser.clone)
+  end
 end
