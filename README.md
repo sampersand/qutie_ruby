@@ -9,20 +9,26 @@
     - `500`
     - `3.5`
     - `0xA`
+      - Numbers starting with `0<SOMETHING>` use different bases depending on the `<SOMETHING>`
+  2. `Text` -- You can start and end text with any of: `'`, ``` ` ```, `"` - they all act the same
+    - `'I\'m a text'`
+      - Characters following a `\` have special meaning
+    - `"Spam & eggs"`
+    - ``` `Also a text` ```
 
-  2. `Text` -- You can start and end text with any of: `\`'"`4 - they all act the same */
-    'I\'m a text'    # Characters following a \ have special meaning
-    "Spam & eggs"
-    `Alsi a text`
+  3. `Symbol` -- Similar to `Text`, except you can only have alphanumeric values and no spaces.
+    - `myVariable_0`
+    - `my_variable`
+    - `MY_VARIABLE`
+    - <S>`0myvar`</S>
+      - <b>NOT</b> a `Symbol` - you can only start symbols with letters or an underscore
+  4. `Universe` -- These can represent Arrays, Maps, Functions, and Classes.
+    - These will be covered in a later section (INSERT NUMBER HERE)
 
-  /* 2.3 Symbol -- Similar to text, except you can only have alphanumeric values and no spaces. */
-    myVariable_0
-    my_variable
-    MY_VARIABLE
-    0myvar # NOT a symbol - you can only start symbols with letters or an underscore
 
-  /* 2.4 Universe -- These can represent Arrays, Maps, Functions, and Classes.  */
-    # These will be covered in a later section (INSERT NUMBER HERE)
+
+
+
     # 4a. Universes are created by using any of the three brackets: {([
       {} # an empty universe
       [] # also an empty universe
