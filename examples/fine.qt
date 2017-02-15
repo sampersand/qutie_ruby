@@ -7,16 +7,16 @@ Car = {
   };
 
   drive = { 
-    dist = $?.0 || dist?;
-    song = $?.1 || song?;
-    disp?@( if?@(dist?, 'I drove ' + dist? + ' miles', 'vroom vroom'), end='.'; );
-    disp?@( " I sang " + if?@(song?, song?, "nothing") + "!");
+    dist = $.0 || dist;
+    song = $.1 || song;
+    disp@( if@(dist, 'I drove ' + dist + ' miles', 'vroom vroom'), end='.'; );
+    disp@( " I sang " + if@(song, song, "nothing") + "!");
   };
 
 };
 
-car = Car?@(maker: 'toyota');
-car?.drive( 9.3, 'my fav song' );
-car?.drive( dist: 3; song: 'wheels on bus';);
-car?.drive();
-disp?@(car?);
+car = new Car(maker: 'toyota');
+car.drive( 9.3, 'my fav song' );
+car.drive( dist: 3; song: 'wheels on bus';);
+car.drive();
+disp@(car);

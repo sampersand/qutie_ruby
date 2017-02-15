@@ -29,7 +29,6 @@ parser.add_builtins(builtins: Constants::CONSTANTS)
 file = ARGV[0] or fail "No file!"
 text = open(file, 'r').read
 PreParser::pre_process!(text)
-# puts text
 # exit
 $QT_CONTEXT = Contexts.new
 res=nil

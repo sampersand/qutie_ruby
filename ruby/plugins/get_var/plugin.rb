@@ -3,7 +3,6 @@ module GetVar
   module_function
 
   def next_token!(env)
-    return
     Variable.next_token!(env)
   end
 
