@@ -22,13 +22,14 @@ parser.add_plugin(plugin: Universe)
 parser.add_plugin(plugin: Operators)
 parser.add_plugin(plugin: Comment)
 parser.add_plugin(plugin: Text)
-parser.add_plugin(plugin: GetVar)
+# parser.add_plugin(plugin: GetVar)
 parser.add_builtins(builtins: Functions::FUNCTIONS)
 parser.add_builtins(builtins: Constants::CONSTANTS)
 # ARGV[0] = '/Users/westerhack/code/ruby/qutie/examples/users.qt'
 file = ARGV[0] or fail "No file!"
 text = open(file, 'r').read
 PreParser::pre_process!(text)
+puts text if text.lines.include?("#[DISP_TEXT]\n")
 # exit
 $QT_CONTEXT = Contexts.new
 res=nil

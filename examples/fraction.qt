@@ -1,15 +1,15 @@
 Fraction = {
-  numer = __args.0;
-  denom = __args.1;
-  __text = { __self.numer + '/' + __self.denom; __self };
-  # __num =  { __self.numer /  __self.denom };
-  # __bool = { __self.numer == 0 };
-  # __add = { new Fraction(numer + __args.0 * denom, denom) };//, -> __add_r;
-  # __cmp = { num(__self) <=> __args.0 }, -> __cmp_r;
+  numer = __args?.0;
+  denom = __args?.1;
+  __text = { __self?.numer + '/' + __self?.denom };
+  __num =  { __self?.numer /  __self?.denom };
+  __bool = { __self?.numer == 0 };
+  __add = { new Fraction(numer? + __args?.0 * denom?, denom?) };//, -> __add_r;
+  __cmp = { num(__self?) <=> __args.0 }, -> __cmp_r;
 };
 
-frac = Fraction@(2, 3);
-disp@( frac );
-# disp( frac + 3 );
-# disp@( 3 + frac )!;
-# disp@( 3 + frac <=> 2/3)!;
+frac = Fraction?@(2, 3);
+disp( frac? );
+disp( frac? + 3 );
+disp( 3 + frac? )!;
+disp( 3 + frac? <=> 2/3)!;

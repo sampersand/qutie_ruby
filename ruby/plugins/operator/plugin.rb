@@ -38,7 +38,7 @@ module Operators
       # rhs = universe.spawn_new_stack(new_stack: universe.stack.clone)
       rhs = universe
       token_priority = oper.priority
-      $GET_VAR_USE_VALUE = Operators::OPER_DO_NOT_EVAL_POST.include?(oper)
+      # $GET_VAR_USE_VALUE = Operators::OPER_DO_NOT_EVAL_POST.include?(oper)
 
       catch(:EOF){
         until stream.stack_empty?(env)

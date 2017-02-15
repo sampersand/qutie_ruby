@@ -42,7 +42,7 @@ module PreParser
     keys = Functions::FUNCTIONS.keys.collect(&:to_s).join('|')
     while pos = text.index(/(?<=#{keys})[({\[]/)
       parens = get_parens!(text, pos)
-      text.insert(pos, "@#{parens},")
+      text.insert(pos, "?@#{parens},")
     end
 
     while pos = text.index(CLASS_INSTANCE_REG)
@@ -50,7 +50,7 @@ module PreParser
       class_name=match[1]
       text.sub!(CLASS_INSTANCE_REG, '')
       parens = get_parens!(text, pos)
-      text.insert(pos, "#{class_name}@#{parens},")
+      text.insert(pos, "#{class_name}?@#{parens},")
     end
 
     # while pos = text.index(METHOD_CALL_REG)
@@ -77,7 +77,7 @@ module PreParser
       text.sub!(FUNCTION_DECL_REG, '')
       text.insert(pos, "#{func}#{func_start_paren}#{args_str}")
     end
-
+    # puts text
     # text.gsub!(ADD_QUESTION_MARK, '\1?')
     # puts text
     # text.gsub!(/(function|class)(\(.*?\))?\s*/i, '') # replace 'function(args)' with''

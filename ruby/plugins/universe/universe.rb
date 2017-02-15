@@ -44,8 +44,8 @@ class QT_Universe < QT_Object
     # methods
       def qt_method(meth, args, env)
         # text_func = qt_get(QT_Variable.new( meth ), env, type: QT_Variable.new( :LOCALS ) )
-        text_func = @universe.locals[QT_Variable.new( meth )] || QT_Null::INSTANCE
-        return super if text_func._nil?
+        uni_meth = @universe.locals[QT_Variable.new( meth )] || QT_Null::INSTANCE
+        return super if uni_meth._nil?
         uni = @universe.clone
         uni.globals.update(uni.locals)
         uni.stack.clear
@@ -53,8 +53,14 @@ class QT_Universe < QT_Object
         uni.qt_set( QT_Variable.new( :__self ), self, env, type: QT_Variable.new( :LOCALS ) )
         args.locals.each{ |k, v| uni.qt_set(k, v, env, type: QT_Variable.new( :LOCALS) ) }
         args.stack.each{ |v| uni._append(v, env) }
-        args = self.class.new(body: '', universe: uni , parens: '')
-        text_func.qt_call(args, env).qt_get( QT_Number::NEG_1, env, type: QT_Variable.new( :STACK  ) )
+        args = self.class.new(body: '', universe: uni , parens: ['{', '}'])
+        # uni_meth.qt_call(args, env).qt_get( QT_Number::NEG_1, env, type: QT_Variable.new( :STACK  ) )
+        raise "Args have to be a universe, not `#{args.class}`" unless args.is_a?(QT_Universe)
+        args.globals.update(args.locals)
+        args.locals.clear
+        args.locals[ QT_Variable.new :__args ] = args
+        stream = @universe.clone
+        env.parser.parse!(env.fork(stream: stream, universe: args)).u.qt_get(QT_Number::NEG_1, env, type: QT_Variable.new( :STACK ))
       end
 
       def __uni_method(meth, var, var_name, env)

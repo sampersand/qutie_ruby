@@ -92,12 +92,12 @@ class UniverseOLD
     end
 
     def locals_s
-      reduced_locals.collect{|k, v| [k, (self.equal?(v.respond_to?(:universe) ? v.universe : v) ? QT_Variable.new( :'$' ) : v )]}
+      @locals.collect{|k, v| [k, (self.equal?(v.respond_to?(:universe) ? v.universe : v) ? QT_Variable.new( :'$' ) : v )]}
                       .collect{|k,v| "#{k}: #{v}"}.join(', ')
     end
 
     def to_s(parens=['<', '>'])
-      parens[0] +(if reduced_locals_empty?
+      parens[0] +(if locals_empty?
                     stack_s
                   elsif stack_empty?(nil)
                     locals_s

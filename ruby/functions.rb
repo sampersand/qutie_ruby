@@ -91,7 +91,7 @@ module Functions
 
 
     QT_Variable.new( :text ) => QT_BuiltinFunciton.new{ |args, env|
-      to_text = fetch(args, 0, :__to_text, default: QT_Text::EMPTY)
+      to_text  = fetch(args, 0, :__to_text, default: QT_Text::EMPTY)
       quote1   = fetch(args, 1, :quote, :__quote,  :quote1, :__quote1, default: QT_Text.new( '"' ))
       quote2   = fetch(args, 2, :quote2, :__quote2, default: quote1)
       res = to_text.qt_to_text(env)

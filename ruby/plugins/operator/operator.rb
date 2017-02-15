@@ -76,11 +76,11 @@ module Operators
   EQL_OPER = Operators::OPERATORS.find{ |e| e.name == :'=' }
   CALL_OPER = Operators::OPERATORS.find{ |e| e.name == :'@' }
   INDEX_OPER = Operators::OPERATORS.find{ |e| e.name == :'?' }
-  OPER_DO_NOT_EVAL_POST = [Operators::OPERATORS.find{ |e| e.name == :'.' },
-                           Operators::OPERATORS.find{ |e| e.name == :'->'}]
-  OPER_DO_NOT_EVAL_PRE =  [Operators::OPERATORS.find{ |e| e.name == :'=' },
-                           Operators::OPERATORS.find{ |e| e.name == :'<-'},
-                           Operators::OPERATORS.find{ |e| e.name == :':'}]
+  # OPER_DO_NOT_EVAL_POST = [Operators::OPERATORS.find{ |e| e.name == :'.' },
+  #                          Operators::OPERATORS.find{ |e| e.name == :'->'}]
+  # OPER_DO_NOT_EVAL_PRE =  [Operators::OPERATORS.find{ |e| e.name == :'=' },
+  #                          Operators::OPERATORS.find{ |e| e.name == :'<-'},
+  #                          Operators::OPERATORS.find{ |e| e.name == :':'}]
 end
 
 
