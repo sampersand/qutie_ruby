@@ -1,4 +1,5 @@
 Users = {
+
   {} -> users;
 
   __bool = {
@@ -44,12 +45,4 @@ users = new Users();
 users?.add( new User('sam', 'password123')       );
 users?.add( new User('fred', 'let me in')        );
 users?.add( new User('john', 'i like my dog :P') );
-{
-  #)
-}
 disp( users? );
-
-
-
-
-

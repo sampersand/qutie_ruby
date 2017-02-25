@@ -1,10 +1,10 @@
  
-1. Comments can be made in one of three ways:
+1. Comments -- Comments can be made in one of three ways:
   - Started by `/*`, and ended by `*/`.
   - Started by `//`, and ended by the end of the line.
   - Started by `#`, and ended by the end of the line.
 
-2. There are Four basic `Types`:
+2. `Types` -- There are four basic Types
   1. `Number` -- There is no distinction between Integers and Floating Point numbers
     - `500`
     - `3.5`
@@ -24,8 +24,8 @@
       - <b>NOT</b> a `Symbol` - you can only start symbols with letters or an underscore
   4. `Universe` -- These can represent Arrays, Maps, Functions, and Classes.
     - These will be covered in a later section (INSERT NUMBER HERE)
-
-
+3. Operators
+   - All thes
 
 
 

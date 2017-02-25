@@ -14,6 +14,8 @@ module Constants
     QT_Symbol.new( :math_e   ) => QT_Number::E,
     QT_Symbol.new( :math_pi  ) => QT_Number::PI,
     QT_Symbol.new( :math_nan ) => QT_Number::NaN,
+    QT_Symbol.new( :math_inf ) => QT_Number::Infinity,
+    QT_Symbol.new( :math_neg_inf ) => QT_Number::Neg_Infinity,
     QT_Symbol.new( :NEG_1 ) =>  QT_Number::NEG_1,
     # QT_Symbol.new( :QT_Symbol ) => QT_Symbol.new(:'').qt_to_type(nil),
     # QT_Symbol.new( :QT_Number ) => QT_Number.new(:'').qt_to_type(nil),

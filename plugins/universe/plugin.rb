@@ -48,7 +48,6 @@ module Universe
           #     next
           #   end
           # end
-
         if L_PARENS.any?{ |lp| lp._eql?( stream._peek(env), env ) }
           parens += 1
         elsif R_PARENS.any?{ |rp| rp._eql?( stream._peek(env), env ) }

@@ -31,14 +31,15 @@ class QT_Number < QT_Object
   end
 
   # consts
-    NEG_1 = new( -1         )
-    ZERO  = new(  0         )
-    ONE   = new(  1         )
-    TWO   = new(  2         )
-
-    E     = new( Math::E    )
-    PI    = new( Math::PI   )
-    NaN   = new( Float::NAN )
+    NEG_1        = new( -1               )
+    ZERO         = new(  0               )
+    ONE          = new(  1               )
+    TWO          = new(  2               )
+    E            = new(  Math::E         )
+    PI           = new(  Math::PI        )
+    NaN          = new(  Float::NAN      )
+    Infinity     = new(  Float::INFINITY )
+    Neg_Infinity = new( -Float::INFINITY )
 
   # qt methods
     # conversion
