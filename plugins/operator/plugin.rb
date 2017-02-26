@@ -35,42 +35,20 @@ module Operators
       universe = env.universe
       stream = env.stream
       parser = env.parser
-      # rhs = universe.spawn_new_stack(new_stack: universe.stack.clone)
-      rhs = universe
+      rhs = universe.spawn_new_stack(new_stack: universe.stack.clone)
+      # rhs = universe
       token_priority = oper.priority
       catch(:EOF){
         until stream.stack_empty?(env)
           ntoken = parser.next_token!(env.fork(stream: stream.clone, universe: rhs))
-          # if ntoken[0] =~ /[-+*\/]/ and ntoken[1] == Operator and rhs.stack_empty?  # this is dangerous
-          #   ntoken = parser.next_token!(stream: stream,
-          #                               universe: rhs,  
-          #                               parser: parser)
-          #   rhs << fix_lhs(ntoken[0])
-          #   ntoken[1].handle(token: ntoken[0],
-          #                    stream: stream,
-          #                    universe: rhs,
-          #                    parser: parser)
-          # else
-            break if token_priority <= ( ntoken[0].is_a?(QT_Operator) ? ntoken[0].priority : 0 )
-            ntoken = parser.next_token!(env.fork(universe: rhs))
-            ntoken[1].handle(ntoken[0], env.fork(universe: rhs))
-          # end
+          break if token_priority <= ( ntoken[0].is_a?(QT_Operator) ? ntoken[0].priority : 0 )
+          ntoken = parser.next_token!(env.fork(universe: rhs))
+          ntoken[1].handle(ntoken[0], env.fork(universe: rhs))
         end
         nil
       }
-      # rhs.stack.shift(universe.stack.length);
-      # # p rhs.stack
-      # raise "Ambiguous rhs for operator `#{oper}`: #{rhs.stack}" unless rhs.stack.length == 1
       rhs.stack.pop || QT_Null::INSTANCE
     end
-
-    # def fix_lhs(token)
-    #   case token
-    #   when '**'     then QT_Number::Math_E
-    #   when '*', '/' then QT_Number::ONE
-    #   when '+', '-' then QT_Number::ZERO
-    #   end
-    # end
 end
 
 

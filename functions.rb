@@ -56,8 +56,18 @@ module Functions
       start = fetch(args, 0, :__start)
       cond =  fetch(args, 1, :__cond)
       incr =  fetch(args, 2, :__incr)
-      body =  fetch(args, 3, :__body)
-      start.clone.qt_eval(env)
+      body =  fetch(args, 3, :__body, default: nil)
+      unless body
+        ntoken = env.p.next_token!(env.clone)
+        if Operators::DELIMS.include?(ntoken[0])
+          raise unless Operators::DELIMS.include?(env.p.next_token!(env)[0]) # get rid of the , or ;
+          body = env.p.next_token!(env)[0]
+        end
+      end
+      fail "Cannot find body for `for`" unless body
+      p body
+      # exit
+      # start.clone.qt_eval(env)
       while cond.clone.qt_eval(env).pop.qt_to_bool(env).bool_val
         body.clone.qt_eval(env)
         incr.clone.qt_eval(env)

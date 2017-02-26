@@ -186,6 +186,13 @@ class QT_Universe < QT_Object
       end
 
       def qt_cmp(r, e) __uni_method(:__cmp, r, :__right, e) || super end
+      def qt_eql(r, e) __uni_method(:__t_e, r, :__right, e) || r.is_a?(QT_Universe) && QT_Boolean::get( @universe == r.universe ) end
+      def qt_neq(r, e) __uni_method(:__t_n, r, :__right, e) || super end
+      def qt_lth(r, e) __uni_method(:__t_l, r, :__right, e) || super end
+      def qt_gth(r, e) __uni_method(:__t_g, r, :__right, e) || super end
+      def qt_leq(r, e) __uni_method(:__t_l, r, :__right, e) || super end
+      def qt_geq(r, e) __uni_method(:__t_g, r, :__right, e) || super end
+
       def qt_add(r, e) __uni_method(:__add, r, :__right, e) || super end
       def qt_sub(r, e) __uni_method(:__sub, r, :__right, e) || super end
       def qt_mul(r, e) __uni_method(:__mul, r, :__right, e) || super end
@@ -193,7 +200,15 @@ class QT_Universe < QT_Object
       def qt_mod(r, e) __uni_method(:__mod, r, :__right, e) || super end
       def qt_pow(r, e) __uni_method(:__pow, r, :__right, e) || super end
 
+
       def qt_cmp_l(r, e) __uni_method(:__cmp_l, r, :__right, e) || super end
+      def qt_eql_l(r, e) __uni_method(:__eql_l, r, :__right, e) || r.is_a?(QT_Universe) && QT_Boolean::get( @universe == r.universe ) end
+      def qt_neq_l(r, e) __uni_method(:__neq_l, r, :__right, e) || super end
+      def qt_lth_l(r, e) __uni_method(:__lth_l, r, :__right, e) || super end
+      def qt_gth_l(r, e) __uni_method(:__gth_l, r, :__right, e) || super end
+      def qt_leq_l(r, e) __uni_method(:__leq_l, r, :__right, e) || super end
+      def qt_geq_l(r, e) __uni_method(:__geq_l, r, :__right, e) || super end
+
       def qt_add_l(r, e) __uni_method(:__add_l, r, :__right, e) || super end
       def qt_sub_l(r, e) __uni_method(:__sub_l, r, :__right, e) || super end
       def qt_mul_l(r, e) __uni_method(:__mul_l, r, :__right, e) || super end
@@ -201,7 +216,15 @@ class QT_Universe < QT_Object
       def qt_mod_l(r, e) __uni_method(:__mod_l, r, :__right, e) || super end
       def qt_pow_l(r, e) __uni_method(:__pow_l, r, :__right, e) || super end
 
+
       def qt_cmp_r(l, e) __uni_method(:__cmp_r, l, :__left, e) || super end
+      def qt_eql_r(l, e) __uni_method(:__eql_r, l, :__left, e) || r.is_a?(QT_Universe) && QT_Boolean::get( @universe == l.universe ) end
+      def qt_neq_r(l, e) __uni_method(:__neq_r, l, :__left, e) || super end
+      def qt_lth_r(l, e) __uni_method(:__lth_r, l, :__left, e) || super end
+      def qt_gth_r(l, e) __uni_method(:__gth_r, l, :__left, e) || super end
+      def qt_leq_r(l, e) __uni_method(:__leq_r, l, :__left, e) || super end
+      def qt_geq_r(l, e) __uni_method(:__geq_r, l, :__left, e) || super end
+
       def qt_add_r(l, e) __uni_method(:__add_r, l, :__left, e) || super end
       def qt_sub_r(l, e) __uni_method(:__sub_r, l, :__left, e) || super end
       def qt_mul_r(l, e) __uni_method(:__mul_r, l, :__left, e) || super end

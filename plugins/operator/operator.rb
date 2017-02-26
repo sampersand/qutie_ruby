@@ -75,6 +75,7 @@ module Operators
 
   EQL_OPER  = Operators::OPERATORS.find{ |e| e.name == :'=' }
   CALL_OPER = Operators::OPERATORS.find{ |e| e.name == :'@' }
+  DELIMS = Operators::OPERATORS.find_all{ |e| [:',', :';'].include?(e.name) }
 
 end
 

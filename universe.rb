@@ -141,7 +141,9 @@ class UniverseOLD
   def _append(val, env)
     @stack << val
   end
-
+  def ==(other)
+    @stack == other.stack && @locals == other.locals
+  end
 end
 
 

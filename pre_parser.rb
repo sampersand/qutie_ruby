@@ -31,9 +31,9 @@ module PreParser
   NEW_CLS_REG = /new\s+([a-z_][a-z_0-9]+)/i
   METHOD_CALL_REG = /([a-z_][a-z_0-9]*\?(?:\.[a-z_0-9]*)*)\.([a-z_0-9]*)(?=[\[({])/i
   # METHOD_CALL_REG = /([a-z_][a-z_0-9]*\?)\.([a-z_0-9]*)(?=[\[({])/i
-  FUNCITON_DECL_REG = /([a-z_][a-z_0-9 ]*\s*=\s*)function\s*[(]([^)]*?)[)]\s*([{(\[])/i # THIS IS BAD
+  FUNCITON_DECL_REG = /([a-z_][a-z_0-9 ]*\s*=\s*)function\s*[(]([^)]*?)[)]([{(\[])/i # THIS IS BAD
   CLASS_INSTANCE_REG = /new\s+([a-z_][a-z_0-9]*)(?=[(])/i
-  FUNCTION_CALL_REG = /([a-z_][a-z_0-9]*)\s*(?=[\[({])/i
+  FUNCTION_CALL_REG = /([a-z_][a-z_0-9]*)(?=\()/i
   def pre_process!(text)
     text.gsub!(/import[({\[](['"])([^)\]}]+)[)\]}]/, '((\1\1+`cat \1\2.qt`!)!.0,!)!.0')
     keys = Functions::FUNCTIONS.keys.collect(&:to_s).join('|')
@@ -79,8 +79,8 @@ module PreParser
     text.gsub!(/([a-z_0-9]+)\s*(\*\*|\+|-|\*|\/|%|\|\||&&|\^)=/i,'\1=\1?\2') # x=
     text.gsub!(/([a-z_0-9]+)\s*<(\*\*|\+|-|\*|\/|%|\|\||&&|\^)-/i,'\1<-\1?\2') # -x>
     text.gsub!(/-(\*\*|\+|-|\*|\/|%|\|\||&&|\^)>\s*([a-z_0-9]+)/i,'\1\2?->\2') # <x-
-    text.gsub!(/(\+|-)\1([a-z_0-9]+)\b/i,'\2=\2?\11') # ++i
-    text.gsub!(/\b([a-z_0-9]+)(\+|-)(\2)/i,'($?.-1,.=(\1,\1?\21)!;\1?)@(),') # i++
-    puts text
+    text.gsub!(/(\+|-)\1([a-z_0-9]+)\?/i,'(\2=\2?\11)!.0') # ++i
+    text.gsub!(/\b([a-z_0-9]+)(\+|-)(\2)/i,'\1($?.-1,.=(\1,\1?\21)!;\1?)@(),') # i++
+    # puts text
   end
 end

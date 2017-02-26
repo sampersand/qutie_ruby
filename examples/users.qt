@@ -1,4 +1,5 @@
 Users = {
+  a -> b;
 
   {} -> users;
 
@@ -25,24 +26,29 @@ Users = {
     len( __self?.users, STACK )
   };
 
-  add = {
-    $?.0 || $?.user? -> user;
+  __add = {
+    -||> user;
     __self?.users .= [len(__self?), user?]!;
-  };
-
+    __self?
+  }, -> add;
 };
 
 User = {
-  $?.1 || $?.pass -> pass; ;#pop the password
-  $?.0 || $?.name -> name; ;#pop the username
+  -||> pass; 
+  -||> name; 
   __text = { '`' + __self?.name + '`=' + __self?.pass };
 };
 
-# users?.add@(__self=users?; new User('john', 'password123') )!;
-# users?.add@(__self=users?; new User('fred', 'lemmiein') )!;
-# users?.add@(__self=users?; new User('jill', 'ilikepie') )!;
 users = new Users();
-users?.add( new User('sam', 'password123')       );
-users?.add( new User('fred', 'let me in')        );
-users?.add( new User('john', 'i like my dog :P') );
-disp( users? );
+users += new User('sam', 'password123');
+users += new User('john', 'i like my dog :P');
+users?.add( new User('fred', 'let me in') );
+disp( users? ); 
+
+
+
+
+
+
+
+
