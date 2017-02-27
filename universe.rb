@@ -145,23 +145,3 @@ class UniverseOLD
     @stack == other.stack && @locals == other.locals
   end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
