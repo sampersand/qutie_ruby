@@ -7,7 +7,7 @@ class Environment
     @stream = stream
     @universe = universe
     @parser = parser
-    fail @stream.class.to_s unless  @universe.is_a?(UniverseOLD) || @universe.is_a?(QT_Universe)
+    fail @stream.class.to_s unless @universe.is_a?(UniverseOLD) || @universe.is_a?(QT_Universe)
     fail @universe.class.to_s unless @universe.is_a?(UniverseOLD) || @universe.is_a?(QT_Universe)
     fail @parser.class.to_s unless @parser.is_a?(Parser)
   end

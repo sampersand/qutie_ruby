@@ -1,7 +1,9 @@
-       1       
-   2       3   
- 4   5   6  131
+require 'test/unit'
 
-        2
-   4       3   
- _   5   6  131
+module Test::Unit::Assertions
+  def assert_contains(expected_substring, string, *args)
+    assert_match expected_substring, string, *args
+  end
+end
+
+puts Test::Unit::Assertions::methods.select{|e| e.to_s =~ /assert/ }
