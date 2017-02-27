@@ -33,8 +33,8 @@ module Functions
       cond     = fetch(args, env, 0, :__cond)
       if_true  = fetch(args, env, 1, QT_True::INSTANCE, :true, can_pass_block: true)
       true_block = $BLOCK_GIVEN
-      if true_block && ELSE_KEYWORD_FOR_IF == env.p.next_token!(env.clone)[0]
-        raise unless ELSE_KEYWORD_FOR_IF == env.p.next_token!(env)[0]
+      if true_block && ELSE_KEYWORD_FOR_IF == env.p.next_token(env.clone)[0]
+        raise unless ELSE_KEYWORD_FOR_IF == env.p.next_token(env)[0]
       end
       if_false = fetch(args, env, 2, QT_False::INSTANCE, :false, default: QT_Null::INSTANCE, can_pass_block: true)
       false_block = $BLOCK_GIVEN
@@ -50,8 +50,8 @@ module Functions
       if_false = fetch(args, env, 1, QT_False::INSTANCE, :false, can_pass_block: false)
       false_block = $BLOCK_GIVEN
 
-      if false_block && ELSE_KEYWORD_FOR_IF == env.p.next_token!(env.clone)[0]
-        raise unless ELSE_KEYWORD_FOR_IF == env.p.next_token!(env)[0]
+      if false_block && ELSE_KEYWORD_FOR_IF == env.p.next_token(env.clone)[0]
+        raise unless ELSE_KEYWORD_FOR_IF == env.p.next_token(env)[0]
       end
 
       if_true = fetch(args, env, 2, QT_True::INSTANCE, :true, default: QT_Null::INSTANCE, can_pass_block: false)
@@ -216,11 +216,11 @@ module Functions
       return res unless res.equal?( Ignore )
     end
     if can_pass_block
-      ntoken = env.p.next_token!(env.clone)
-      raise unless Operators::DELIMS.include?(env.p.next_token!(env)[0]) if Operators::DELIMS.include?(ntoken[0])
+      ntoken = env.p.next_token(env.clone)
+      raise unless Operators::DELIMS.include?(env.p.next_token(env)[0]) if Operators::DELIMS.include?(ntoken[0])
       # ^^ get rid of the [';' or ','] outside the function.
       $BLOCK_GIVEN = true
-      return env.p.next_token!(env)[0]
+      return env.p.next_token(env)[0]
     end
     raise "Cannot find args for #{search_fors}" if default.equal?(Ignore)
     default

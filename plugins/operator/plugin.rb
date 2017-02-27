@@ -3,7 +3,7 @@ module Operators
   # handling the operators
     module_function
 
-    def next_token!(env)
+    def next_token(env)
       stream = env.stream
       OPERATORS.find do |oper|
         if oper.name == stream._peek( env, oper.name.length ).source_val
@@ -41,9 +41,9 @@ module Operators
       token_priority = oper.priority
       catch(:EOF){
         until stream.stack_empty?(env)
-          ntoken = parser.next_token!(env.fork(stream: stream.clone, universe: rhs))
+          ntoken = parser.next_token(env.fork(stream: stream.clone, universe: rhs))
           break if token_priority <= ( ntoken[0].is_a?(QT_Operator) ? ntoken[0].priority : 0 )
-          ntoken = parser.next_token!(env.fork(universe: rhs))
+          ntoken = parser.next_token(env.fork(universe: rhs))
           ntoken[1].handle(ntoken[0], env.fork(universe: rhs))
         end
         nil

@@ -24,7 +24,7 @@ module Comment
     :retry
   end
 
-  def next_token!(env)
+  def next_token(env)
     next_single!(env) || next_multi!(env)
   end
 end

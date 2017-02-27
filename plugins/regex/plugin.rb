@@ -22,7 +22,7 @@
 #     else chr
 #     end
 #   end
-#   def next_token!(stream:, **_)
+#   def next_token(stream:, **_)
 #     return unless stream.peek_any?(vals: QUOTES) # if quotes change length this will break
 #     quote = stream.next # if quotes change length this will break
 #     body = quote

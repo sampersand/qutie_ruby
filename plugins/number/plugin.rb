@@ -49,7 +49,7 @@ module Number
     QT_Number::from( res, env, base: base )
   end
 
-  def next_token!(env)
+  def next_token(env)
     return unless DECIMAL_REGEX._match?(env.stream._peek(env), env)
 
     if BASE_START_REGEX._match?(env.stream._peek(env, 2), env)

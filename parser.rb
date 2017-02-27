@@ -16,7 +16,7 @@ class Parser
   end
 
   def add_plugin(plugin:)
-    assert_respond_to(plugin, :next_token!, msg: "`plugin` passed to Parser#add_plugin doesn't respond to `next_token!`")
+    assert_respond_to(plugin, :next_token, msg: "`plugin` passed to Parser#add_plugin doesn't respond to `next_token`")
     @plugins.unshift plugin
   end
 
@@ -42,7 +42,7 @@ class Parser
     assert_is_a(universe, NilClass, QT_Universe, msg: "`universe` passed to Parser#process isn't nil or a QT_Universe")
     universe ||= UniverseOLD.new
     assert_is_a(stream, QT_Universe, msg: "`stream` (from `UniverseOLD.new`) didn't return a QT_Universe")
-    assert_is_a(unvierse, QT_Universe, msg: "`universe` (from `UniverseOLD.new` or passed in) isn't a QT_Universe")
+    assert_is_a(universe, QT_Universe, msg: "`universe` (from `UniverseOLD.new` or passed in) isn't a QT_Universe")
 
     assert_is_a(@builtins, Hash, msg: "`@builtins` isn't a Hash")
     assert_is_a(additional_builtins, Hash, msg: "`additional_builtins` isn't a Hash")
@@ -58,7 +58,7 @@ class Parser
       res
     end
     res = parse!(env: env) #dont need to copy stream cause we just made it.
-    assert_is_a(res, QT_Universe, msg: "`parse!` didn't return a QT_Universe")
+    assert_is_a(res, Environment, msg: "`parse!` didn't return an Environment, bu: #{res.class}")
     res
   end
 
@@ -67,13 +67,13 @@ class Parser
     catch(:EOF){ 
       until env.stream.stack_empty?(env)
         
-        res = next_token!(env)
-        assert_is_a(res, Array, msg: "Parser#next_token! didn't return an Array")
+        res = next_token(env)
+        assert_is_a(res, Array, msg: "Parser#next_token didn't return an Array")
         
         token, plugin = res
-        assert_is_a(token, QT_Object, msg: "`token` returned from Parser#next_token! isn't a QT_Object")
+        assert_is_a(token, QT_Object, msg: "`token` returned from Parser#next_token isn't a QT_Object")
 
-        assert_respond_to(plugin, :handle, msg: "`plugin` returned from Parser#next_token! doesn't have attribute `handle`")
+        assert_respond_to(plugin, :handle, msg: "`plugin` returned from Parser#next_token doesn't have attribute `handle`")
         plugin.handle(token, env)
 
       end
@@ -83,23 +83,23 @@ class Parser
     env
   end
 
-  def next_token!(env)
-    self.class.next_token!(env)
+  def next_token(env)
+    self.class.next_token(env)
   end
 
-  def self.next_token!(env)
-    assert_is_a(env, Environment, msg: "`env` passed to Parser#next_token! isn't an Environment")
+  def self.next_token(env)
+    assert_is_a(env, Environment, msg: "`env` passed to Parser#next_token isn't an Environment")
 
     env.p.plugins.each do |pl|
-      token = pl.next_token!(env)
+      token = pl.next_token(env)
 
-      assert_is_a(token, NilClass, QT_Object, Symbol, msg: "`#{pl.to_s}`#next_token! didn't return nil or a QT_Object")
+      assert_is_a(token, NilClass, QT_Object, Symbol, msg: "`#{pl.to_s}`#next_token didn't return nil or a QT_Object")
       next unless token
       if token == :retry
-        res = next_token!(env)
-        assert_is_a(res, Array, msg: "Parser#next_token! didn't return an Array")
+        res = next_token(env)
+        assert_is_a(res, Array, msg: "Parser#next_token didn't return an Array")
       else
-        assert(!token.is_a?(Symbol), msg: "`#{pl.to_s}`#next_token! returned a Symbol that isn't :retry (#{token})")
+        assert(!token.is_a?(Symbol), msg: "`#{pl.to_s}`#next_token returned a Symbol that isn't :retry (#{token})")
         res = [token, pl]
       end
       return res

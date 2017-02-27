@@ -21,7 +21,7 @@ module Text
     else chr
     end
   end
-  def next_token!(env)
+  def next_token(env)
     stream = env.stream
 
     return unless QUOTES.any?{ |q| q._eql?( stream._peek(env, q._length ), env)}

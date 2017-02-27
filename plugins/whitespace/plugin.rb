@@ -5,7 +5,7 @@ module Whitespace
 
   module_function
 
-  def next_token!(env)
+  def next_token(env)
     stream = env.stream
     unless WHITESPACE_REGEX.qt_match(stream._peek(env), env)._rb_false?
       stream._next(env) # and ignore

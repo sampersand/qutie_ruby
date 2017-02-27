@@ -12,7 +12,7 @@ module Universe
   ESCAPE = QT_Default.new( :'\\' )
   module_function
   
-  def next_token!(env)
+  def next_token(env)
     stream = env.stream
     universe = env.universe
     return unless L_PARENS.any?{ |lp| lp._eql?( stream._peek(env), env ) }
