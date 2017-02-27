@@ -1,4 +1,12 @@
-Name = prompt?@("What's your name?", ' ')!;
-Age =  prompt?@("What's your age?", ' ')!;
-Favourite Colour =  prompt?@("What's your favourite colour?", ' ')!;
-disp?@( "Hello," Name? "(age " Age? ") Your favourite colour is:" Favourite Colour? ", no?", sep=" ";)!;
+prompt_me = {
+  Name = prompt("What's your name?", ' ');
+  Age =  prompt("What's your age?", ' ');
+  Favourite Colour =  prompt("What's your favourite colour?", ' ');
+  disp( "Hello," Name? "(age " Age? ") Your favourite colour is:" Favourite Colour? ", no?", sep=" ";);
+};
+
+foo = {
+  disp('foo bar baz!!!');
+  1,2,3
+};
+add = { -> a; + a? };

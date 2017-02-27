@@ -40,8 +40,16 @@ class QT_Number < QT_Object
     NaN          = new(  Float::NAN      )
     Infinity     = new(  Float::INFINITY )
     Neg_Infinity = new( -Float::INFINITY )
-
   # qt methods
+      def qt_get(item, env, type:)
+        return QT_Missing::INSTANCE unless item.is_a?(QT_Symbol)
+        case item.sym_val
+        when :floor then QT_Number.new( @num_val.floor )
+        when :ceil  then QT_Number.new( @num_val.ceil )
+        else QT_Missing::INSTANCE
+        end
+      end
+
     # conversion
       def qt_to_num(_env)
         clone
@@ -49,7 +57,6 @@ class QT_Number < QT_Object
       def qt_to_bool(_env)
         QT_Boolean::get(@num_val != 0)
       end
-
     # operators
         private
           def numer_func_l(right, env,  lmeth)

@@ -23,7 +23,8 @@ module Operators
       #                             operand: token,
       #                             lhs_vars: lhs_vars,
       #                             rhs_vars: rhs_vars)
-      warn("`#{oper}` returned non-QT_Object `#{result.class}`") unless true == result || result.is_a?(QT_Object)
+
+      fail("`#{oper}` returned non-QT_Object `#{result.class}`") unless true == result || result.is_a?(QT_Object)
       env.universe << result if result.is_a?(QT_Object)
     end
 

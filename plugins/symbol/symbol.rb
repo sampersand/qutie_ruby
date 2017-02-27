@@ -24,8 +24,8 @@ class QT_Symbol < QT_Object
 
   # qt methods
     # conversion
-      def qt_equal(right)
-        self == right
+      def qt_eql(right, env)
+        QT_Boolean::get( self == right )
       end
 
       def qt_to_text(_env)

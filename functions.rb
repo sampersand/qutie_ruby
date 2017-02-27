@@ -1,3 +1,4 @@
+
 require_relative 'plugins/default/default'
 module Functions
   class QT_BuiltinFunciton < QT_Object
@@ -19,8 +20,14 @@ module Functions
     QT_Symbol.new( :switch ) => QT_BuiltinFunciton.new{ |args, env|
       switch_on = fetch(args, env, 0, :__switch_on)
       cases = fetch(args, env, :__cases, default: args, can_pass_block: true)
+
       cases = cases.qt_eval(env) if $BLOCK_GIVEN
-      cases.qt_get(switch_on, env, type: QT_Symbol.new( :BOTH ))
+      res = cases.qt_get(switch_on, env, type: QT_Symbol.new( :BOTH ))
+      if res._missing?
+        cases.qt_get(QT_Symbol.new( :DEFAULT ), env, type: QT_Symbol.new( :BOTH ))
+      else
+        res
+      end
     },
     QT_Symbol.new( :if ) => QT_BuiltinFunciton.new{ |args, env|
       cond     = fetch(args, env, 0, :__cond)
@@ -104,13 +111,20 @@ module Functions
       QT_Text.new( STDIN.gets(endl.text_val).chomp )
     },
 
-    QT_Symbol.new( :syscall ) => QT_BuiltinFunciton.new{ |args, env|
-      sep = fetch(args, env, :sep, default: QT_Text.new(""))
-      args.locals[QT_Symbol.new( :sep ) ] ||= sep
-      to_call = FUNCTIONS[ QT_Symbol.new( :text ) ].qt_call(args, env) 
-      QT_Text.new( `#{to_call}` )
+    QT_Symbol.new( :read_file ) => QT_BuiltinFunciton.new{ |args, env|
+      file_path = fetch(args, env, 0, :file, :file_path).qt_to_text(env)
+      file = open(file_path.text_val, 'r')
+      QT_Text.new( file.read, quotes: file_path.quotes )
     },
-
+    QT_Symbol.new( :write_file ) => QT_BuiltinFunciton.new{ |args, env|
+      file_path = fetch(args, env, 0, :file, :file_path).qt_to_text(env)
+      text = fetch(args, env, 1, :text).qt_to_text(env)
+      file = open(file_path.text_val, 'w'){ |f|
+        f.write(text.text_val)
+      }
+      QT_Null::INSTANCE
+      # QT_Text.new( file.read, quotes: file_path.quotes )
+    },
 
     QT_Symbol.new( :text ) => QT_BuiltinFunciton.new{ |args, env|
       to_text = fetch(args, env, 0, :__to_text, default: QT_Text::EMPTY)
@@ -164,14 +178,11 @@ module Functions
     },
 
     QT_Symbol.new( :import ) => QT_BuiltinFunciton.new{ |args, env|
-      file = args.stack.fetch(0){ args.locals.fetch(:__file) }
-      # passed_args = args.stack.fetch(1){ args.locals.fetch(:__args, universe.class.new) }
-      pre_process = args.stack.fetch(2){ args.locals.fetch(:__preprocess, true) }
-
+      file = fetch(args, env, 0, :__file)
+      pre_process = fetch(args, env, 1, :__preprocess, default: QT_True::INSTANCE).qt_to_bool(env)
       imported = open(file).read
-
-      PreParser.pre_process!(imported) if pre_process
-      # parser.process(input: imported, additional_builtins: passed_args.locals)
+      PreParser.pre_process!(imported) if pre_process.bool_val
+      parser.process(input: imported, additional_builtins: passed_args.locals)
 
     },
 
@@ -214,18 +225,6 @@ module Functions
     raise "Cannot find args for #{search_fors}" if default.equal?(Ignore)
     default
   end
-
-  # def qutie_func(arg, universe, parser, name)
-  #   uni = UniverseOLD.new(globals: universe.globals.clone.update(universe.locals))
-  #   uni.locals[:__self] ||= arg
-  #   if arg.respond_to?(:locals) && arg.locals.include?(name)
-  #     func = arg.locals[name] or fail "no #{name}` function for #{arg}"
-  #     parser.parse!(stream: func.clone, universe: uni).stack.last
-  #   else
-  #     raise unless block_given?
-  #     yield(arg, universe, parser)
-  #   end
-  # end
 
 end
 

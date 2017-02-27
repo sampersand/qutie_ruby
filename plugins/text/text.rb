@@ -9,13 +9,13 @@ class QT_Text < QT_Object
 
   def initialize(text_val, quotes: nil)
     @text_val = text_val
-    raise unless text_val.is_a?(String)
+    raise text_val.class.to_s unless text_val.is_a?(String)
     @quotes = quotes || gen_quotes
   end
 
   EMPTY = new( '', quotes: [ QT_Default.new( :"'" ), QT_Default.new( :"'" ) ] )
   def gen_quotes
-    ['' ,'']
+    [QT_Default.new( :"'" ), QT_Default.new( :"'" ) ]
     # if @text_val =~ /(?<!\\)'/
     #   if @text_val =~ /(?<!\\)"/
 
@@ -69,12 +69,12 @@ class QT_Text < QT_Object
       def qt_eval(env)
         raise unless @quotes[0] == @quotes[1] #why wouldn't they be?
         case @quotes[0].text_val
-        when '`' then self.class.new( `#{@text_val}`, quotes: @quotes )
+        when '`' then self.class.new( `#{@text_val}`.chomp, quotes: @quotes )
         when "'" 
           result = env.parser.process( input: @text_val ).u
           QT_Universe.new(body: '', universe: result, parens: ['<', '>']) #to fix
         when '"' 
-          result = env.parser.process( input: @text_val, universe: env.universe ).u
+          result = env.parser.process( input: @text_val, universe: env.u ).u
           QT_Universe.new(body: '', universe: result, parens: ['<', '>']) #to fix
         else fail "IDK HOW TO DEAL WITH QUOTE TYPE #{@quotes[0]}"
         end

@@ -21,7 +21,8 @@ class Parser
     @builtins.update builtins
   end
 
-  def process(input:, additional_builtins: {}, universe: nil)
+  def process(input:, additional_builtins: {}, universe: nil, pre_proc: true)
+    PreParser::pre_process!(input) if pre_proc
     stream = UniverseOLD.new
     universe ||= UniverseOLD.new
     

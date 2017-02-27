@@ -1,15 +1,35 @@
 Fraction = {
-  numer = __args?.0;
-  denom = __args?.1;
+  -||> denom;
+  -||> numer;
   __text = { __self?.numer + '/' + __self?.denom };
   __num =  { __self?.numer /  __self?.denom };
   __bool = { __self?.numer == 0 };
-  __add = { new Fraction(numer? + __args?.0 * denom?, denom?) };//, -> __add_r;
+  __type = { Fraction_CLASS };
+  __add = {
+    -> rhs;
+    new_numer = __self?.numer;
+    new_denom = __self?.denom;
+    switch(type(rhs?)){
+      Fraction_CLASS = {
+        new_numer = __self?.numer * rhs?.denom + rhs?.numer * __self?.denom;
+        new_denom = __self?.denom * rhs?.denom;
+      };
+      DEFAULT = {
+        new_numer = __self?.numer + rhs? * __self?.denom
+      }
+    ),!;
+    new Fraction(new_numer?, new_denom?)
+  }, -> __add_r;
+  a=3;
   __cmp = { num(__self?) <=> __args?.0 }, -> __cmp_r;
 };
 
-frac = new Fraction(2, 3);
-disp( frac? );
-disp( frac? + 3 );
-# disp?@( 3 + frac? )!;
-# disp?@( 3 + frac? <=> 2/3)!;
+frac1 = new Fraction(2, 3);
+frac2 = new Fraction(3, 4);
+disp( frac1? );
+disp( frac1? + 3 );
+disp( frac1? + frac2? );
+
+
+
+

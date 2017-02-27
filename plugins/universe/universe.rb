@@ -74,6 +74,12 @@ class QT_Universe < QT_Object
         throw(:ERROR, QTE_Type.new(env, " `__num` returned a non-QT_Number value! `#{res}`")) unless res.is_a?(QT_Number)
         res
       end
+      def qt_to_type(env)
+        res = qt_method(:__type, UniverseOLD.new, env)
+        return super if res._missing?
+        # throw(:ERROR, QTE_Type.new(env, " `qt_to_type` returned a non-QT_Number value! `#{res}`")) unless res.is_a?(QT_Number)
+        res
+      end
       def qt_to_bool(env)
         res = qt_method(:__bool, UniverseOLD.new, env)
         return QT_Boolean::get(!@universe.stack_empty?(env) || !@universe.reduced_locals_empty?) if res._missing?
@@ -186,7 +192,7 @@ class QT_Universe < QT_Object
       end
 
       def qt_cmp(r, e) __uni_method(:__cmp, r, :__right, e) || super end
-      def qt_eql(r, e) __uni_method(:__t_e, r, :__right, e) || r.is_a?(QT_Universe) && QT_Boolean::get( @universe == r.universe ) end
+      def qt_eql(r, e) __uni_method(:__t_e, r, :__right, e) || QT_Boolean::get( r.is_a?(QT_Universe) && @universe == r.universe ) end
       def qt_neq(r, e) __uni_method(:__t_n, r, :__right, e) || super end
       def qt_lth(r, e) __uni_method(:__t_l, r, :__right, e) || super end
       def qt_gth(r, e) __uni_method(:__t_g, r, :__right, e) || super end
@@ -202,7 +208,7 @@ class QT_Universe < QT_Object
 
 
       def qt_cmp_l(r, e) __uni_method(:__cmp_l, r, :__right, e) || super end
-      def qt_eql_l(r, e) __uni_method(:__eql_l, r, :__right, e) || r.is_a?(QT_Universe) && QT_Boolean::get( @universe == r.universe ) end
+      def qt_eql_l(r, e) __uni_method(:__eql_l, r, :__right, e) || QT_Boolean::get( r.is_a?(QT_Universe) && @universe == r.universe ) end
       def qt_neq_l(r, e) __uni_method(:__neq_l, r, :__right, e) || super end
       def qt_lth_l(r, e) __uni_method(:__lth_l, r, :__right, e) || super end
       def qt_gth_l(r, e) __uni_method(:__gth_l, r, :__right, e) || super end
@@ -218,7 +224,7 @@ class QT_Universe < QT_Object
 
 
       def qt_cmp_r(l, e) __uni_method(:__cmp_r, l, :__left, e) || super end
-      def qt_eql_r(l, e) __uni_method(:__eql_r, l, :__left, e) || r.is_a?(QT_Universe) && QT_Boolean::get( @universe == l.universe ) end
+      def qt_eql_r(l, e) __uni_method(:__eql_r, l, :__left, e) || QT_Boolean::get( r.is_a?(QT_Universe) && @universe == l.universe ) end
       def qt_neq_r(l, e) __uni_method(:__neq_r, l, :__left, e) || super end
       def qt_lth_r(l, e) __uni_method(:__lth_r, l, :__left, e) || super end
       def qt_gth_r(l, e) __uni_method(:__gth_r, l, :__left, e) || super end
