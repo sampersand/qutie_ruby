@@ -32,9 +32,7 @@ class Parser
     env = Environment.new(stream, universe, self)
     stream.stack = input.each_char.to_a.collect{ |e| QT_Default::from(e, env)}
 
-    $QT_CONTEXT.start(stream, universe)
     res = parse!(env) #dont need to copy stream cause we just made it.
-    $QT_CONTEXT.stop(stream)
     res
   end
 

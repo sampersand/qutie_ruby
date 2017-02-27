@@ -125,7 +125,7 @@ class QT_Object
           return res unless res._missing?
           res = right.method(callername + '_r').(self, env)
           return res unless res._missing?
-          throw(:ERROR, QTE_MethodMissing.new($QT_CONTEXT.current, callername, self, right))
+          throw(:ERROR, QTE_MethodMissing.new(callername, self, right))
           fail
         end
 

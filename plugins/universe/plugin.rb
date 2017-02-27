@@ -19,7 +19,6 @@ module Universe
 
     start_paren = stream._next(env)
     body = QT_Default::EMPTY
-    start_line_no = $QT_CONTEXT.current.line_no
     parens = 1
     catch(:EOF) do
       loop do
@@ -59,11 +58,9 @@ module Universe
         body = body.qt_add( stream._next(env), env )
       end
       true
-    end or throw(:ERROR, QTE_Syntax_EOF.new($QT_CONTEXT.current,
-                                                "Reached EOF before finishing universe starting with: #{start_paren}"))
+    end or throw(:ERROR, QTE_Syntax_EOF.new("Reached EOF before finishing universe starting with: #{start_paren}"))
     end_paren = stream._next(env)
-    res=QT_Universe::from(body, env, parens: [start_paren, end_paren])
-    res.__start_line_no = start_line_no
+    res = QT_Universe::from(body, env, parens: [start_paren, end_paren])
     res
   end
 
