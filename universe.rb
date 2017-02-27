@@ -140,4 +140,13 @@ class UniverseOLD
   def ==(other)
     @stack == other.stack && @locals == other.locals
   end
+  def is_a?(type)
+    type == QT_Universe || super
+  end
 end
+
+
+
+
+
+

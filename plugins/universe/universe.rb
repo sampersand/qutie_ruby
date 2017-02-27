@@ -113,7 +113,7 @@ class QT_Universe < QT_Object
     # normal universe methods
       def qt_eval(env)
         universe = env.universe.spawn_new_stack(new_stack: nil)#.clone #removed the .clone here
-        res = env.parser.parse!(env.fork(stream: @universe.clone, universe: universe)).u
+        res = env.parser.parse!(env: env.fork(stream: @universe.clone, universe: universe)).u
         QT_Universe.new(body: '', universe: res, parens: @parens) # this is where it gets hacky
       end
 
@@ -124,7 +124,7 @@ class QT_Universe < QT_Object
         passed_args.locals.clear
         passed_args.locals[ QT_Symbol.new :__args ] = passed_args
         stream = @universe.clone
-        env.parser.parse!(env.fork(stream: stream, universe: passed_args)).u
+        env.parser.parse!(env: env.fork(stream: stream, universe: passed_args)).u
         # func.program_stack.push args
         # $QT_CONTEXT.start(stream, self)
         # $QT_CONTEXT.stop(stream)
