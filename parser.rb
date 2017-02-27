@@ -34,18 +34,18 @@ class Parser
               universe: nil,
               pre_proc: true)
 
-    assert_is_a(input, String, msg: "`input` passed to Parser#process isn't a String")
-    assert_is_any(pre_proc, TrueClass, FalseClass, msg: "`pre_proc` passed to Parser#process isn't a boolean")
+    assert_is_a(input, String, msg: "`input` passed to Parser#process isn't a String, but: #{input.class}")
+    assert_is_any(pre_proc, TrueClass, FalseClass, msg: "`pre_proc` passed to Parser#process isn't a boolean, but: #{pre_proc.class}")
     PreParser::pre_process!(input) if pre_proc
 
     stream = UniverseOLD.new
-    assert_is_a(universe, NilClass, QT_Universe, msg: "`universe` passed to Parser#process isn't nil or a QT_Universe")
+    assert_is_a(universe, NilClass, QT_Universe, msg: "`universe` passed to Parser#process isn't nil or a QT_Universe, but: #{universe.class}")
     universe ||= UniverseOLD.new
-    assert_is_a(stream, QT_Universe, msg: "`stream` (from `UniverseOLD.new`) didn't return a QT_Universe")
-    assert_is_a(universe, QT_Universe, msg: "`universe` (from `UniverseOLD.new` or passed in) isn't a QT_Universe")
+    assert_is_a(stream, QT_Universe, msg: "`stream` (from `UniverseOLD.new`) didn't return a QT_Universe, but: #{stream.class}")
+    assert_is_a(universe, QT_Universe, msg: "`universe` (from `UniverseOLD.new` or passed in) isn't a QT_Universe, but: #{universe.class}")
 
-    assert_is_a(@builtins, Hash, msg: "`@builtins` isn't a Hash")
-    assert_is_a(additional_builtins, Hash, msg: "`additional_builtins` isn't a Hash")
+    assert_is_a(@builtins, Hash, msg: "`@builtins` isn't a Hash, but: #{@builtins.class}")
+    assert_is_a(additional_builtins, Hash, msg: "`additional_builtins` isn't a Hash, but: #{additional_builtins.class}")
     universe.globals.update(@builtins)
     universe.globals.update(additional_builtins)
 
@@ -63,15 +63,15 @@ class Parser
   end
 
   def parse!(env:)
-    assert_is_a(env, Environment, msg: "`env` passed to Parser#parse! isn't an Environment")
+    assert_is_a(env, Environment, msg: "`env` passed to Parser#parse! isn't an Environment, but: #{env.class}")
     catch(:EOF){ 
       until env.stream.stack_empty?(env)
         
         res = next_token(env)
-        assert_is_a(res, Array, msg: "Parser#next_token didn't return an Array")
+        assert_is_a(res, Array, msg: "Parser#next_token didn't return an Array, but: #{res.class}")
         
         token, plugin = res
-        assert_is_a(token, QT_Object, msg: "`token` returned from Parser#next_token isn't a QT_Object")
+        assert_is_a(token, QT_Object, msg: "`token` returned from Parser#next_token isn't a QT_Object, but: #{token.class}")
 
         assert_respond_to(plugin, :handle, msg: "`plugin` returned from Parser#next_token doesn't have attribute `handle`")
         plugin.handle(token, env)
@@ -88,18 +88,18 @@ class Parser
   end
 
   def self.next_token(env)
-    assert_is_a(env, Environment, msg: "`env` passed to Parser#next_token isn't an Environment")
+    assert_is_a(env, Environment, msg: "`env` passed to Parser#next_token isn't an Environment, but: #{env.class}")
 
     env.p.plugins.each do |pl|
       token = pl.next_token(env)
 
-      assert_is_a(token, NilClass, QT_Object, Symbol, msg: "`#{pl.to_s}`#next_token didn't return nil or a QT_Object")
+      assert_is_a(token, NilClass, QT_Object, Symbol, msg: "`#{pl.to_s}`#next_token didn't return nil or a QT_Object, but: #{token.class}")
       next unless token
       if token == :retry
         res = next_token(env)
-        assert_is_a(res, Array, msg: "Parser#next_token didn't return an Array")
+        assert_is_a(res, Array, msg: "Parser#next_token didn't return an Array, but: #{res.class}")
       else
-        assert(!token.is_a?(Symbol), msg: "`#{pl.to_s}`#next_token returned a Symbol that isn't :retry (#{token})")
+        assert(!token.is_a?(Symbol), msg: "`#{pl.to_s}`#next_token returned a non-:retry Symbol: #{token}")
         res = [token, pl]
       end
       return res
