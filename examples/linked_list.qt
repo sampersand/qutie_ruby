@@ -1,36 +1,41 @@
 LinkedList = {
-  head = head || nil?;
+  head = nil?;
 
   __text = {
-    current = __self?.head;
+    current = head?;
     res = '[';
-    if( current? == nil? [return(res? + ']')] {}),!
 
-    until( [current? == nil?] {
-      res += text(current? ', ' sep='');
+    while((current?)){
+      res += current? + ', ';
       current = current?.next;
-    });
-    del(res?, __pos=-1); del(res?, __pos=-1); // remove the last `, `
+    };
+    del(__enviro: res?; NEG_1?);
+    del(__enviro: res?; NEG_1?);
     res? + ']'
   };
-  unshift = function(val?){
+
+  unshift = { -> val;
     __self? .= (head, new Node(val?, __self?.head))!;
-  };
-  shift = function(){
+  }, -> __add_l;
+
+  shift = { -> __amnt;
     res = __self?.head;
     __self? .= (head, __self?.head.next)!;
-    res?
-  };
+    res?.data
+  }, -> __sub_l
+  __get = { -> pos;
+    current = __self?.head;
+    while((pos? > 0)){
+      disp(pos?)
+    }
+  }
 };
 
 Node = {
-  data = __args?.0;
-  next = __args?.1 || nil?;
+  data = $?.0;
+  next = $?.1 || nil?;
 
-  __text = function() {
-    text(__self?.data)
-  };
-
+  __text = { text(__self?.data) };
 };
 
 list = new LinkedList();
@@ -39,9 +44,10 @@ list?.unshift('c');
 list?.unshift('b');
 list?.unshift('a');
 disp( list? );
-# disp( list?.shift().0   );
-list?.shift();
-disp( list? );
+disp( list?.0 )
+# disp( list?.shift().0 );
+# disp( list? );
+
 
 
 

@@ -59,10 +59,33 @@ class QT_Text < QT_Object
       end
 
     # operators
+      def qt_method(meth, env)
+        case meth.sym_val
+        when :insert
+          Functions::QT_BuiltinFunciton.new{ |args, env|
+            text = Functions::fetch(args, env, 0, :__text)
+            pos = Functions::fetch(args, env, 1, :__pos, default: QT_Number::ZERO)
+            @text_val.insert((pos.qt_to_num(env) or return QT_Null::INSTANCE).num_val,
+                             text.qt_to_text(env).text_val)
+            self
+          }
+        end
+      end
       # access
       def qt_get(pos, env, type:)
         # ignores type
-        text = @text_val[(pos.qt_to_num(env) or return QT_Null::INSTANCE).num_val]
+        if pos.is_a?(QT_Symbol)
+          qt_method(pos, env)
+        else
+          text = @text_val[(pos.qt_to_num(env) or return QT_Null::INSTANCE).num_val]
+          text and QT_Text.new(text) or QT_Null::INSTANCE
+        end
+      end
+
+      def qt_del(pos, env, type:)
+        # ignores type
+        fail unless type == QT_Symbol.new( :BOTH ) || type == QT_Symbol.new( :STACK )
+        text = @text_val.slice!((pos.qt_to_num(env) or return QT_Null::INSTANCE).num_val)
         text and QT_Text.new(text) or QT_Null::INSTANCE
       end
 

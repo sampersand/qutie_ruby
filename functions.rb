@@ -39,9 +39,17 @@ module Functions
       if_false = fetch(args, env, 2, QT_False::INSTANCE, :false, default: QT_Null::INSTANCE, can_pass_block: true)
       false_block = $BLOCK_GIVEN
       if cond.qt_to_bool(env).bool_val
-        true_block ? if_true.qt_eval(env) : if_true
+        if true_block 
+          if_true.qt_eval(env).qt_get(QT_Number::NEG_1, env, type: QT_Symbol.new( :STACK ))
+        else
+          if_true
+        end
       else
-        false_block ? if_false.qt_eval(env) : if_false
+        if false_block
+          if_false.qt_eval(env).qt_get(QT_Number::NEG_1, env, type: QT_Symbol.new( :STACK ))
+        else
+          if_false
+        end
       end
     },
     QT_Symbol.new( :unless ) => QT_BuiltinFunciton.new{ |args, env| 
@@ -75,7 +83,7 @@ module Functions
     },
     QT_Symbol.new( :until ) => QT_BuiltinFunciton.new{ |args, env|
       cond = fetch(args, env, 0, :__cond)
-      body = fetch(args, env, 1, :__body, can_pass_block: trues)
+      body = fetch(args, env, 1, :__body, can_pass_block: true)
       until cond.clone.qt_eval(env).pop.qt_to_bool(env).bool_val
         body.clone.qt_eval(env)
       end
@@ -159,6 +167,14 @@ module Functions
     },
 
 
+    QT_Symbol.new( :del ) => QT_BuiltinFunciton.new{ |args, env|
+      enviro = fetch(args, env, :__enviro, default: args)
+      to_del = fetch(args, env, 0, :__to_del)
+      type = fetch(args, env, 1, :__type, default: QT_Symbol.new( :BOTH ))
+      enviro.qt_del(to_del, env, type: type)
+      # arg.qt_length( env, type: fetch(args, env, 1, :__type, default: QT_Symbol.new( :BOTH )))
+    },
+
     # i dont know how many of these work...
 
     QT_Symbol.new( :clone ) => QT_BuiltinFunciton.new{ |args, env|
@@ -186,24 +202,24 @@ module Functions
 
     },
 
-    QT_Symbol.new( :del ) => QT_BuiltinFunciton.new{ |args, env|
+    # QT_Symbol.new( :del ) => QT_BuiltinFunciton.new{ |args, env|
         
-      uni = args.stack.fetch(0){ args.locals.fetch(:__uni) }
-      pos = args.stack.fetch(1){ args.locals.fetch(:__pos) }
-      type = args.stack.fetch(2){ args.locals.fetch(:__type, nil) }
-      if(uni.is_a?(String))
-        uni.slice!(pos)
-      elsif type == :V || (type.nil? && uni.locals.include?(pos))
-        uni.locals.delete(pos)
-      elsif type == :S || (type.nil? && (0..uni.stack.length).include?(pos))
-        uni.stack.delete_at(pos)
-      elsif type == :G
-        uni.globals.delete(pos)
-      else
-        raise "Unknown type `#{type.inspect}` with pos `#{pos}`"
-      end
-      QT_Null::INSTANCE
-    },
+    #   uni = args.stack.fetch(0){ args.locals.fetch(:__uni) }
+    #   pos = args.stack.fetch(1){ args.locals.fetch(:__pos) }
+    #   type = args.stack.fetch(2){ args.locals.fetch(:__type, nil) }
+    #   if(uni.is_a?(String))
+    #     uni.slice!(pos)
+    #   elsif type == :V || (type.nil? && uni.locals.include?(pos))
+    #     uni.locals.delete(pos)
+    #   elsif type == :S || (type.nil? && (0..uni.stack.length).include?(pos))
+    #     uni.stack.delete_at(pos)
+    #   elsif type == :G
+    #     uni.globals.delete(pos)
+    #   else
+    #     raise "Unknown type `#{type.inspect}` with pos `#{pos}`"
+    #   end
+    #   QT_Null::INSTANCE
+    # },
   }
 
   module_function

@@ -18,19 +18,34 @@ module Number
   module_function
 
   def next_number!(env)
+    assert_is_a(env, Environment, 'env')
     stream = env.stream
+    assert_is_a(stream, QT_Universe, 'env.stream')
     res = stream._next(env)
+    assert_is_a(res, QT_Default, 'res (aka stream._next)')
+    assert_is_a(DECIMAL_REGEX, QT_Regex, "#{name}::DECIMAL_REGEX")
     catch(:EOF) do
       res = res.qt_add( stream._next(env), env) while DECIMAL_REGEX._match?(stream._peek(env), env)
-      if stream.qt_length(env, type: QT_Symbol.new( :STACK ) ) > 1 && # this will fail when I upgrade it to QT_Number
-          DECIMAL_POINT_REGEX._match?(stream._peek(env, 2), env)
+      assert_is_a(res, QT_Default, 'res')
+      if stream.qt_length(env, type: QT_Symbol.new( :STACK ) ).
+                qt_gth(QT_Number::ONE, env).
+                qt_to_bool(env).
+                bool_val && DECIMAL_POINT_REGEX._match?(stream._peek(env, 2), env)
         res = res.qt_add( stream._next(env), env)
+        assert_is_a(res, QT_Default, 'res')
         res = res.qt_add( stream._next(env), env) while DECIMAL_REGEX._match?( stream._peek(env), env )
+        assert_is_a(res, QT_Default, 'res')
       end
-      if stream.qt_length(env, type: QT_Symbol.new( :STACK ) ) > 0 && EXPONENT_START._match?( stream._peek(env), env )
+      if stream.qt_length(env, type: QT_Symbol.new( :STACK ) ).
+                qt_gth(QT_Number::ZERO, env).
+                qt_to_bool(env).
+                bool_val && EXPONENT_START._match?( stream._peek(env), env )
         res = res.qt_add( stream._next(env), env)
+        assert_is_a(res, QT_Default, 'res')
         res = res.qt_add( stream._next(env), env) if EXPONENT_SIGN_MODIFIER._match?( stream._peek(env), env )
+        assert_is_a(res, QT_Default, 'res')
         res = res.qt_add( stream._next(env), env) while DECIMAL_REGEX._match?( stream._peek(env), env )
+        assert_is_a(res, QT_Default, 'res')
       end
     end
     QT_Number::from( res, env )
@@ -50,13 +65,18 @@ module Number
   end
 
   def next_token(env)
+    assert_is_a(env, Environment, 'env')
+    assert_is_a(DECIMAL_REGEX, QT_Regex, "#{name}::DECIMAL_REGEX")
     return unless DECIMAL_REGEX._match?(env.stream._peek(env), env)
 
-    if BASE_START_REGEX._match?(env.stream._peek(env, 2), env)
-      next_base!(env)
-    else
-      next_number!(env)
-    end
+    assert_is_a(BASE_START_REGEX, QT_Regex, "#{name}::BASE_START_REGEX")
+    res = if BASE_START_REGEX._match?(env.stream._peek(env, 2), env)
+            next_base!(env)
+          else
+            next_number!(env)
+          end
+    assert_is_a(res, QT_Number, 'res')
+    res
   end
 
   def handle(token, env)

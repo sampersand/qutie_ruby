@@ -35,7 +35,6 @@ module PreParser
   CLASS_INSTANCE_REG = /new\s+([a-z_][a-z_0-9]*)(?=[(])/i
   FUNCTION_CALL_REG = /([a-z_][a-z_0-9]*)(?=\()/i
   def pre_process!(text)
-    text.gsub!(/import[({\[](['"])([^)\]}]+)[)\]}]/, '((\1\1+`cat \1\2.qt`!)!.0,!)!.0')
     keys = Functions::FUNCTIONS.keys.collect(&:to_s).join('|')
     while pos = text.index(/(?<=#{keys})[({\[]/)
       parens = get_parens!(text, pos)

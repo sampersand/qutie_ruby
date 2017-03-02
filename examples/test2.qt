@@ -1,12 +1,37 @@
-prompt_me = {
-  Name = prompt("What's your name?", ' ');
-  Age =  prompt("What's your age?", ' ');
-  Favourite Colour =  prompt("What's your favourite colour?", ' ');
-  disp( "Hello," Name? "(age " Age? ") Your favourite colour is:" Favourite Colour? ", no?", sep=" ";);
+Heap = {
+  elements = []@();
+  insert = { -> to_insert;
+    if(__self?.elements){
+      __self?.elements .= (1, new Node(to_insert?))!;
+
+    } else {
+      __self?.elements .= (0, new Node(to_insert?))!;
+    }
+  };
+  __text = {
+    '[' + text(__self?.elements) + ']'
+  };
 };
 
-foo = {
-  disp('foo bar baz!!!');
-  1,2,3
+Node = {
+  -> data;
+  -> left;
+  -> right;
+  __text = { text(__self?.data) + if(left? || right?, "{" + left? + ", " + right? + "}", '') };
 };
-add = { -> a; + a? };
+
+list = new Heap();
+list?.insert(0);
+list?.insert(1);
+disp( list? );
+
+
+
+
+
+
+
+
+
+
+

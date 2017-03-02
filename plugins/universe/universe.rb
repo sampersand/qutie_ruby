@@ -3,7 +3,6 @@ class QT_Universe < QT_Object
   attr_reader :universe
   attr_reader :body
   attr_reader :parens
-  attr_accessor :__start_line_no 
   def self.from(source, env, parens:)
     # warn("QT_Universe::from doesnt conform to others!")
     new_universe = UniverseOLD.new
@@ -64,9 +63,12 @@ class QT_Universe < QT_Object
 
       def qt_to_text(env)
         res = qt_method(:__text, UniverseOLD.new, env)
-        return super if res._missing?
-        throw(:ERROR, QTE_Type.new(env, " `__text` returned a non-QT_Text value! `#{res}`")) unless res.is_a?(QT_Text)
-        res
+        if res._missing?
+          @universe.qt_to_text(env)
+        else
+          throw(:ERROR, QTE_Type.new(env, " `__text` returned a non-QT_Text value! `#{res}`")) unless res.is_a?(QT_Text)
+          res
+        end
       end
       def qt_to_num(env)
         res = qt_method(:__num, UniverseOLD.new, env)
@@ -124,11 +126,10 @@ class QT_Universe < QT_Object
         passed_args.locals.clear
         passed_args.locals[ QT_Symbol.new :__args ] = passed_args
         stream = @universe.clone
-        env.parser.parse!(env: env.fork(stream: stream, universe: passed_args)).u
-        # func.program_stack.push args
-        # $QT_CONTEXT.start(stream, self)
-        # $QT_CONTEXT.stop(stream)
-        # func.program_stack.pop
+        res = env.parser.parse!(env: env.fork(stream: stream, universe: passed_args)).u
+        # res2 = res.qt_get(QT_Number::NEG_1, env, type: QT_Symbol.new( :STACK ))
+        # p [res, res2]
+        # res2
       end
 
       def qt_get(pos, env, type:)  # fix this
@@ -183,7 +184,7 @@ class QT_Universe < QT_Object
           end
         end
         case type 
-        when :STACK then @universe.stack.delete((pos.qt_to_num or return QT_Null::INSTANCE).num_val)
+        when :STACK then @universe.stack.delete((pos.qt_to_num(env) or return QT_Null::INSTANCE).num_val)
         when :LOCALS then @universe.locals.delete(pos)
         when :GLOBALS then @universe.globals.delete(pos)
         else fail "Unknown qt_get type `#{type}`!"

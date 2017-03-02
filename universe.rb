@@ -101,6 +101,31 @@ class UniverseOLD
                     " [#{stack_s}] | {#{locals_s}} "
                   end) + parens[1]
     end
+    def _qt_stack_s(env)
+      stck = @stack.collect{|e|
+        if self.equal?(e.respond_to?(:universe) ? e.universe : e)
+          QT_Symbol.new( :'$' ) 
+        else
+          e.qt_to_text(env)
+        end
+      }
+      stck.reduce{|a, b| a.qt_add(QT_Text.new(', '), env).qt_add(b, env)}
+    end
+
+    def _qt_locals_s(env)
+      reduced_locals.collect{|k, v| [k, (self.equal?(v.respond_to?(:universe) ? v.universe : v) ? QT_Symbol.new( :'$' ) : v )]}
+                      .collect{|k,v| "#{k}: #{v}"}.join(', ')
+    end
+
+    def qt_to_text(env)
+      if reduced_locals_empty?
+        _qt_stack_s(env)
+      elsif stack_empty?(nil)
+        _qt_locals_s(env)
+      else
+        QT_Text.new( " [#{_qt_stack_s(env)}] | {#{_qt_locals_s(env)}} " )
+      end
+    end
 
   # cloning
     def spawn_new_stack(new_stack:)
@@ -118,9 +143,9 @@ class UniverseOLD
 
   def qt_length(_env, type:)
     case type.sym_val
-    when :STACK then @stack.length
-    when :LOCALS then @locals.length
-    when :GLOBALS then @globals.length
+    when :STACK then QT_Number.new( @stack.length )
+    when :LOCALS then QT_Number.new( @locals.length )
+    when :GLOBALS then QT_Number.new( @globals.length )
     end
   end
 

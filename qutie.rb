@@ -1,3 +1,5 @@
+$LOAD_PATH << `dirname #{$PROGRAM_NAME}`.chomp
+
 require_relative 'assert'
 include Assertions
 

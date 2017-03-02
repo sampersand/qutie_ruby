@@ -9,9 +9,9 @@ class Environment
     @stream = stream
     @universe = universe
     @parser = parser
-    assert_is_any(@stream, QT_Universe)
-    assert_is_any(@universe, QT_Universe)
-    assert_is_any(@parser, Parser)
+    assert_is_a(@stream, QT_Universe, '@stream')
+    assert_is_a(@universe, QT_Universe, '@universe')
+    assert_is_a(@parser, Parser, '@parser')
   end
 
   def fork(stream:   @stream,

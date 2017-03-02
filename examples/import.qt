@@ -1,3 +1,3 @@
-imp=import('import_2');
-greet('sam');
-imp?.greet('sam');
+imp=import("import_2");
+greet('Sam');
+imp?.greet('Sam');
