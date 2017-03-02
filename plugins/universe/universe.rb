@@ -142,7 +142,6 @@ class QT_Universe < QT_Object
         when :BOTH then type = @universe.locals.include?(pos) ? :LOCALS : :STACK
         when :NON_STACK then type = @universe.locals.include?(pos) ? :LOCALS : :GLOBALS
         end
-
         case type 
         when :STACK
           stack_val = pos.qt_to_num(env)
@@ -170,8 +169,9 @@ class QT_Universe < QT_Object
           @universe.locals[pos] = val
         when :GLOBALS
           @universe.globals[pos] = val
-        else fail "Unknown qt_get type `#{type}`!"
+        else fail "Unknown qt_set type `#{type}`!"
         end
+
       end
 
       def qt_del(pos, env, type:)

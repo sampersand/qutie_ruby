@@ -71,7 +71,11 @@ class UniverseOLD
     end
     def qt_get(pos, _env, type: QT_Symbol.new( :BOTH )) #ignores type
       return QT_Universe.new(body: '', universe: _env.universe, parens: ['<', '>']) if pos == QT_Symbol.new( :'$' )
-      self[pos] || QT_Null::INSTANCE
+      if pos.is_a?(QT_Number)
+        @stack[pos.num_val] || QT_Null::INSTANCE
+      else
+        self[pos] || QT_Null::INSTANCE
+      end
     end
     def qt_set(pos, val, _env, type: QT_Symbol.new( :BOTH )) #ignores type
       self.locals[pos] = val
@@ -102,7 +106,8 @@ class UniverseOLD
                   end) + parens[1]
     end
     def _qt_stack_s(env)
-      stck = @stack.collect{|e|
+      stck = @stack.length.times.collect{|i|
+        e = qt_get(QT_Number.new( i ), env, type: QT_Symbol.new( :STACK ))
         if self.equal?(e.respond_to?(:universe) ? e.universe : e)
           QT_Symbol.new( :'$' ) 
         else

@@ -1,15 +1,15 @@
 Heap = {
   elements = []@();
+  __text = { '[' + text(__self?.elements) + ']' };
+  __len = { len(__self?.elements) };
   insert = { -> to_insert;
     if(__self?.elements){
-      __self?.elements .= (1, new Node(to_insert?))!;
+      # __self?.elements .= (len(__self?)+1, new Node(to_insert?))!;
+      __self?.elements .= (2, new Node(to_insert?))!;
 
     } else {
       __self?.elements .= (0, new Node(to_insert?))!;
     }
-  };
-  __text = {
-    '[' + text(__self?.elements) + ']'
   };
 };
 
