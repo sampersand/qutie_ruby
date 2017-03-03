@@ -10,22 +10,10 @@ class QT_Text < QT_Object
   def initialize(text_val, quotes: nil)
     @text_val = text_val
     raise text_val.class.to_s unless text_val.is_a?(String)
-    @quotes = quotes || gen_quotes
+    @quotes = quotes || [QT_Default.new( :"'" ), QT_Default.new( :"'" ) ]
   end
 
   EMPTY = new( '', quotes: [ QT_Default.new( :"'" ), QT_Default.new( :"'" ) ] )
-  def gen_quotes
-    [QT_Default.new( :"'" ), QT_Default.new( :"'" ) ]
-    # if @text_val =~ /(?<!\\)'/
-    #   if @text_val =~ /(?<!\\)"/
-
-    #   else 
-    #     "\"#{@text_val}\""
-    #   end
-    # else 
-    #   "'#{@text_val}'"
-    # end
-  end
 
   def to_s
     "#{@quotes[0]}#{@text_val}#{@quotes[1]}"
